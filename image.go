@@ -34,7 +34,7 @@ type Transform struct {
 	Output string `json:"output"`
 }
 
-func Decode(path string) (transform Transform, err error) {
+func Decode(path string) (transform Transform, err error, errs []error) {
 	t := Transform{}
 
 	paramsSubstringStart := getParamsSubstringStart(path)
@@ -49,16 +49,16 @@ func Decode(path string) (transform Transform, err error) {
 		t.Image.Extension = unescapeRawUrlParts(output)
 		t.Output = unescapeRawUrlParts(output)
 
-		return t, err
+		return t, err, errs
 	}
 
 	imgId = path[0 : paramsSubstringStart-1]
 	paramsString, output = getFilePathParts(path[paramsSubstringStart-1 : len(path)])
-	err = extractParams(paramsString, output, &t)
 	t.Image.Id = unescapeRawUrlParts(imgId)
+	err, errs = extractParams(paramsString, output, &t)
 	t.Output = unescapeRawUrlParts(output)
 
-	return t, err
+	return t, err, errs
 }
 
 func Encode(transform Transform) (url string) {
@@ -155,11 +155,13 @@ func getParamsSubstringStart(sp string) int {
 	return -1
 }
 
-func getDimensions(c string) (x int, y int, err error) {
+func getDimensions(c string) (x int, y int, errs []error) {
+	var err error
 	div := strings.Index(c, "x")
 
 	if div == -1 {
-		return x, y, errors.New("Dimensions separator not found")
+		errs = append(errs, errors.New("Dimensions separator not found"))
+		return x, y, errs
 	}
 
 	current := c[0:div]
@@ -169,7 +171,8 @@ func getDimensions(c string) (x int, y int, err error) {
 	}
 
 	if err != nil {
-		return x, y, err
+		errs = append(errs, err)
+		return x, y, errs
 	}
 
 	current = c[div+1 : len(c)]
@@ -179,43 +182,47 @@ func getDimensions(c string) (x int, y int, err error) {
 	}
 
 	if err != nil {
-		return x, y, err
+		errs = append(errs, err)
+		return x, y, errs
 	}
 
 	if x < 0 || y < 0 {
-		err = errors.New("x and y must be non-negative")
+		errs = append(errs, errors.New("x and y must be non-negative"))
 	}
 
 	if x == 0 && y == 0 {
-		err = errors.New("At least x and y must be greater than zero")
+		errs = append(errs, errors.New("At least x and y must be greater than zero"))
 	}
 
-	return x, y, err
+	return x, y, errs
 }
 
-func getCropDimensions(c string) (x int, y int, err error) {
-	x, y, err = getDimensions(c)
+func getCropDimensions(c string) (x int, y int, errs []error) {
+	x, y, errs = getDimensions(c)
 
 	if x == 0 || y == 0 {
-		err = errors.New("Both x and y must be greater than zero")
+		errs = append(errs, errors.New("Both x and y must be greater than zero"))
 	}
 
-	return x, y, err
+	return x, y, errs
 }
 
-func extractCrop(c string) (crop Crop, err error) {
+func extractCrop(c string) (crop Crop, errs []error) {
 	dot := strings.Index(c, ":")
 
 	if dot == -1 {
-		err = errors.New("Not in crop format")
-		return crop, err
+		errs = append(errs, errors.New("Not in crop format"))
+		return crop, errs
 	}
 
-	x, y, err1 := getDimensions(c[0:dot])
-	width, height, err2 := getCropDimensions(c[dot+1 : len(c)])
+	x, y, errs1 := getDimensions(c[0:dot])
+	width, height, errs2 := getCropDimensions(c[dot+1 : len(c)])
 
-	if err1 != nil || err2 != nil {
-		err = errors.New("Invalid crop format dimensions")
+	errs = append(errs, errs1...)
+	errs = append(errs, errs2...)
+
+	if len(errs1) != 0 || len(errs2) != 0 {
+		errs = append(errs, errors.New("Invalid crop format dimensions"))
 	}
 
 	crop = Crop{
@@ -225,10 +232,10 @@ func extractCrop(c string) (crop Crop, err error) {
 		Height: height,
 	}
 
-	return crop, err
+	return crop, errs
 }
 
-func extractParams(part string, output string, t *Transform) (err error) {
+func extractParams(part string, output string, t *Transform) (err error, errs []error) {
 	params := strings.Split(part, "_")
 
 	for i := range params {
@@ -240,22 +247,26 @@ func extractParams(part string, output string, t *Transform) (err error) {
 	if len(params) == 2 && params[pos] == RAW {
 		t.Raw = true
 		t.Image.Extension = output
-		return err
+		return err, errs
 	}
 
-	crop, errCrop := extractCrop(params[pos])
+	crop, errsCrop := extractCrop(params[pos])
 
-	if errCrop == nil {
+	if len(errsCrop) == 0 {
 		t.Crop = crop
 		pos += 1
 	}
 
-	width, height, errResize := getDimensions(params[pos])
+	errs = append(errs, errsCrop...)
 
-	if errResize == nil {
+	width, height, errsResize := getDimensions(params[pos])
+
+	if len(errsResize) == 0 {
 		t.Width, t.Height = width, height
 		pos += 1
 	}
+
+	errs = append(errs, errsResize...)
 
 	extension := t.Output
 
@@ -268,9 +279,10 @@ func extractParams(part string, output string, t *Transform) (err error) {
 
 	if pos != len(params) {
 		err = errors.New("Can't process all parameters")
+		errs = append(errs, err)
 	}
 
-	return err
+	return err, errs
 }
 
 func getFilePathParts(part string) (string, string) {

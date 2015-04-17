@@ -160,20 +160,19 @@ func TestGetParamsSubstringStart(t *testing.T) {
 
 func TestGetDimensions(t *testing.T) {
 	cases := []struct {
-		in  string
-		x   int
-		y   int
-		err error
+		in string
+		x  int
+		y  int
 	}{
-		{"500x100", 500, 100, nil},
-		{"300x", 300, 0, nil},
-		{"x300", 0, 300, nil},
+		{"500x100", 500, 100},
+		{"300x", 300, 0},
+		{"x300", 0, 300},
 	}
 	for _, c := range cases {
 		x, y, err := getDimensions(c.in)
 
-		if x != c.x || y != c.y || err != c.err {
-			t.Errorf("getDimensions(%q) == %d %d %q, want %d %d %q", c.in, x, y, err, c.x, c.y, c.err)
+		if x != c.x || y != c.y || len(err) != 0 {
+			t.Errorf("getDimensions(%q) == %dx%d, want %dx%d", c.in, x, y, c.x, c.y)
 		}
 	}
 }
@@ -226,7 +225,7 @@ func TestDecodingFailureUnknownParameter(t *testing.T) {
 		{"la__office/newborn__bunnies_raw_stars.jpg"},
 	}
 	for _, c := range cases {
-		_, err := Decode(c.in)
+		_, err, _ := Decode(c.in)
 
 		if err == nil {
 			t.Errorf("There should be errors due to invalid params for Decode(%q)", c.in)
@@ -244,7 +243,7 @@ func TestDecodingFailure(t *testing.T) {
 		{"la__office/newborn__bunnies_400x200:300xno_gif.jpg"},
 	}
 	for _, c := range cases {
-		_, err := Decode(c.in)
+		_, err, _ := Decode(c.in)
 
 		if err == nil {
 			t.Errorf("There should be errors due to invalid params for Decode(%q)", c.in)
@@ -402,9 +401,9 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 			t.Errorf("Encode(%+v) == %v, want %v", c.object, gotUrl, c.url)
 		}
 
-		gotObject, errObject := Decode(c.url)
+		gotObject, err, _ := Decode(c.url)
 
-		if errObject != nil {
+		if err != nil {
 			t.Errorf("There should be no errors for Decode(%v)", c.url)
 		}
 
