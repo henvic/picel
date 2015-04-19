@@ -5,6 +5,38 @@ import (
 	"testing"
 )
 
+func TestName(t *testing.T) {
+	cases := []struct {
+		i        Image
+		name     string
+		fullname string
+	}{
+		{Image{
+			Id:        "help/staff",
+			Extension: "jpg",
+		}, "staff.jpg", "help/staff.jpg"},
+		{Image{
+			Id:        "section/help/staff",
+			Extension: "jpg",
+		}, "staff.jpg", "section/help/staff.jpg"},
+		{Image{
+			Id:        "dog",
+			Extension: "png",
+		}, "dog.png", "dog.png"},
+		{Image{
+			Id:        "dog",
+			Extension: "",
+		}, "dog", "dog"},
+	}
+	for _, c := range cases {
+		name, fullname := c.i.name()
+
+		if name != c.name || fullname != c.fullname {
+			t.Errorf("c.i.name() == %q %q, want %q %q", name, fullname, c.name, c.fullname)
+		}
+	}
+}
+
 func TestEscapeRawUrlParts(t *testing.T) {
 	cases := []struct {
 		unescaped string

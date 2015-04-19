@@ -44,6 +44,22 @@ type Transform struct {
 	Output string `json:"output"`
 }
 
+func (i *Image) name() (name string, fullname string) {
+	fullname = i.Id
+
+	if i.Extension != "" {
+		fullname += "." + i.Extension
+	}
+
+	last := strings.LastIndex(fullname, "/")
+
+	if last == -1 {
+		return fullname, fullname
+	}
+
+	return fullname[last+1 : len(fullname)], fullname
+}
+
 func Decode(path string) (transform Transform, err error, errs []error) {
 	t := Transform{}
 
