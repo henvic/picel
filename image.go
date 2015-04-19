@@ -7,6 +7,16 @@ import (
 	"strings"
 )
 
+var (
+	ErrDimensionsSeparator      = errors.New("Dimensions separator not found")
+	ErrDimensionsNonNegative    = errors.New("x and y must be non-negative")
+	ErrBothDimensionEqualToZero = errors.New("At least x and y must be greater than zero")
+	ErrCropDimensionEqualToZero = errors.New("Both x and y must be greater than zero")
+	ErrNotCropFormat            = errors.New("Not in crop format")
+	ErrInvalidCropDimensions    = errors.New("Invalid crop format dimensions")
+	ErrNonEmptyParameterQueue   = errors.New("Can't process all parameters")
+)
+
 const (
 	defaultInputExtension = "jpg"
 	defaultOutput         = ""
@@ -160,7 +170,7 @@ func getDimensions(c string) (x int, y int, errs []error) {
 	div := strings.Index(c, "x")
 
 	if div == -1 {
-		errs = append(errs, errors.New("Dimensions separator not found"))
+		errs = append(errs, ErrDimensionsSeparator)
 		return x, y, errs
 	}
 
@@ -187,11 +197,11 @@ func getDimensions(c string) (x int, y int, errs []error) {
 	}
 
 	if x < 0 || y < 0 {
-		errs = append(errs, errors.New("x and y must be non-negative"))
+		errs = append(errs, ErrDimensionsNonNegative)
 	}
 
 	if x == 0 && y == 0 {
-		errs = append(errs, errors.New("At least x and y must be greater than zero"))
+		errs = append(errs, ErrBothDimensionEqualToZero)
 	}
 
 	return x, y, errs
@@ -201,7 +211,7 @@ func getCropDimensions(c string) (x int, y int, errs []error) {
 	x, y, errs = getDimensions(c)
 
 	if x == 0 || y == 0 {
-		errs = append(errs, errors.New("Both x and y must be greater than zero"))
+		errs = append(errs, ErrCropDimensionEqualToZero)
 	}
 
 	return x, y, errs
@@ -211,7 +221,7 @@ func extractCrop(c string) (crop Crop, errs []error) {
 	dot := strings.Index(c, ":")
 
 	if dot == -1 {
-		errs = append(errs, errors.New("Not in crop format"))
+		errs = append(errs, ErrNotCropFormat)
 		return crop, errs
 	}
 
@@ -222,7 +232,7 @@ func extractCrop(c string) (crop Crop, errs []error) {
 	errs = append(errs, errs2...)
 
 	if len(errs1) != 0 || len(errs2) != 0 {
-		errs = append(errs, errors.New("Invalid crop format dimensions"))
+		errs = append(errs, ErrInvalidCropDimensions)
 	}
 
 	crop = Crop{
@@ -278,7 +288,7 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 	t.Image.Extension = extension
 
 	if pos != len(params) {
-		err = errors.New("Can't process all parameters")
+		err = ErrNonEmptyParameterQueue
 		errs = append(errs, err)
 	}
 
