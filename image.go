@@ -19,7 +19,6 @@ var (
 
 const (
 	defaultInputExtension = "jpg"
-	defaultOutput         = ""
 	RAW                   = "raw"
 )
 
@@ -72,7 +71,14 @@ func Decode(path string) (transform Transform, err error, errs []error) {
 	if paramsSubstringStart == -1 {
 		imgId, output = getFilePathParts(path)
 		t.Image.Id = unescapeRawUrlParts(imgId)
-		t.Image.Extension = unescapeRawUrlParts(output)
+
+		extension := output
+
+		if extension == "" {
+			extension = defaultInputExtension
+		}
+
+		t.Image.Extension = unescapeRawUrlParts(extension)
 		t.Output = unescapeRawUrlParts(output)
 
 		return t, err, errs
@@ -81,6 +87,7 @@ func Decode(path string) (transform Transform, err error, errs []error) {
 	imgId = path[0 : paramsSubstringStart-1]
 	paramsString, output = getFilePathParts(path[paramsSubstringStart-1 : len(path)])
 	t.Image.Id = unescapeRawUrlParts(imgId)
+
 	err, errs = extractParams(paramsString, output, &t)
 	t.Output = unescapeRawUrlParts(output)
 
@@ -107,7 +114,7 @@ func Encode(transform Transform) (url string) {
 
 	url += encodeParam(EncodeDimension(transform))
 
-	if transform.Output != inputExtension {
+	if transform.Output != inputExtension && (inputExtension != defaultInputExtension || transform.Output != "") {
 		url += encodeParam(escapeRawUrlParts(inputExtension))
 	}
 
@@ -298,9 +305,13 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 
 	extension := t.Output
 
-	if params[pos] != t.Output {
+	if pos != len(params) && params[pos] != t.Output {
 		extension = params[pos]
 		pos += 1
+	}
+
+	if extension == "" {
+		extension = defaultInputExtension
 	}
 
 	t.Image.Extension = extension
@@ -317,7 +328,7 @@ func getFilePathParts(part string) (string, string) {
 	last := strings.LastIndex(part, ".")
 
 	if last == -1 {
-		return part[0:len(part)], defaultOutput
+		return part[0:len(part)], ""
 	}
 
 	return part[0:last], part[last+1 : len(part)]

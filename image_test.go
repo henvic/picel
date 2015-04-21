@@ -311,13 +311,11 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 		}, "airplane__flying__low_jpg.webp"},
 		{Transform{
 			Image: Image{
-				Id:        "help/foo",
+				Id:        "dog",
 				Extension: "jpg",
 			},
 			Output: "",
-			Width:  400,
-			Height: 800,
-		}, "help/foo_400x800_jpg"},
+		}, "dog"},
 		{Transform{
 			Image: Image{
 				Id:        "help/foo",
@@ -325,7 +323,16 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 			},
 			Output: "",
 			Width:  400,
-		}, "help/foo_400x_jpg"},
+			Height: 800,
+		}, "help/foo_400x800"},
+		{Transform{
+			Image: Image{
+				Id:        "help/foo",
+				Extension: "jpg",
+			},
+			Output: "",
+			Width:  400,
+		}, "help/foo_400x"},
 		{Transform{
 			Image: Image{
 				Id:        "help/foo",
@@ -333,7 +340,7 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 			},
 			Output: "",
 			Height: 800,
-		}, "help/foo_x800_jpg"},
+		}, "help/foo_x800"},
 		{Transform{
 			Image: Image{
 				Id:        "adoption_shelters_in_nyc/pretty_dogs",
@@ -369,7 +376,7 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 				Extension: "jpg",
 			},
 			Output: "",
-		}, "foo_jpg"},
+		}, "foo"},
 		{Transform{
 			Image: Image{
 				Id:        "foo_bah_h",
@@ -476,7 +483,7 @@ func TestIncompleteEncoding(t *testing.T) {
 				Id: "foo",
 			},
 			Output: "",
-		}, "foo_jpg"},
+		}, "foo"},
 		{Transform{
 			Image: Image{
 				Id: "help/staff",
