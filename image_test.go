@@ -372,6 +372,19 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 		}, "foo_jpg"},
 		{Transform{
 			Image: Image{
+				Id:        "foo_bah_h",
+				Extension: "jpg",
+			},
+			Crop: Crop{
+				X:      300,
+				Y:      300,
+				Width:  800,
+				Height: 400,
+			},
+			Output: "jpg",
+		}, "foo__bah__h_300x300:800x400.jpg"},
+		{Transform{
+			Image: Image{
 				Id:        "foo",
 				Extension: "jpg",
 			},

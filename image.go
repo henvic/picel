@@ -285,14 +285,16 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 
 	errs = append(errs, errsCrop...)
 
-	width, height, errsResize := getDimensions(params[pos])
+	if pos < len(params) {
+		width, height, errsResize := getDimensions(params[pos])
 
-	if len(errsResize) == 0 {
-		t.Width, t.Height = width, height
-		pos += 1
+		if len(errsResize) == 0 {
+			t.Width, t.Height = width, height
+			pos += 1
+		}
+
+		errs = append(errs, errsResize...)
 	}
-
-	errs = append(errs, errsResize...)
 
 	extension := t.Output
 
