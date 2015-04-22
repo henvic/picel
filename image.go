@@ -314,7 +314,7 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 		extension = defaultInputExtension
 	}
 
-	t.Image.Extension = extension
+	t.Image.Extension = unescapeRawUrlParts(extension)
 
 	if pos != len(params) {
 		err = ErrNonEmptyParameterQueue
