@@ -87,9 +87,8 @@ func Decode(path string) (transform Transform, err error, errs []error) {
 	imgId = path[0 : paramsSubstringStart-1]
 	paramsString, output = getFilePathParts(path[paramsSubstringStart-1 : len(path)])
 	t.Image.Id = unescapeRawUrlParts(imgId)
-
-	err, errs = extractParams(paramsString, output, &t)
 	t.Output = unescapeRawUrlParts(output)
+	err, errs = extractParams(paramsString, output, &t)
 
 	return t, err, errs
 }
@@ -305,7 +304,7 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 
 	extension := t.Output
 
-	if pos != len(params) && params[pos] != t.Output {
+	if pos != len(params) && params[pos] != t.Output && params[pos] != "" {
 		extension = params[pos]
 		pos += 1
 	}

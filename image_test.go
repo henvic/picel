@@ -298,6 +298,21 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 		{Transform{
 			Image: Image{
 				Id:        "help/staff",
+				Extension: "webp",
+			},
+			Output: "webp",
+		}, "help/staff.webp"},
+		{Transform{
+			Image: Image{
+				Id:        "help/staff",
+				Extension: "webp",
+			},
+			Width:  800,
+			Output: "webp",
+		}, "help/staff_800x.webp"},
+		{Transform{
+			Image: Image{
+				Id:        "help/staff",
 				Extension: "jpg",
 			},
 			Output: "webp",
