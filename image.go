@@ -302,7 +302,7 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 		errs = append(errs, errsResize...)
 	}
 
-	extension := t.Output
+	extension := output
 
 	if pos != len(params) && params[pos] != t.Output && params[pos] != "" {
 		extension = params[pos]
