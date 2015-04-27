@@ -6,6 +6,7 @@ import (
 )
 
 func TestName(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		i        Image
 		name     string
@@ -38,6 +39,7 @@ func TestName(t *testing.T) {
 }
 
 func TestEscapeRawUrlParts(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		unescaped string
 		escaped   string
@@ -64,6 +66,7 @@ func TestEscapeRawUrlParts(t *testing.T) {
 }
 
 func TestEncodeCrop(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		in   Crop
 		want string
@@ -85,6 +88,7 @@ func TestEncodeCrop(t *testing.T) {
 }
 
 func TestEncodeDimension(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		in   Transform
 		want string
@@ -114,6 +118,7 @@ func TestEncodeDimension(t *testing.T) {
 }
 
 func TestEncodeParam(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		in   string
 		want string
@@ -131,6 +136,7 @@ func TestEncodeParam(t *testing.T) {
 }
 
 func TestExtractCrop(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		in   string
 		want Crop
@@ -153,6 +159,7 @@ func TestExtractCrop(t *testing.T) {
 }
 
 func TestExtractCropFailure(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		in string
 	}{
@@ -172,6 +179,7 @@ func TestExtractCropFailure(t *testing.T) {
 }
 
 func TestGetParamsSubstringStart(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		in   string
 		want int
@@ -191,6 +199,7 @@ func TestGetParamsSubstringStart(t *testing.T) {
 }
 
 func TestGetDimensions(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		in string
 		x  int
@@ -210,6 +219,7 @@ func TestGetDimensions(t *testing.T) {
 }
 
 func TestGetDimensionsFailure(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		in string
 	}{
@@ -232,6 +242,7 @@ func TestGetDimensionsFailure(t *testing.T) {
 }
 
 func TestGetOutput(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		in     string
 		prefix string
@@ -251,6 +262,7 @@ func TestGetOutput(t *testing.T) {
 }
 
 func TestDecodingFailureUnknownParameter(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		in string
 	}{
@@ -266,6 +278,7 @@ func TestDecodingFailureUnknownParameter(t *testing.T) {
 }
 
 func TestDecodingFailure(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		in string
 	}{
@@ -284,6 +297,7 @@ func TestDecodingFailure(t *testing.T) {
 }
 
 func TestCompleteEncodingAndDecoding(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		object Transform
 		url    string
@@ -481,6 +495,7 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 }
 
 func TestIncompleteEncoding(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		object Transform
 		url    string
