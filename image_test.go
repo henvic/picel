@@ -327,6 +327,7 @@ func TestDecodingFailure(t *testing.T) {
 	cases := []struct {
 		in string
 	}{
+		{"_"},
 		{"la__office/newborn__bunnies_.jpg"},
 		{"la__office/newborn__bunnies_400x200:300_gif.jpg"},
 		{"la__office/newborn__bunnies_400x200:nox300_gif.jpg"},
