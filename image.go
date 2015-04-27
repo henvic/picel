@@ -180,7 +180,7 @@ func getParamsSubstringStart(sp string) int {
 
 		pivot += next_ + 1
 
-		if sp[pivot:][:1] != "_" && (pivot < 2 || sp[pivot-2:][:1] != "_") {
+		if len(sp[pivot:]) == 0 || (sp[pivot:][:1] != "_" && (pivot < 2 || sp[pivot-2:][:1] != "_")) {
 			return pivot
 		}
 	}
