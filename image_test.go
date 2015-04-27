@@ -198,6 +198,50 @@ func TestGetParamsSubstringStart(t *testing.T) {
 	}
 }
 
+func TestGetOffsets(t *testing.T) {
+	t.Parallel()
+	cases := []struct {
+		in string
+		x  int
+		y  int
+	}{
+		{"500x100", 500, 100},
+		{"300x", 300, 0},
+		{"x300", 0, 300},
+		{"0x0", 0, 0},
+	}
+	for _, c := range cases {
+		x, y, err := getOffsets(c.in)
+
+		if x != c.x || y != c.y || len(err) != 0 {
+			t.Errorf("getOffsets(%q) == %dx%d, want %dx%d", c.in, x, y, c.x, c.y)
+		}
+	}
+}
+
+func TestGetOffsetsFailure(t *testing.T) {
+	t.Parallel()
+	cases := []struct {
+		in string
+	}{
+		{""},
+		{"-1x10"},
+		{"10x-1"},
+		{"-1x-1"},
+		{"x"},
+		{"yx10"},
+		{"10xy"},
+		{"yxy"},
+	}
+	for _, c := range cases {
+		_, _, err := getOffsets(c.in)
+
+		if err == nil {
+			t.Errorf("getOffsets(%q) should fail", c.in)
+		}
+	}
+}
+
 func TestGetDimensions(t *testing.T) {
 	t.Parallel()
 	cases := []struct {
@@ -231,6 +275,7 @@ func TestGetDimensionsFailure(t *testing.T) {
 		{"yx10"},
 		{"10xy"},
 		{"yxy"},
+		{"0x0"},
 	}
 	for _, c := range cases {
 		_, _, err := getDimensions(c.in)

@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	ErrDimensionsSeparator      = errors.New("Dimensions separator not found")
-	ErrDimensionsNonNegative    = errors.New("x and y must be non-negative")
+	ErrOffsetInvalid            = errors.New("Offset is invalid")
+	ErrOffsetSeparator          = errors.New("Offset separator not found")
+	ErrOffsetNonNegative        = errors.New("x and y must be non-negative")
 	ErrBothDimensionEqualToZero = errors.New("At least x and y must be greater than zero")
 	ErrCropDimensionEqualToZero = errors.New("Both x and y must be greater than zero")
 	ErrNotCropFormat            = errors.New("Not in crop format")
@@ -187,12 +188,18 @@ func getParamsSubstringStart(sp string) int {
 	return -1
 }
 
-func getDimensions(c string) (x int, y int, errs []error) {
+func getOffsets(c string) (x int, y int, errs []error) {
 	var err error
+
+	if len(c) <= 1 {
+		errs = append(errs, ErrOffsetInvalid)
+		return x, y, errs
+	}
+
 	div := strings.Index(c, "x")
 
 	if div == -1 {
-		errs = append(errs, ErrDimensionsSeparator)
+		errs = append(errs, ErrOffsetSeparator)
 		return x, y, errs
 	}
 
@@ -219,8 +226,14 @@ func getDimensions(c string) (x int, y int, errs []error) {
 	}
 
 	if x < 0 || y < 0 {
-		errs = append(errs, ErrDimensionsNonNegative)
+		errs = append(errs, ErrOffsetNonNegative)
 	}
+
+	return x, y, errs
+}
+
+func getDimensions(c string) (x int, y int, errs []error) {
+	x, y, errs = getOffsets(c)
 
 	if x == 0 && y == 0 {
 		errs = append(errs, ErrBothDimensionEqualToZero)
@@ -247,7 +260,7 @@ func extractCrop(c string) (crop Crop, errs []error) {
 		return crop, errs
 	}
 
-	x, y, errs1 := getDimensions(c[0:dot])
+	x, y, errs1 := getOffsets(c[0:dot])
 	width, height, errs2 := getCropDimensions(c[dot+1 : len(c)])
 
 	errs = append(errs, errs1...)
