@@ -60,7 +60,15 @@ func (i *Image) name() (name string, fullname string) {
 	return fullname[last+1 : len(fullname)], fullname
 }
 
-func Decode(path string) (transform Transform, err error, errs []error) {
+func getOutputFormat(output string, defaultOutputFormat string) string {
+	if output == "" {
+		return defaultOutputFormat
+	}
+
+	return output
+}
+
+func Decode(path string, defaultOutputFormat string) (transform Transform, errs []error, err error) {
 	t := Transform{}
 
 	paramsSubstringStart := getParamsSubstringStart(path)
@@ -80,18 +88,18 @@ func Decode(path string) (transform Transform, err error, errs []error) {
 		}
 
 		t.Image.Extension = unescapeRawUrlParts(extension)
-		t.Output = unescapeRawUrlParts(output)
+		t.Output = getOutputFormat(unescapeRawUrlParts(output), defaultOutputFormat)
 
-		return t, err, errs
+		return t, errs, err
 	}
 
 	imgId = path[0 : paramsSubstringStart-1]
 	paramsString, output = getFilePathParts(path[paramsSubstringStart-1 : len(path)])
 	t.Image.Id = unescapeRawUrlParts(imgId)
-	t.Output = unescapeRawUrlParts(output)
-	err, errs = extractParams(paramsString, output, &t)
+	t.Output = getOutputFormat(unescapeRawUrlParts(output), defaultOutputFormat)
+	err, errs = extractParams(paramsString, unescapeRawUrlParts(output), &t)
 
-	return t, err, errs
+	return t, errs, err
 }
 
 func Encode(transform Transform) (url string) {
@@ -317,7 +325,7 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 
 	extension := output
 
-	if pos != len(params) && params[pos] != t.Output && params[pos] != "" {
+	if pos != len(params) && params[pos] != "" {
 		extension = params[pos]
 		pos += 1
 	}

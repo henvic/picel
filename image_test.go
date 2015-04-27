@@ -314,7 +314,7 @@ func TestDecodingFailureUnknownParameter(t *testing.T) {
 		{"la__office/newborn__bunnies_raw_stars.jpg"},
 	}
 	for _, c := range cases {
-		_, err, _ := Decode(c.in)
+		_, _, err := Decode(c.in, "webp")
 
 		if err == nil {
 			t.Errorf("There should be errors due to invalid params for Decode(%q)", c.in)
@@ -334,10 +334,10 @@ func TestDecodingFailure(t *testing.T) {
 		{"la__office/newborn__bunnies_400x200:300xno_gif.jpg"},
 	}
 	for _, c := range cases {
-		_, err, _ := Decode(c.in)
+		_, _, err := Decode(c.in, "jpg")
 
-		if err == nil {
-			t.Errorf("There should be errors due to invalid params for Decode(%q)", c.in)
+		if err != ErrNonEmptyParameterQueue {
+			t.Errorf("There should be errors due to invalid / unprocessed params for Decode(%q)", c.in)
 		}
 	}
 }
@@ -458,6 +458,19 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 				Extension: "jpg",
 			},
 			Crop: Crop{
+				X:      0,
+				Y:      0,
+				Width:  800,
+				Height: 400,
+			},
+			Output: "jpg",
+		}, "foo__bah__h_0x0:800x400.jpg"},
+		{Transform{
+			Image: Image{
+				Id:        "foo_bah_h",
+				Extension: "jpg",
+			},
+			Crop: Crop{
 				X:      300,
 				Y:      300,
 				Width:  800,
@@ -528,10 +541,81 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 			t.Errorf("Encode(%+v) == %v, want %v", c.object, gotUrl, c.url)
 		}
 
-		gotObject, err, _ := Decode(c.url)
+		gotObject, _, err := Decode(c.url, "")
 
 		if err != nil {
 			t.Errorf("There should be no errors for Decode(%v)", c.url)
+		}
+
+		if reflect.DeepEqual(gotObject, c.object) != true {
+			t.Errorf("Decode(%v) == %+v, want %+v", c.url, gotObject, c.object)
+		}
+	}
+}
+
+func TestDecodingToDefaultOutputFormat(t *testing.T) {
+	t.Parallel()
+	cases := []struct {
+		object Transform
+		url    string
+	}{
+		{Transform{
+			Image: Image{
+				Id:        "la_office/newborn_bunnies",
+				Extension: "jpg",
+			},
+			Raw:    false,
+			Output: "other",
+		}, "la__office/newborn__bunnies",
+		},
+		{Transform{
+			Image: Image{
+				Id:        "la_office/newborn_bunnies",
+				Extension: "jpg",
+			},
+			Raw:    false,
+			Output: "other",
+		}, "la__office/newborn__bunnies_jpg",
+		},
+		{Transform{
+			Image: Image{
+				Id:        "la_office/newborn_bunnies",
+				Extension: "other",
+			},
+			Raw:    false,
+			Output: "other",
+		}, "la__office/newborn__bunnies_other",
+		},
+		{Transform{
+			Image: Image{
+				Id:        "la_office/newborn_bunnies",
+				Extension: "gif",
+			},
+			Raw:    false,
+			Output: "gif",
+		}, "la__office/newborn__bunnies.gif",
+		},
+		{Transform{
+			Image: Image{
+				Id:        "big_sur",
+				Extension: "jpg",
+			},
+			Crop: Crop{
+				X:      0,
+				Y:      0,
+				Width:  600,
+				Height: 600,
+			},
+			Output: "other",
+		}, "big__sur_0x0:600x600",
+		},
+	}
+	for _, c := range cases {
+		gotObject, _, err := Decode(c.url, "other")
+
+		if err != nil {
+			t.Errorf("There should be no errors for Decode(%v)", c.url)
+			t.Errorf("Decode(%v) == %+v, want %+v", c.url, gotObject, c.object)
 		}
 
 		if reflect.DeepEqual(gotObject, c.object) != true {
