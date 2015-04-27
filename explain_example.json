@@ -1,0 +1,20 @@
+{
+    "message": "Success. Image path parsed and decoded correctly",
+    "transform": {
+        "image": {
+            "id": "foo",
+            "extension": "jpg"
+        },
+        "original": false,
+        "width": 800,
+        "height": 600,
+        "crop": {
+            "x": 137,
+            "y": 0,
+            "width": 737,
+            "height": 450
+        },
+        "output": "webp"
+    },
+    "errors": null
+}
