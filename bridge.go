@@ -86,6 +86,10 @@ func processCwebp(t Transform, input string, output string) (err error) {
 func processImagick(t Transform, input string, output string) (err error) {
 	var params []string
 
+	if verbose {
+		params = append(params, "-verbose")
+	}
+
 	params = append(params, input)
 
 	params = append(params, "-strip")
@@ -111,10 +115,6 @@ func processImagick(t Transform, input string, output string) (err error) {
 
 		params = append(params, "-resize")
 		params = append(params, resize)
-	}
-
-	if verbose {
-		params = append(params, "-verbose")
 	}
 
 	output = t.Output + ":" + output
