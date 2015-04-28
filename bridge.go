@@ -1,9 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
-	"os"
 	"os/exec"
 	"strings"
 )
@@ -40,14 +40,21 @@ func Process(t Transform, input string, output string) (err error) {
 
 func callProgram(name string, params []string) error {
 	cmd := exec.Command(name, params...)
+	var bOut bytes.Buffer
+	var bErr bytes.Buffer
+	cmd.Stdout = &bOut
+	cmd.Stderr = &bErr
 
 	if verbose {
-		fmt.Println(fmt.Sprintf("%v %v", name, strings.Join(params, " ")))
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
+		std.out.Println(fmt.Sprintf("%v %v", name, strings.Join(params, " ")))
 	}
 
 	cmdErr := cmd.Run()
+
+	if verbose {
+		std.out.Println(string(bOut.Bytes()))
+		std.err.Println(string(bErr.Bytes()))
+	}
 
 	return cmdErr
 }

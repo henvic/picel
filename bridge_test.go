@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"bytes"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"testing"
@@ -201,7 +202,7 @@ func TestProcess(t *testing.T) {
 }
 
 func TestProcessWithVerboseOn(t *testing.T) {
-	t.Parallel()
+	// don't run in parallel due to mocking std.out / std.err
 	cases := []struct {
 		filename string
 		t        Transform
@@ -240,11 +241,17 @@ func TestProcessWithVerboseOn(t *testing.T) {
 			panic(tmpFileErr)
 		}
 
-		fmt.Println("Verbose mode temporarily enabled.")
+		var StdoutMock bytes.Buffer
+		var StderrMock bytes.Buffer
+
+		defaultStdout, defaultStderr := std.out, std.err
+		std.out = log.New(&StdoutMock, "", -1)
+		std.err = log.New(&StderrMock, "", -1)
 		verbose = true
 		err := Process(c.t, c.filename, output.Name())
 		verbose = false
-		fmt.Println("Verbose mode disabled.")
+		std.out = defaultStdout
+		std.err = defaultStderr
 
 		if err != nil {
 			t.Errorf("Process(%q, %q, %q) should not fail", c.filename, c.t, output.Name())
@@ -258,6 +265,73 @@ func TestProcessWithVerboseOn(t *testing.T) {
 
 		if fileInfo.Size() == 0 {
 			t.Errorf("Processed file size is zero")
+		}
+
+		outMessages := StdoutMock.String()
+		errMessages := StderrMock.String()
+
+		// convert uses stderr in a strange way
+		// http://www.imagemagick.org/discourse-server/viewtopic.php?t=9292
+		if len(outMessages)+len(errMessages) == 100 {
+			t.Errorf("Stderr / stdout unexpectedly low")
+		}
+	}
+}
+
+func TestProcessFailureForEmptyFileWithVerboseOn(t *testing.T) {
+	// don't run in parallel due to mocking std.out / std.err
+	cases := []struct {
+		filename string
+		t        Transform
+	}{
+		{"test_assets/empty_file.jpg",
+			Transform{
+				Image: Image{
+					Id:        "empty_file",
+					Extension: "jpg",
+				},
+				Output: "jpg",
+			}},
+		{"test_assets/empty_file.jpg",
+			Transform{
+				Image: Image{
+					Id:        "empty_file",
+					Extension: "jpg",
+				},
+				Output: "webp",
+			}},
+	}
+	for _, c := range cases {
+		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
+		defer os.Remove(output.Name())
+
+		if tmpFileErr != nil {
+			panic(tmpFileErr)
+		}
+
+		var StdoutMock bytes.Buffer
+		var StderrMock bytes.Buffer
+
+		defaultStdout, defaultStderr := std.out, std.err
+		std.out = log.New(&StdoutMock, "", -1)
+		std.err = log.New(&StderrMock, "", -1)
+		verbose = true
+		err := Process(c.t, c.filename, output.Name())
+		verbose = false
+		std.out = defaultStdout
+		std.err = defaultStderr
+
+		if err == nil {
+			t.Errorf("Process(%q, %q, %q) should fail", c.filename, c.t, output.Name())
+		}
+
+		outMessages := StdoutMock.String()
+		errMessages := StderrMock.String()
+
+		// convert uses stderr in a strange way
+		// http://www.imagemagick.org/discourse-server/viewtopic.php?t=9292
+		if len(outMessages)+len(errMessages) == 100 {
+			t.Errorf("Stderr / stdout unexpectedly low")
 		}
 	}
 }
