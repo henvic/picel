@@ -33,7 +33,7 @@ func TestName(t *testing.T) {
 		name, fullname := c.i.name()
 
 		if name != c.name || fullname != c.fullname {
-			t.Errorf("c.i.name() == %q %q, want %q %q", name, fullname, c.name, c.fullname)
+			t.Errorf("i.name() == %q %q, want %q %q", name, fullname, c.name, c.fullname)
 		}
 	}
 }

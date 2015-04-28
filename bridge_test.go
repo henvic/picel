@@ -37,7 +37,7 @@ func TestProcessInputFileNotFound(t *testing.T) {
 	err := Process(transform, file, output.Name())
 
 	if err == nil {
-		t.Errorf("Process(%v, %v) should fail", file, transform)
+		t.Errorf("Process(%q, %q) should fail", file, transform)
 	}
 }
 
@@ -62,7 +62,7 @@ func TestInvalidProcess(t *testing.T) {
 		err := Process(c.t, c.input, c.output)
 
 		if err != ErrOutputFormatNotSupported {
-			t.Errorf("Process(%v, %v, %v) unknown output format should make it fail", c.t, c.input, c.output)
+			t.Errorf("Process(%q, %q, %q) unknown output format should make it fail", c.t, c.input, c.output)
 		}
 	}
 }
@@ -185,7 +185,7 @@ func TestProcess(t *testing.T) {
 		err := Process(c.t, c.filename, output.Name())
 
 		if err != nil {
-			t.Errorf("Process(%v, %v, %v) should not fail", c.filename, c.t, output.Name())
+			t.Errorf("Process(%q, %q, %q) should not fail", c.filename, c.t, output.Name())
 		}
 
 		fileInfo, fileInfoErr := os.Stat(output.Name())
@@ -247,7 +247,7 @@ func TestProcessWithVerboseOn(t *testing.T) {
 		fmt.Println("Verbose mode disabled.")
 
 		if err != nil {
-			t.Errorf("Process(%v, %v, %v) should not fail", c.filename, c.t, output.Name())
+			t.Errorf("Process(%q, %q, %q) should not fail", c.filename, c.t, output.Name())
 		}
 
 		fileInfo, fileInfoErr := os.Stat(output.Name())

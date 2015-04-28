@@ -113,7 +113,7 @@ func TestLoad(t *testing.T) {
 		}
 
 		if err != nil || int(size) != len(c.word) || fileInfo.Size() != size {
-			t.Errorf("Load(%v, %v) == %v %v, want %v %v", ts.URL, file.Name(), size, err, len(c.word), nil)
+			t.Errorf("Load(%q, %q) == %q %q, want %q %q", ts.URL, file.Name(), size, err, len(c.word), nil)
 		}
 	}
 }
