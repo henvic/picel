@@ -174,6 +174,20 @@ func TestProcess(t *testing.T) {
 				},
 				Output: "webp",
 			}},
+		{"test_assets/barter.gif",
+			Transform{
+				Image: Image{
+					Id:        "test_assets/barter",
+					Extension: "gif",
+				},
+				Crop: Crop{
+					X:      0,
+					Y:      0,
+					Width:  100,
+					Height: 200,
+				},
+				Output: "webp",
+			}},
 	}
 	for _, c := range cases {
 		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
@@ -229,8 +243,31 @@ func TestProcessWithVerboseOn(t *testing.T) {
 					Id:        "test_assets/barter",
 					Extension: "gif",
 				},
+				Output: "webp",
+			}},
+		{"test_assets/barter.gif",
+			Transform{
+				Image: Image{
+					Id:        "test_assets/barter",
+					Extension: "gif",
+				},
 				Width:  100,
 				Output: "gif",
+			}},
+		{"test_assets/barter.gif",
+			Transform{
+				Image: Image{
+					Id:        "test_assets/barter",
+					Extension: "gif",
+				},
+				Width: 100,
+				Crop: Crop{
+					X:      0,
+					Y:      0,
+					Width:  200,
+					Height: 300,
+				},
+				Output: "webp",
 			}},
 	}
 	for _, c := range cases {
@@ -291,6 +328,15 @@ func TestProcessFailureForEmptyFileWithVerboseOn(t *testing.T) {
 					Extension: "jpg",
 				},
 				Output: "jpg",
+			}},
+		{"test_assets/empty_file.gif",
+			Transform{
+				Image: Image{
+					Id:        "empty_file",
+					Extension: "gif",
+				},
+				Height: 100,
+				Output: "webp",
 			}},
 		{"test_assets/empty_file.jpg",
 			Transform{

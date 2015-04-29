@@ -10,6 +10,7 @@ import (
 
 const (
 	WEBP_QUALITY    = "92"
+	IMAGICK_QUALITY = "92"
 )
 
 var (
@@ -35,7 +36,7 @@ func Process(t Transform, input string, output string) (err error) {
 		return processImagick(t, input, output)
 	}
 
-	return processCwebp(t, input, output)
+	return processWebp(t, input, output)
 }
 
 func callProgram(name string, params []string) error {
@@ -57,6 +58,42 @@ func callProgram(name string, params []string) error {
 	}
 
 	return cmdErr
+}
+
+func processWebp(t Transform, input string, output string) (err error) {
+	if t.Extension != "gif" {
+		return processCwebp(t, input, output)
+	}
+
+	if t.Crop.Width != 0 || t.Crop.Height != 0 || t.Width != 0 || t.Height != 0 {
+		t.Output = "gif"
+		err = processImagick(t, input, output)
+		t.Output = "webp"
+		input = output
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return processGif2Webp(input, output)
+}
+
+func processGif2Webp(input string, output string) (err error) {
+	var params []string
+
+	params = append(params, "-q")
+	params = append(params, WEBP_QUALITY)
+
+	if verbose {
+		params = append(params, "-v")
+	}
+
+	params = append(params, input)
+	params = append(params, "-o")
+	params = append(params, output)
+
+	return callProgram("gif2webp", params)
 }
 
 func processCwebp(t Transform, input string, output string) (err error) {
@@ -96,6 +133,10 @@ func processImagick(t Transform, input string, output string) (err error) {
 	if verbose {
 		params = append(params, "-verbose")
 	}
+
+	params = append(params, "-quality")
+
+	params = append(params, IMAGICK_QUALITY)
 
 	params = append(params, input)
 
