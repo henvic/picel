@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	WEBP_QUALITY = "95"
+	WEBP_QUALITY    = "92"
 )
 
 var (
