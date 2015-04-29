@@ -9,6 +9,10 @@ import (
 	"testing"
 )
 
+type LoadProvider struct {
+	word string
+}
+
 func TestLoadWithInvalidFilename(t *testing.T) {
 	t.Parallel()
 	_, err := Load("0/foo.png", "")
@@ -89,14 +93,7 @@ func TestLoad(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(handler))
 	defer ts.Close()
 
-	cases := []struct {
-		word string
-	}{
-		{"/x"},
-		{"/xyz"},
-		{"/content"},
-	}
-	for _, c := range cases {
+	for _, c := range LoadCases {
 		file, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
 		defer os.Remove(file.Name())
 

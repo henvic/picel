@@ -5,31 +5,98 @@ import (
 	"testing"
 )
 
+type NameProvider struct {
+	i        Image
+	name     string
+	fullname string
+}
+
+type EscapeRawUrlPartsProvider struct {
+	unescaped string
+	escaped   string
+}
+
+type EncodeCropProvider struct {
+	in   Crop
+	want string
+}
+
+type EncodeDimensionProvider struct {
+	in   Transform
+	want string
+}
+
+type EncodeParamProvider struct {
+	in   string
+	want string
+}
+
+type ExtractCropProvider struct {
+	in   string
+	want Crop
+}
+
+type ExtractCropFailureProvider struct {
+	in string
+}
+
+type GetParamsSubstringProvider struct {
+	in   string
+	want int
+}
+
+type GetOffsetsProvider struct {
+	in string
+	x  int
+	y  int
+}
+
+type GetOffsetsFailureProvider struct {
+	in string
+}
+
+type GetDimensionsProvider struct {
+	in string
+	x  int
+	y  int
+}
+
+type GetDimensionsFailureProvider struct {
+	in string
+}
+
+type GetOutputProvider struct {
+	in     string
+	prefix string
+	suffix string
+}
+
+type DecodingFailureUnknownParameterProvider struct {
+	in string
+}
+
+type DecodingFailureProvider struct {
+	in string
+}
+
+type CompeteEncodingAndDecodingProvider struct {
+	object Transform
+	url    string
+}
+
+type DecodingToDefaultOutputFormatProvider struct {
+	object Transform
+	url    string
+}
+
+type IncompleteEncodingProvider struct {
+	object Transform
+	url    string
+}
+
 func TestName(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		i        Image
-		name     string
-		fullname string
-	}{
-		{Image{
-			Id:        "help/staff",
-			Extension: "jpg",
-		}, "staff.jpg", "help/staff.jpg"},
-		{Image{
-			Id:        "section/help/staff",
-			Extension: "jpg",
-		}, "staff.jpg", "section/help/staff.jpg"},
-		{Image{
-			Id:        "dog",
-			Extension: "png",
-		}, "dog.png", "dog.png"},
-		{Image{
-			Id:        "dog",
-			Extension: "",
-		}, "dog", "dog"},
-	}
-	for _, c := range cases {
+	for _, c := range NameCases {
 		name, fullname := c.i.name()
 
 		if name != c.name || fullname != c.fullname {
@@ -40,18 +107,7 @@ func TestName(t *testing.T) {
 
 func TestEscapeRawUrlParts(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		unescaped string
-		escaped   string
-	}{
-		{"", ""},
-		{"_", "__"},
-		{"__", "____"},
-		{"x_", "x__"},
-		{"_y", "__y"},
-		{"x_y", "x__y"},
-	}
-	for _, c := range cases {
+	for _, c := range EscapeRawUrlPartsCases {
 		esc := escapeRawUrlParts(c.unescaped)
 		unesc := unescapeRawUrlParts(c.escaped)
 
@@ -67,18 +123,7 @@ func TestEscapeRawUrlParts(t *testing.T) {
 
 func TestEncodeCrop(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in   Crop
-		want string
-	}{
-		{Crop{
-			X:      0,
-			Y:      0,
-			Width:  10,
-			Height: 10,
-		}, "0x0:10x10"},
-	}
-	for _, c := range cases {
+	for _, c := range EncodeCropCases {
 		got := encodeCrop(c.in)
 
 		if got != c.want {
@@ -89,26 +134,7 @@ func TestEncodeCrop(t *testing.T) {
 
 func TestEncodeDimension(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in   Transform
-		want string
-	}{
-		{Transform{
-			Width:  0,
-			Height: 0,
-		}, ""},
-		{Transform{
-			Width: 10,
-		}, "10x"},
-		{Transform{
-			Height: 10,
-		}, "x10"},
-		{Transform{
-			Width:  10,
-			Height: 10,
-		}, "10x10"},
-	}
-	for _, c := range cases {
+	for _, c := range EncodeDimensionCases {
 		got := EncodeDimension(c.in)
 
 		if got != c.want {
@@ -119,14 +145,7 @@ func TestEncodeDimension(t *testing.T) {
 
 func TestEncodeParam(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in   string
-		want string
-	}{
-		{"", ""},
-		{"x", "_x"},
-	}
-	for _, c := range cases {
+	for _, c := range EncodeParamCases {
 		got := encodeParam(c.in)
 
 		if got != c.want {
@@ -137,19 +156,7 @@ func TestEncodeParam(t *testing.T) {
 
 func TestExtractCrop(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in   string
-		want Crop
-	}{
-		{"10x20:400x300",
-			Crop{
-				X:      10,
-				Y:      20,
-				Width:  400,
-				Height: 300,
-			}},
-	}
-	for _, c := range cases {
+	for _, c := range ExtractCropCases {
 		crop, _ := extractCrop(c.in)
 
 		if reflect.DeepEqual(crop, c.want) != true {
@@ -160,16 +167,7 @@ func TestExtractCrop(t *testing.T) {
 
 func TestExtractCropFailure(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in string
-	}{
-		{""},
-		{"10x20:x300"},
-		{"10x20:400x"},
-		{"10x:x300"},
-		{"20:400"},
-	}
-	for _, c := range cases {
+	for _, c := range ExtractCropFailureCases {
 		_, err := extractCrop(c.in)
 
 		if err == nil {
@@ -180,16 +178,7 @@ func TestExtractCropFailure(t *testing.T) {
 
 func TestGetParamsSubstringStart(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in   string
-		want int
-	}{
-		{"", -1},
-		{"little__kittens", -1},
-		{"dogs_4x4.png", 5},
-		{"animals/turtles__newborn_4x4.jpg", 25},
-	}
-	for _, c := range cases {
+	for _, c := range GetParamsSubstringStartCases {
 		got := getParamsSubstringStart(c.in)
 
 		if got != c.want {
@@ -200,17 +189,7 @@ func TestGetParamsSubstringStart(t *testing.T) {
 
 func TestGetOffsets(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in string
-		x  int
-		y  int
-	}{
-		{"500x100", 500, 100},
-		{"300x", 300, 0},
-		{"x300", 0, 300},
-		{"0x0", 0, 0},
-	}
-	for _, c := range cases {
+	for _, c := range GetOffsetsCases {
 		x, y, err := getOffsets(c.in)
 
 		if x != c.x || y != c.y || len(err) != 0 {
@@ -221,19 +200,7 @@ func TestGetOffsets(t *testing.T) {
 
 func TestGetOffsetsFailure(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in string
-	}{
-		{""},
-		{"-1x10"},
-		{"10x-1"},
-		{"-1x-1"},
-		{"x"},
-		{"yx10"},
-		{"10xy"},
-		{"yxy"},
-	}
-	for _, c := range cases {
+	for _, c := range GetOffsetsFailureCases {
 		_, _, err := getOffsets(c.in)
 
 		if err == nil {
@@ -244,16 +211,7 @@ func TestGetOffsetsFailure(t *testing.T) {
 
 func TestGetDimensions(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in string
-		x  int
-		y  int
-	}{
-		{"500x100", 500, 100},
-		{"300x", 300, 0},
-		{"x300", 0, 300},
-	}
-	for _, c := range cases {
+	for _, c := range GetDimensionsCases {
 		x, y, err := getDimensions(c.in)
 
 		if x != c.x || y != c.y || len(err) != 0 {
@@ -264,20 +222,7 @@ func TestGetDimensions(t *testing.T) {
 
 func TestGetDimensionsFailure(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in string
-	}{
-		{""},
-		{"-1x10"},
-		{"10x-1"},
-		{"-1x-1"},
-		{"x"},
-		{"yx10"},
-		{"10xy"},
-		{"yxy"},
-		{"0x0"},
-	}
-	for _, c := range cases {
+	for _, c := range GetDimensionsFailureCases {
 		_, _, err := getDimensions(c.in)
 
 		if err == nil {
@@ -288,16 +233,7 @@ func TestGetDimensionsFailure(t *testing.T) {
 
 func TestGetOutput(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in     string
-		prefix string
-		suffix string
-	}{
-		{"", "", ""},
-		{"file", "file", ""},
-		{"file.out", "file", "out"},
-	}
-	for _, c := range cases {
+	for _, c := range GetOutputCases {
 		prefix, suffix := getFilePathParts(c.in)
 
 		if prefix != c.prefix || suffix != c.suffix {
@@ -308,12 +244,7 @@ func TestGetOutput(t *testing.T) {
 
 func TestDecodingFailureUnknownParameter(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in string
-	}{
-		{"la__office/newborn__bunnies_raw_stars.jpg"},
-	}
-	for _, c := range cases {
+	for _, c := range DecodingFailureUnknownParameterCases {
 		_, _, err := Decode(c.in, "webp")
 
 		if err == nil {
@@ -324,16 +255,7 @@ func TestDecodingFailureUnknownParameter(t *testing.T) {
 
 func TestDecodingFailure(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		in string
-	}{
-		{"_"},
-		{"la__office/newborn__bunnies_.jpg"},
-		{"la__office/newborn__bunnies_400x200:300_gif.jpg"},
-		{"la__office/newborn__bunnies_400x200:nox300_gif.jpg"},
-		{"la__office/newborn__bunnies_400x200:300xno_gif.jpg"},
-	}
-	for _, c := range cases {
+	for _, c := range DecodingFailureCases {
 		_, _, err := Decode(c.in, "jpg")
 
 		if err != ErrNonEmptyParameterQueue {
@@ -344,197 +266,7 @@ func TestDecodingFailure(t *testing.T) {
 
 func TestCompleteEncodingAndDecoding(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		object Transform
-		url    string
-	}{
-		{Transform{
-			Image: Image{
-				Id:        "help/staff",
-				Extension: "jpg",
-			},
-			Output: "jpg",
-		}, "help/staff.jpg"},
-		{Transform{
-			Image: Image{
-				Id:        "help/staff",
-				Extension: "webp",
-			},
-			Output: "webp",
-		}, "help/staff.webp"},
-		{Transform{
-			Image: Image{
-				Id:        "help/staff",
-				Extension: "webp",
-			},
-			Width:  800,
-			Output: "webp",
-		}, "help/staff_800x.webp"},
-		{Transform{
-			Image: Image{
-				Id:        "help/staff",
-				Extension: "jpg",
-			},
-			Output: "webp",
-		}, "help/staff_jpg.webp"},
-		{Transform{
-			Image: Image{
-				Id:        "airplane_flying_low",
-				Extension: "jpg",
-			},
-			Output: "webp",
-		}, "airplane__flying__low_jpg.webp"},
-		{Transform{
-			Image: Image{
-				Id:        "dog",
-				Extension: "jpg",
-			},
-			Output: "",
-		}, "dog"},
-		{Transform{
-			Image: Image{
-				Id:        "help/foo",
-				Extension: "jpg",
-			},
-			Output: "",
-			Width:  400,
-			Height: 800,
-		}, "help/foo_400x800"},
-		{Transform{
-			Image: Image{
-				Id:        "help/foo",
-				Extension: "jpg",
-			},
-			Output: "",
-			Width:  400,
-		}, "help/foo_400x"},
-		{Transform{
-			Image: Image{
-				Id:        "help/foo",
-				Extension: "jpg",
-			},
-			Output: "",
-			Height: 800,
-		}, "help/foo_x800"},
-		{Transform{
-			Image: Image{
-				Id:        "adoption_shelters_in_nyc/pretty_dogs",
-				Extension: "jpg",
-			},
-			Output: "webp",
-			Width:  400,
-			Height: 800,
-		}, "adoption__shelters__in__nyc/pretty__dogs_400x800_jpg.webp"},
-		{Transform{
-			Image: Image{
-				Id:        "airplane_360",
-				Extension: "gif",
-			},
-			Output: "gif",
-		}, "airplane__360.gif"},
-		{Transform{
-			Image: Image{
-				Id:        "airplane_360",
-				Extension: "gif",
-			},
-		}, "airplane__360_gif"},
-		{Transform{
-			Image: Image{
-				Id:        "airplane_360",
-				Extension: "gif",
-			},
-			Output: "webp",
-		}, "airplane__360_gif.webp"},
-		{Transform{
-			Image: Image{
-				Id:        "foo",
-				Extension: "jpg",
-			},
-			Output: "",
-		}, "foo"},
-		{Transform{
-			Image: Image{
-				Id:        "foo_bah_h",
-				Extension: "jpg",
-			},
-			Crop: Crop{
-				X:      0,
-				Y:      0,
-				Width:  800,
-				Height: 400,
-			},
-			Output: "jpg",
-		}, "foo__bah__h_0x0:800x400.jpg"},
-		{Transform{
-			Image: Image{
-				Id:        "foo_bah_h",
-				Extension: "jpg",
-			},
-			Crop: Crop{
-				X:      300,
-				Y:      300,
-				Width:  800,
-				Height: 400,
-			},
-			Output: "jpg",
-		}, "foo__bah__h_300x300:800x400.jpg"},
-		{Transform{
-			Image: Image{
-				Id:        "foo",
-				Extension: "jpg",
-			},
-			Width:  800,
-			Height: 600,
-			Crop: Crop{
-				X:      137,
-				Y:      0,
-				Width:  737,
-				Height: 450,
-			},
-			Output: "webp",
-		}, "foo_137x0:737x450_800x600_jpg.webp",
-		},
-		{Transform{
-			Image: Image{
-				Id:        "adoption_shelters_in_nyc/pretty_dogs",
-				Extension: "jpg",
-			},
-			Width:  800,
-			Height: 600,
-			Crop: Crop{
-				X:      137,
-				Y:      1,
-				Width:  737,
-				Height: 451,
-			},
-			Output: "webp",
-		}, "adoption__shelters__in__nyc/pretty__dogs_137x1:737x451_800x600_jpg.webp",
-		},
-		{Transform{
-			Image: Image{
-				Id:        "adoption_shelters_in_nyc/pretty_dogs",
-				Extension: "jpg",
-			},
-			Crop: Crop{
-				X:      137,
-				Y:      1,
-				Width:  737,
-				Height: 451,
-			},
-			Output: "webp",
-		}, "adoption__shelters__in__nyc/pretty__dogs_137x1:737x451_jpg.webp",
-		},
-		{Transform{
-			Image: Image{
-				Id:        "la_office/newborn_bunnies",
-				Extension: "jpg",
-			},
-			Raw:    true,
-			Output: "jpg",
-		}, "la__office/newborn__bunnies_raw.jpg",
-		},
-	}
-	for _, c := range cases {
+	for _, c := range CompeteEncodingAndDecodingCases {
 		gotUrl := Encode(c.object)
 
 		if gotUrl != c.url {
@@ -555,62 +287,7 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 
 func TestDecodingToDefaultOutputFormat(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		object Transform
-		url    string
-	}{
-		{Transform{
-			Image: Image{
-				Id:        "la_office/newborn_bunnies",
-				Extension: "jpg",
-			},
-			Raw:    false,
-			Output: "other",
-		}, "la__office/newborn__bunnies",
-		},
-		{Transform{
-			Image: Image{
-				Id:        "la_office/newborn_bunnies",
-				Extension: "jpg",
-			},
-			Raw:    false,
-			Output: "other",
-		}, "la__office/newborn__bunnies_jpg",
-		},
-		{Transform{
-			Image: Image{
-				Id:        "la_office/newborn_bunnies",
-				Extension: "other",
-			},
-			Raw:    false,
-			Output: "other",
-		}, "la__office/newborn__bunnies_other",
-		},
-		{Transform{
-			Image: Image{
-				Id:        "la_office/newborn_bunnies",
-				Extension: "gif",
-			},
-			Raw:    false,
-			Output: "gif",
-		}, "la__office/newborn__bunnies.gif",
-		},
-		{Transform{
-			Image: Image{
-				Id:        "big_sur",
-				Extension: "jpg",
-			},
-			Crop: Crop{
-				X:      0,
-				Y:      0,
-				Width:  600,
-				Height: 600,
-			},
-			Output: "other",
-		}, "big__sur_0x0:600x600",
-		},
-	}
-	for _, c := range cases {
+	for _, c := range DecodingToDefaultOutputFormatCases {
 		gotObject, _, err := Decode(c.url, "other")
 
 		if err != nil {
@@ -626,32 +303,7 @@ func TestDecodingToDefaultOutputFormat(t *testing.T) {
 
 func TestIncompleteEncoding(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		object Transform
-		url    string
-	}{
-		{Transform{
-			Image: Image{
-				Id:        "la_office/newborn_bunnies",
-				Extension: "jpg",
-			},
-			Raw: true,
-		}, "la__office/newborn__bunnies_raw.jpg",
-		},
-		{Transform{
-			Image: Image{
-				Id: "foo",
-			},
-			Output: "",
-		}, "foo"},
-		{Transform{
-			Image: Image{
-				Id: "help/staff",
-			},
-			Output: "webp",
-		}, "help/staff_jpg.webp"},
-	}
-	for _, c := range cases {
+	for _, c := range IncompleteEncodingCases {
 		gotUrl := Encode(c.object)
 
 		if gotUrl != c.url {

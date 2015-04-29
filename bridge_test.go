@@ -9,6 +9,17 @@ import (
 	"testing"
 )
 
+type ProcessProvider struct {
+	filename string
+	t        Transform
+}
+
+type InvalidProcessProvider struct {
+	t      Transform
+	input  string
+	output string
+}
+
 func init() {
 	// binary test assets are stored in a helper branch for neatness
 	exec.Command("git", "checkout", "test_assets", "--", "test_assets").Run()
@@ -44,22 +55,7 @@ func TestProcessInputFileNotFound(t *testing.T) {
 
 func TestInvalidProcess(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		t      Transform
-		input  string
-		output string
-	}{
-		{Transform{
-			Image: Image{
-				Id:        "20120528-IMG_5236",
-				Extension: "jpg",
-			},
-			Output: "unknown",
-		},
-			"foo.png",
-			"foo.unknown"},
-	}
-	for _, c := range cases {
+	for _, c := range InvalidProcessCases {
 		err := Process(c.t, c.input, c.output)
 
 		if err != ErrOutputFormatNotSupported {
@@ -70,126 +66,7 @@ func TestInvalidProcess(t *testing.T) {
 
 func TestProcess(t *testing.T) {
 	t.Parallel()
-	cases := []struct {
-		filename string
-		t        Transform
-	}{
-		{"test_assets/golden-gate-bridge.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/golden-gate-bridge",
-					Extension: "jpg",
-				},
-				Output: "jpg",
-			}},
-		{"test_assets/raccoons.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/raccoons",
-					Extension: "jpg",
-				},
-				Width:  100,
-				Output: "jpg",
-			}},
-		{"test_assets/golden-gate-bridge.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/golden-gate-bridge",
-					Extension: "jpg",
-				},
-				Height: 100,
-				Output: "jpg",
-			}},
-		{"test_assets/golden-gate-bridge.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/golden-gate-bridge",
-					Extension: "jpg",
-				},
-				Width:  100,
-				Height: 100,
-				Output: "jpg",
-			}},
-		{"test_assets/golden-gate-bridge.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/golden-gate-bridge",
-					Extension: "jpg",
-				},
-				Crop: Crop{
-					X:      0,
-					Y:      0,
-					Width:  100,
-					Height: 200,
-				},
-				Output: "jpg",
-			}},
-		{"test_assets/rocks_waves_big_sur_2.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/rocks_waves_big_sur_2",
-					Extension: "jpg",
-				},
-				Output: "webp",
-			}},
-		{"test_assets/rocks_waves_big_sur_1.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/rocks_waves_big_sur_1",
-					Extension: "jpg",
-				},
-				Width:  100,
-				Output: "webp",
-			}},
-		{"test_assets/rocks_waves_big_sur_1.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/rocks_waves_big_sur_1",
-					Extension: "jpg",
-				},
-				Height: 100,
-				Output: "webp",
-			}},
-		{"test_assets/rocks_waves_big_sur_1.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/rocks_waves_big_sur_1",
-					Extension: "jpg",
-				},
-				Width:  100,
-				Height: 100,
-				Output: "webp",
-			}},
-		{"test_assets/raccoons.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/raccoons",
-					Extension: "jpg",
-				},
-				Crop: Crop{
-					X:      0,
-					Y:      0,
-					Width:  100,
-					Height: 200,
-				},
-				Output: "webp",
-			}},
-		{"test_assets/barter.gif",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/barter",
-					Extension: "gif",
-				},
-				Crop: Crop{
-					X:      0,
-					Y:      0,
-					Width:  100,
-					Height: 200,
-				},
-				Output: "webp",
-			}},
-	}
-	for _, c := range cases {
+	for _, c := range ProcessCases {
 		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
 		defer os.Remove(output.Name())
 
@@ -217,60 +94,7 @@ func TestProcess(t *testing.T) {
 
 func TestProcessWithVerboseOn(t *testing.T) {
 	// don't run in parallel due to mocking std.out / std.err
-	cases := []struct {
-		filename string
-		t        Transform
-	}{
-		{"test_assets/insects.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/insects",
-					Extension: "jpg",
-				},
-				Output: "jpg",
-			}},
-		{"test_assets/insects.jpg",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/insects",
-					Extension: "jpg",
-				},
-				Output: "webp",
-			}},
-		{"test_assets/barter.gif",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/barter",
-					Extension: "gif",
-				},
-				Output: "webp",
-			}},
-		{"test_assets/barter.gif",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/barter",
-					Extension: "gif",
-				},
-				Width:  100,
-				Output: "gif",
-			}},
-		{"test_assets/barter.gif",
-			Transform{
-				Image: Image{
-					Id:        "test_assets/barter",
-					Extension: "gif",
-				},
-				Width: 100,
-				Crop: Crop{
-					X:      0,
-					Y:      0,
-					Width:  200,
-					Height: 300,
-				},
-				Output: "webp",
-			}},
-	}
-	for _, c := range cases {
+	for _, c := range ProcessCasesForVerboseOn {
 		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
 		defer os.Remove(output.Name())
 
@@ -317,37 +141,7 @@ func TestProcessWithVerboseOn(t *testing.T) {
 
 func TestProcessFailureForEmptyFileWithVerboseOn(t *testing.T) {
 	// don't run in parallel due to mocking std.out / std.err
-	cases := []struct {
-		filename string
-		t        Transform
-	}{
-		{"test_assets/empty_file.jpg",
-			Transform{
-				Image: Image{
-					Id:        "empty_file",
-					Extension: "jpg",
-				},
-				Output: "jpg",
-			}},
-		{"test_assets/empty_file.gif",
-			Transform{
-				Image: Image{
-					Id:        "empty_file",
-					Extension: "gif",
-				},
-				Height: 100,
-				Output: "webp",
-			}},
-		{"test_assets/empty_file.jpg",
-			Transform{
-				Image: Image{
-					Id:        "empty_file",
-					Extension: "jpg",
-				},
-				Output: "webp",
-			}},
-	}
-	for _, c := range cases {
+	for _, c := range ProcessFailureForEmptyFileWithVerboseOnCases {
 		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
 		defer os.Remove(output.Name())
 
