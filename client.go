@@ -1,4 +1,4 @@
-package main
+package picel
 
 import (
 	"errors"
