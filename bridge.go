@@ -17,16 +17,16 @@ var (
 	ErrOutputFormatNotSupported = errors.New("The requested output format is not supported")
 )
 
-func Process(t Transform, input string, output string) (err error) {
-	formats := map[string]string{
-		"jpg":  "Imagick",
-		"gif":  "Imagick",
-		"png":  "Imagick",
-		"pdf":  "Imagick",
-		"webp": "Cwebp",
-	}
+var InputFormats = map[string]string{
+	"jpg":  "Imagick",
+	"gif":  "Imagick",
+	"png":  "Imagick",
+	"pdf":  "Imagick",
+	"webp": "Cwebp",
+}
 
-	tool, valid := formats[t.Output]
+func Process(t Transform, input string, output string) (err error) {
+	tool, valid := InputFormats[t.Output]
 
 	if !valid {
 		return ErrOutputFormatNotSupported
