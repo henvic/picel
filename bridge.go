@@ -22,7 +22,7 @@ var InputFormats = map[string]string{
 	"gif":  "Imagick",
 	"png":  "Imagick",
 	"pdf":  "Imagick",
-	"webp": "Cwebp",
+	"webp": "Webp",
 }
 
 func Process(t Transform, input string, output string) (err error) {
