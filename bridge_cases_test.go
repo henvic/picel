@@ -9,6 +9,14 @@ var ProcessCases = []ProcessProvider{
 			},
 			Output: "jpg",
 		}},
+	{"test_assets/insects-2.JPEG",
+		Transform{
+			Image: Image{
+				Id:        "test_assets/insects",
+				Extension: "JPEG",
+			},
+			Output: "JPEG",
+		}},
 	{"test_assets/raccoons.jpg",
 		Transform{
 			Image: Image{

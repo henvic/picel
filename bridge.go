@@ -17,8 +17,9 @@ var (
 	ErrOutputFormatNotSupported = errors.New("The requested output format is not supported")
 )
 
-var InputFormats = map[string]string{
+var OutputFormats = map[string]string{
 	"jpg":  "Imagick",
+	"jpeg": "Imagick",
 	"gif":  "Imagick",
 	"png":  "Imagick",
 	"pdf":  "Imagick",
@@ -26,7 +27,7 @@ var InputFormats = map[string]string{
 }
 
 func Process(t Transform, input string, output string) (err error) {
-	tool, valid := InputFormats[t.Output]
+	tool, valid := OutputFormats[strings.ToLower(t.Output)]
 
 	if !valid {
 		return ErrOutputFormatNotSupported
@@ -142,9 +143,12 @@ func processImagick(t Transform, input string, output string) (err error) {
 
 	params = append(params, "-strip")
 
-	if t.Crop.Width != 0 && t.Crop.Height != 0 {
+	c := t.Crop
+
+	if c.Width != 0 && c.Height != 0 {
+		crop := fmt.Sprintf("%dx%d+%d+%d", c.Width, c.Height, c.X, c.Y)
 		params = append(params, "-crop")
-		params = append(params, fmt.Sprintf("%dx%d+%d+%d", t.Crop.Width, t.Crop.Height, t.Crop.X, t.Crop.Y))
+		params = append(params, crop)
 		params = append(params, "+repage")
 	}
 
@@ -165,7 +169,7 @@ func processImagick(t Transform, input string, output string) (err error) {
 		params = append(params, resize)
 	}
 
-	output = t.Output + ":" + output
+	output = strings.ToLower(t.Output) + ":" + output
 
 	params = append(params, output)
 
