@@ -1,9 +1,17 @@
+/*
+picel (picture element) is an image processing micro service.
+
+	https://github.com/henvic/picel
+
+*/
+
 package picel
 
 import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/henvic/picel/bridge"
 	"io/ioutil"
 	"log"
 	"net/http"
