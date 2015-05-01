@@ -87,7 +87,7 @@ func processingHandler(filename string, t image.Transform, w http.ResponseWriter
 		return
 	}
 
-	output, _ := ioutil.TempFile(os.TempDir(), "ips")
+	output, _ := ioutil.TempFile(os.TempDir(), "picel")
 	outputFilename := output.Name()
 	defer os.Remove(outputFilename)
 
@@ -102,7 +102,7 @@ func processingHandler(filename string, t image.Transform, w http.ResponseWriter
 }
 
 func loadingHandler(t image.Transform, w http.ResponseWriter, r *http.Request) {
-	file, _ := ioutil.TempFile(os.TempDir(), "ips")
+	file, _ := ioutil.TempFile(os.TempDir(), "picel")
 	defer os.Remove(file.Name())
 	filename := file.Name()
 

@@ -31,7 +31,7 @@ func init() {
 }
 
 func showVersion() {
-	fmt.Println("ips version", VERSION)
+	fmt.Println("picel version", VERSION)
 }
 
 func existsDependency(cmd string) bool {

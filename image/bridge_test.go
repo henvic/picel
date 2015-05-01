@@ -29,7 +29,7 @@ func init() {
 
 func TestProcessInputFileNotFound(t *testing.T) {
 	t.Parallel()
-	output, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
+	output, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
 
 	if tmpFileErr != nil {
 		panic(tmpFileErr)
@@ -68,7 +68,7 @@ func TestInvalidProcess(t *testing.T) {
 func TestProcess(t *testing.T) {
 	t.Parallel()
 	for _, c := range ProcessCases {
-		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
+		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
 		defer os.Remove(output.Name())
 
 		if tmpFileErr != nil {
@@ -96,7 +96,7 @@ func TestProcess(t *testing.T) {
 func TestProcessWithVerboseOn(t *testing.T) {
 	// don't run in parallel due to mocking logger.Stdout / logger.Stderr
 	for _, c := range ProcessCasesForVerboseOn {
-		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
+		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
 		defer os.Remove(output.Name())
 
 		if tmpFileErr != nil {
@@ -144,7 +144,7 @@ func TestProcessWithVerboseOn(t *testing.T) {
 func TestProcessFailureForEmptyFileWithVerboseOn(t *testing.T) {
 	// don't run in parallel due to mocking Stdout / Stderr
 	for _, c := range ProcessFailureForEmptyFileWithVerboseOnCases {
-		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
+		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
 		defer os.Remove(output.Name())
 
 		if tmpFileErr != nil {

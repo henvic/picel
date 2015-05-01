@@ -24,7 +24,7 @@ func TestLoadWithInvalidFilename(t *testing.T) {
 
 func TestLoadFromInvalidSchema(t *testing.T) {
 	t.Parallel()
-	file, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
+	file, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
 	defer os.Remove(file.Name())
 
 	if tmpFileErr != nil {
@@ -47,7 +47,7 @@ func TestBackendFailure(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(handler))
 	defer ts.Close()
 
-	file, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
+	file, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
 	defer os.Remove(file.Name())
 
 	if tmpFileErr != nil {
@@ -70,7 +70,7 @@ func TestNotFound(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(handler))
 	defer ts.Close()
 
-	file, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
+	file, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
 	defer os.Remove(file.Name())
 
 	if tmpFileErr != nil {
@@ -94,7 +94,7 @@ func TestLoad(t *testing.T) {
 	defer ts.Close()
 
 	for _, c := range LoadCases {
-		file, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
+		file, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
 		defer os.Remove(file.Name())
 
 		if tmpFileErr != nil {
