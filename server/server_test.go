@@ -77,18 +77,6 @@ func TestCheckMissingDependencies(t *testing.T) {
 		if StdoutMock.String() != "" {
 			t.Errorf("checkMissingDependencies(%v) stdout should be empty", c.cmds)
 		}
-
-		// errMessage := StderrMock.String()
-
-		// if
-		// "Dependencies missing:", strings.Join(missing, ", ")
-
-		// fmt.Println(StderrMock.String())
-
-		// if !existsDependencies(c.cmds...) {
-		// 	t.Errorf("existsDependencies(%v) should return true", c.cmds)
-		// }
-
 	}
 }
 
