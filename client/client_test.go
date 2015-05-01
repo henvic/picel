@@ -1,4 +1,4 @@
-package picel
+package client
 
 import (
 	"fmt"

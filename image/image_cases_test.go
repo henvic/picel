@@ -1,4 +1,4 @@
-package picel
+package image
 
 var NameCases = []NameProvider{
 	{Image{

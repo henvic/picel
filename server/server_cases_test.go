@@ -1,21 +1,9 @@
-package picel
+package server
 
-import "errors"
-
-var existsDependencyCases = []ExistsDependencyProvider{
-	{"echo", true},
-	{"unknown", false},
-}
-
-var CheckMissingDependencies = []CheckMissingDependenciesProvider{
-	{},
-	{[]string{}, true},
-	{[]string{"echo"}, true},
-	{[]string{"echo", "cd"}, true},
-	{[]string{"unknown"}, true},
-	{[]string{"unknown", "unknown2"}, true},
-	{[]string{"unknown", "echo"}, true},
-}
+import (
+	"errors"
+	"github.com/henvic/picel/image"
+)
 
 var GoodRequestsCases = []GoodRequestProvider{
 	{
@@ -274,21 +262,21 @@ var GoodRequestsCases = []GoodRequestProvider{
 
 var BuildExplainCases = []BuildExplainProvider{
 	{
-		Transform{},
+		image.Transform{},
 		nil,
 		nil,
 		Explain{
 			Message:    SUCCESS_DECODE_MESSAGE,
-			Transform:  Transform{},
+			Transform:  image.Transform{},
 			ErrorStack: nil},
 	},
 	{
-		Transform{},
+		image.Transform{},
 		errors.New("xyz"),
 		[]error{errors.New("foo"), errors.New("testing")},
 		Explain{
 			Message:    "xyz",
-			Transform:  Transform{},
+			Transform:  image.Transform{},
 			ErrorStack: []string{"foo", "testing"},
 		}},
 }

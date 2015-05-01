@@ -1,4 +1,4 @@
-package picel
+package image
 
 import (
 	"errors"
@@ -44,7 +44,7 @@ type Transform struct {
 	Output string `json:"output"`
 }
 
-func (i *Image) name() (name string, fullname string) {
+func (i *Image) Name() (name string, fullname string) {
 	fullname = i.Id
 
 	if i.Extension != "" {

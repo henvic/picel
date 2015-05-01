@@ -1,4 +1,4 @@
-package picel
+package client
 
 var LoadCases = []LoadProvider{
 	{"/x"},

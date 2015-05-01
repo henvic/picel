@@ -1,4 +1,4 @@
-package picel
+package image
 
 var ProcessCases = []ProcessProvider{
 	{"test_assets/golden-gate-bridge.jpg",

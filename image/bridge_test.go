@@ -1,7 +1,8 @@
-package picel
+package image
 
 import (
 	"bytes"
+	"github.com/henvic/picel/logger"
 	"io/ioutil"
 	"log"
 	"os"
@@ -74,10 +75,10 @@ func TestProcess(t *testing.T) {
 			panic(tmpFileErr)
 		}
 
-		err := Process(c.t, c.filename, output.Name())
+		err := Process(c.t, "../"+c.filename, output.Name())
 
 		if err != nil {
-			t.Errorf("Process(%q, %q, %q) should not fail", c.filename, c.t, output.Name())
+			t.Errorf("Process(%q, %q, %q) should not fail", "../"+c.filename, c.t, output.Name())
 		}
 
 		fileInfo, fileInfoErr := os.Stat(output.Name())
@@ -93,7 +94,7 @@ func TestProcess(t *testing.T) {
 }
 
 func TestProcessWithVerboseOn(t *testing.T) {
-	// don't run in parallel due to mocking std.out / std.err
+	// don't run in parallel due to mocking logger.Stdout / logger.Stderr
 	for _, c := range ProcessCasesForVerboseOn {
 		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
 		defer os.Remove(output.Name())
@@ -105,17 +106,18 @@ func TestProcessWithVerboseOn(t *testing.T) {
 		var StdoutMock bytes.Buffer
 		var StderrMock bytes.Buffer
 
-		defaultStdout, defaultStderr := std.out, std.err
-		std.out = log.New(&StdoutMock, "", -1)
-		std.err = log.New(&StderrMock, "", -1)
-		verbose = true
-		err := Process(c.t, c.filename, output.Name())
-		verbose = false
-		std.out = defaultStdout
-		std.err = defaultStderr
+		defaultStdout := logger.Stdout
+		defaultStderr := logger.Stderr
+		logger.Stdout = log.New(&StdoutMock, "", -1)
+		logger.Stderr = log.New(&StderrMock, "", -1)
+		Verbose = true
+		err := Process(c.t, "../"+c.filename, output.Name())
+		Verbose = false
+		logger.Stdout = defaultStdout
+		logger.Stderr = defaultStderr
 
 		if err != nil {
-			t.Errorf("Process(%q, %q, %q) should not fail", c.filename, c.t, output.Name())
+			t.Errorf("Process(%q, %q, %q) should not fail", "../"+c.filename, c.t, output.Name())
 		}
 
 		fileInfo, fileInfoErr := os.Stat(output.Name())
@@ -131,16 +133,16 @@ func TestProcessWithVerboseOn(t *testing.T) {
 		outMessages := StdoutMock.String()
 		errMessages := StderrMock.String()
 
-		// convert uses stderr in a strange way
+		// convert uses Stderr in a strange way
 		// http://www.imagemagick.org/discourse-server/viewtopic.php?t=9292
 		if len(outMessages)+len(errMessages) == 100 {
-			t.Errorf("Stderr / stdout unexpectedly low")
+			t.Errorf("Stderr / Stdout unexpectedly low")
 		}
 	}
 }
 
 func TestProcessFailureForEmptyFileWithVerboseOn(t *testing.T) {
-	// don't run in parallel due to mocking std.out / std.err
+	// don't run in parallel due to mocking Stdout / Stderr
 	for _, c := range ProcessFailureForEmptyFileWithVerboseOnCases {
 		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "ips")
 		defer os.Remove(output.Name())
@@ -152,26 +154,27 @@ func TestProcessFailureForEmptyFileWithVerboseOn(t *testing.T) {
 		var StdoutMock bytes.Buffer
 		var StderrMock bytes.Buffer
 
-		defaultStdout, defaultStderr := std.out, std.err
-		std.out = log.New(&StdoutMock, "", -1)
-		std.err = log.New(&StderrMock, "", -1)
-		verbose = true
-		err := Process(c.t, c.filename, output.Name())
-		verbose = false
-		std.out = defaultStdout
-		std.err = defaultStderr
+		defaultStdout := logger.Stdout
+		defaultStderr := logger.Stderr
+		logger.Stdout = log.New(&StdoutMock, "", -1)
+		logger.Stderr = log.New(&StderrMock, "", -1)
+		Verbose = true
+		err := Process(c.t, "../"+c.filename, output.Name())
+		Verbose = false
+		logger.Stdout = defaultStdout
+		logger.Stderr = defaultStderr
 
 		if err == nil {
-			t.Errorf("Process(%q, %q, %q) should fail", c.filename, c.t, output.Name())
+			t.Errorf("Process(%q, %q, %q) should fail", "../"+c.filename, c.t, output.Name())
 		}
 
 		outMessages := StdoutMock.String()
 		errMessages := StderrMock.String()
 
-		// convert uses stderr in a strange way
+		// convert uses Stderr in a strange way
 		// http://www.imagemagick.org/discourse-server/viewtopic.php?t=9292
 		if len(outMessages)+len(errMessages) == 100 {
-			t.Errorf("Stderr / stdout unexpectedly low")
+			t.Errorf("Stderr / Stdout unexpectedly low")
 		}
 	}
 }

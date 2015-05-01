@@ -1,9 +1,10 @@
-package picel
+package image
 
 import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/henvic/picel/logger"
 	"os/exec"
 	"strings"
 )
@@ -15,6 +16,7 @@ const (
 
 var (
 	ErrOutputFormatNotSupported = errors.New("The requested output format is not supported")
+	Verbose                     = false
 )
 
 var OutputFormats = map[string]string{
@@ -47,15 +49,15 @@ func callProgram(name string, params []string) error {
 	cmd.Stdout = &bOut
 	cmd.Stderr = &bErr
 
-	if verbose {
-		std.out.Println(fmt.Sprintf("%v %v", name, strings.Join(params, " ")))
+	if Verbose {
+		logger.Stdout.Println(fmt.Sprintf("%v %v", name, strings.Join(params, " ")))
 	}
 
 	cmdErr := cmd.Run()
 
-	if verbose {
-		std.out.Println(string(bOut.Bytes()))
-		std.err.Println(string(bErr.Bytes()))
+	if Verbose {
+		logger.Stdout.Println(string(bOut.Bytes()))
+		logger.Stderr.Println(string(bErr.Bytes()))
 	}
 
 	return cmdErr
@@ -86,7 +88,7 @@ func processGif2Webp(input string, output string) (err error) {
 	params = append(params, "-q")
 	params = append(params, WEBP_QUALITY)
 
-	if verbose {
+	if Verbose {
 		params = append(params, "-v")
 	}
 
@@ -117,7 +119,7 @@ func processCwebp(t Transform, input string, output string) (err error) {
 		params = append(params, fmt.Sprintf("%d", t.Height))
 	}
 
-	if verbose {
+	if Verbose {
 		params = append(params, "-v")
 	}
 
@@ -131,7 +133,7 @@ func processCwebp(t Transform, input string, output string) (err error) {
 func processImagick(t Transform, input string, output string) (err error) {
 	var params []string
 
-	if verbose {
+	if Verbose {
 		params = append(params, "-verbose")
 	}
 
