@@ -1,5 +1,6 @@
 {
     "message": "Success. Image path parsed and decoded correctly",
+    "source": "foo.jpg",
     "transform": {
         "image": {
             "id": "foo",

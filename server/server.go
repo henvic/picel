@@ -30,6 +30,7 @@ var (
 
 type Explain struct {
 	Message    string          `json:"message"`
+	Source     string          `json:"source"`
 	Transform  image.Transform `json:"transform"`
 	ErrorStack []string        `json:"errors"`
 }
@@ -37,6 +38,8 @@ type Explain struct {
 func buildExplain(transform image.Transform, err error, errs []error) Explain {
 	var errorsMessages []string
 	var message string
+
+	source := getSourceUrl(transform.Image)
 
 	for i := range errs {
 		errorsMessages = append(errorsMessages, fmt.Sprintf("%v", errs[i]))
@@ -52,6 +55,7 @@ func buildExplain(transform image.Transform, err error, errs []error) Explain {
 
 	return Explain{
 		Message:    message,
+		Source:     source,
 		Transform:  transform,
 		ErrorStack: errorsMessages,
 	}
