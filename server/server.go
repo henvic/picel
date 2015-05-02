@@ -51,9 +51,9 @@ func buildExplain(transform image.Transform, err error, errs []error) Explain {
 	}
 
 	return Explain{
+		Message:    message,
 		Transform:  transform,
 		ErrorStack: errorsMessages,
-		Message:    message,
 	}
 }
 
@@ -63,7 +63,7 @@ func jsonEncodeTransformation(t image.Transform, errs []error, err error) string
 	return string(res)
 }
 
-func getOriginalUrl(image image.Image) string {
+func getSourceUrl(image image.Image) string {
 	name, _ := image.Name()
 	return Backend + name
 }
@@ -106,7 +106,7 @@ func loadingHandler(t image.Transform, w http.ResponseWriter, r *http.Request) {
 	defer os.Remove(file.Name())
 	filename := file.Name()
 
-	url := getOriginalUrl(t.Image)
+	url := getSourceUrl(t.Image)
 
 	_, err := client.Load(url, file.Name())
 
