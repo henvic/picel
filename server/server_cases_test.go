@@ -5,6 +5,80 @@ import (
 	"github.com/henvic/picel/image"
 )
 
+var HostCases = []HostProvider{
+	{
+		"google.com",
+		"http://google.com",
+	},
+	{
+		"https:google.com",
+		"https://google.com",
+	},
+}
+
+var EncodingAndDecodingCases = []EncodingAndDecodingProvider{
+	{image.Transform{
+		Image: image.Image{
+			Id:        "help/staff",
+			Extension: "jpg",
+			Source:    "http://127.0.0.1/help/staff.jpg",
+		},
+		Output: "jpg",
+	},
+		"127.0.0.1/help/staff.jpg"},
+	{image.Transform{
+		Image: image.Image{
+			Id:        "help/staff",
+			Extension: "webp",
+			Source:    "http://remote.local/help/staff.webp",
+		},
+		Output: "webp",
+	}, "remote.local/help/staff.webp"},
+	{image.Transform{
+		Image: image.Image{
+			Id:        "help/staff",
+			Extension: "webp",
+			Source:    "https://localhost/help/staff.webp",
+		},
+		Width:  800,
+		Output: "webp",
+	}, "https:localhost/help/staff_800x.webp"},
+}
+
+var EncodingAndDecodingForExplicitBackendCases = []EncodingAndDecodingForExplicitBackendProvider{
+	{image.Transform{
+		Image: image.Image{
+			Id:        "help/staff",
+			Extension: "jpg",
+			Source:    "http://127.0.0.1/help/staff.jpg",
+		},
+		Output: "jpg",
+	},
+		"127.0.0.1/help/staff.jpg",
+		"127.0.0.1"},
+	{image.Transform{
+		Image: image.Image{
+			Id:        "help/staff",
+			Extension: "webp",
+			Source:    "http://remote.local/help/staff.webp",
+		},
+		Output: "webp",
+	},
+		"remote.local/help/staff.webp",
+		"remote.local"},
+	{image.Transform{
+		Image: image.Image{
+			Id:        "help/staff",
+			Extension: "webp",
+			Source:    "https://localhost/help/staff.webp",
+		},
+		Width:  800,
+		Output: "webp",
+	},
+		"https:localhost/help/staff_800x.webp",
+		"https:localhost"},
+}
+
 var GoodRequestsCases = []GoodRequestProvider{
 	{
 		"/rocks__waves__big__sur__2_raw.jpg",

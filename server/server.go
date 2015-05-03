@@ -14,6 +14,9 @@ import (
 const (
 	SUCCESS_DECODE_MESSAGE = "Success. Image path parsed and decoded correctly"
 	BAD_REQUEST_MESSAGE    = "Bad request."
+	HTTP_SCHEMA            = "http://"
+	HTTPS_SCHEMA           = "https://"
+	FLAG_HTTPS_SCHEMA      = "https:"
 )
 
 var (
@@ -23,16 +26,74 @@ var (
 
 type Explain struct {
 	Message    string          `json:"message"`
-	Source     string          `json:"source"`
 	Transform  image.Transform `json:"transform"`
 	ErrorStack []string        `json:"errors"`
+}
+
+func compressHost(raw string) string {
+	if strings.Index(raw, HTTPS_SCHEMA) == 0 {
+		return strings.Replace(raw, HTTPS_SCHEMA, FLAG_HTTPS_SCHEMA, 1)
+	}
+
+	return strings.Replace(raw, HTTP_SCHEMA, "", 1)
+}
+
+func expandHost(raw string) (source string) {
+	https := false
+	source = raw
+
+	if strings.Index(source, FLAG_HTTPS_SCHEMA) == 0 {
+		https = true
+		source = strings.TrimPrefix(source, FLAG_HTTPS_SCHEMA)
+	}
+
+	switch https {
+	case true:
+		source = HTTPS_SCHEMA + source
+	default:
+		source = HTTP_SCHEMA + source
+	}
+
+	return source
+}
+
+func Decode(rawurl string, defaultOutputFormat string) (transform image.Transform, errs []error, err error) {
+	rawurlIndex := strings.Index(rawurl, "/")
+
+	host := rawurl
+	path := ""
+
+	if rawurlIndex != -1 {
+		host = rawurl[0:rawurlIndex]
+		path = rawurl[rawurlIndex+1:]
+	}
+
+	host = expandHost(host)
+
+	transform, errs, err = image.Decode(path, defaultOutputFormat)
+
+	_, fullname := transform.Image.Name()
+	transform.Image.Source = host + "/" + fullname
+
+	return transform, errs, err
+}
+
+func Encode(transform image.Transform) (url string) {
+	url = image.Encode(transform)
+
+	if Backend != "" {
+		return compressHost(Backend) + "/" + url
+	}
+
+	source := transform.Image.Source
+	_, fullname := transform.Image.Name()
+
+	return compressHost(source[0:len(source)-len(fullname)]) + url
 }
 
 func buildExplain(transform image.Transform, err error, errs []error) Explain {
 	var errorsMessages []string
 	var message string
-
-	source := getSourceUrl(transform.Image)
 
 	for i := range errs {
 		errorsMessages = append(errorsMessages, fmt.Sprintf("%v", errs[i]))
@@ -48,7 +109,6 @@ func buildExplain(transform image.Transform, err error, errs []error) Explain {
 
 	return Explain{
 		Message:    message,
-		Source:     source,
 		Transform:  transform,
 		ErrorStack: errorsMessages,
 	}
@@ -58,11 +118,6 @@ func jsonEncodeTransformation(t image.Transform, errs []error, err error) string
 	res, _ := json.MarshalIndent(buildExplain(t, err, errs), "", "    ")
 
 	return string(res)
-}
-
-func getSourceUrl(image image.Image) string {
-	name, _ := image.Name()
-	return Backend + name
 }
 
 func isWebpCompatible(r *http.Request) bool {
@@ -103,9 +158,7 @@ func loadingHandler(t image.Transform, w http.ResponseWriter, r *http.Request) {
 	defer os.Remove(file.Name())
 	filename := file.Name()
 
-	url := getSourceUrl(t.Image)
-
-	_, err := client.Load(url, file.Name())
+	_, err := client.Load(t.Image.Source, file.Name())
 
 	if err != nil {
 		http.NotFound(w, r)
@@ -116,7 +169,13 @@ func loadingHandler(t image.Transform, w http.ResponseWriter, r *http.Request) {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	transform, errs, err := image.Decode(r.URL.Path[1:], getDefaultRequestOutputFormat(r))
+	path := r.URL.Path[1:]
+
+	if Backend != "" {
+		path = compressHost(Backend) + "/" + path
+	}
+
+	transform, errs, err := Decode(path, getDefaultRequestOutputFormat(r))
 
 	if r.URL.Query()["explain"] != nil {
 		w.Header().Set("Content-Type", "application/json")

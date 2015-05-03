@@ -1,11 +1,10 @@
 {
     "message": "Success. Image path parsed and decoded correctly",
-    "source": "foo.jpg",
     "transform": {
         "image": {
             "id": "foo",
-            "extension": "jpg"
-            "source": "foo.jpg"
+            "extension": "jpg",
+            "source": "https://example.net/foo.jpg"
         },
         "original": false,
         "width": 800,
