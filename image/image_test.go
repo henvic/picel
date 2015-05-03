@@ -79,7 +79,7 @@ type DecodingFailureProvider struct {
 	in string
 }
 
-type CompeteEncodingAndDecodingProvider struct {
+type CompleteEncodingAndDecodingProvider struct {
 	object Transform
 	url    string
 }
@@ -267,7 +267,7 @@ func TestDecodingFailure(t *testing.T) {
 
 func TestCompleteEncodingAndDecoding(t *testing.T) {
 	t.Parallel()
-	for _, c := range CompeteEncodingAndDecodingCases {
+	for _, c := range CompleteEncodingAndDecodingCases {
 		gotUrl := Encode(c.object)
 
 		if gotUrl != c.url {

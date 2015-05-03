@@ -138,7 +138,7 @@ var DecodingFailureCases = []DecodingFailureProvider{
 	{"la__office/newborn__bunnies_400x200:300xno_gif.jpg"},
 }
 
-var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
+var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	{Transform{
 		Image: Image{
 			Id:        "help/staff",
