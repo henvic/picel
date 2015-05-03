@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+const (
+	defaultInputExtension = "jpg"
+	RAW                   = "raw"
+)
+
 var (
 	ErrOffsetInvalid            = errors.New("Offset is invalid")
 	ErrOffsetSeparator          = errors.New("Offset separator not found")
@@ -16,11 +21,6 @@ var (
 	ErrNotCropFormat            = errors.New("Not in crop format")
 	ErrInvalidCropDimensions    = errors.New("Invalid crop format dimensions")
 	ErrNonEmptyParameterQueue   = errors.New("Can't process all parameters")
-)
-
-const (
-	defaultInputExtension = "jpg"
-	RAW                   = "raw"
 )
 
 type Image struct {
