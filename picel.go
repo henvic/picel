@@ -21,7 +21,7 @@ import (
 const (
 	VERSION         = "0.0.1"
 	DEFAULT_ADDR    = ":8123"
-	DEFAULT_BACKEND = "http://localhost:8080/"
+	DEFAULT_BACKEND = ""
 )
 
 var (
@@ -32,7 +32,7 @@ var (
 
 func init() {
 	flag.StringVar(&addr, "addr", DEFAULT_ADDR, "Serving address")
-	flag.StringVar(&server.Backend, "storage", DEFAULT_BACKEND, "Image storage back-end server")
+	flag.StringVar(&server.Backend, "backend", DEFAULT_BACKEND, "Image storage back-end server")
 	flag.BoolVar(&verbose, "verbose", false, "Pipe image processing output to stderr/stdout")
 	flag.BoolVar(&flagVersion, "version", false, "Print version information and quit")
 }
@@ -75,7 +75,11 @@ func main() {
 
 	checkMissingDependencies("convert", "cwebp", "gif2webp")
 
-	logger.Stdout.Println(fmt.Sprintf("Image Processing Service running on %v with backend %v", addr, server.Backend))
 	http.HandleFunc("/", server.Handler)
 	panic(http.ListenAndServe(addr, nil))
+	logger.Stdout.Println(fmt.Sprintf("picel started listening on %v"))
+
+	if server.Backend != "" {
+		logger.Stdout.Println("Single backend mode: %v", addr, server.Backend)
+	}
 }
