@@ -143,6 +143,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "help/staff",
 			Extension: "jpg",
+			Source:    "help/staff.jpg",
 		},
 		Output: "jpg",
 	}, "help/staff.jpg"},
@@ -150,6 +151,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "help/staff",
 			Extension: "webp",
+			Source:    "help/staff.webp",
 		},
 		Output: "webp",
 	}, "help/staff.webp"},
@@ -157,6 +159,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "help/staff",
 			Extension: "webp",
+			Source:    "help/staff.webp",
 		},
 		Width:  800,
 		Output: "webp",
@@ -165,6 +168,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "help/staff",
 			Extension: "jpg",
+			Source:    "help/staff.jpg",
 		},
 		Output: "webp",
 	}, "help/staff_jpg.webp"},
@@ -172,6 +176,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "airplane_flying_low",
 			Extension: "jpg",
+			Source:    "airplane_flying_low.jpg",
 		},
 		Output: "webp",
 	}, "airplane__flying__low_jpg.webp"},
@@ -179,6 +184,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "dog",
 			Extension: "jpg",
+			Source:    "dog.jpg",
 		},
 		Output: "",
 	}, "dog"},
@@ -186,6 +192,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "help/foo",
 			Extension: "jpg",
+			Source:    "help/foo.jpg",
 		},
 		Output: "",
 		Width:  400,
@@ -195,6 +202,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "help/foo",
 			Extension: "jpg",
+			Source:    "help/foo.jpg",
 		},
 		Output: "",
 		Width:  400,
@@ -203,6 +211,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "help/foo",
 			Extension: "jpg",
+			Source:    "help/foo.jpg",
 		},
 		Output: "",
 		Height: 800,
@@ -211,6 +220,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "adoption_shelters_in_nyc/pretty_dogs",
 			Extension: "jpg",
+			Source:    "adoption_shelters_in_nyc/pretty_dogs.jpg",
 		},
 		Output: "webp",
 		Width:  400,
@@ -220,6 +230,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "airplane_360",
 			Extension: "gif",
+			Source:    "airplane_360.gif",
 		},
 		Output: "gif",
 	}, "airplane__360.gif"},
@@ -227,12 +238,14 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "airplane_360",
 			Extension: "gif",
+			Source:    "airplane_360.gif",
 		},
 	}, "airplane__360_gif"},
 	{Transform{
 		Image: Image{
 			Id:        "airplane_360",
 			Extension: "gif",
+			Source:    "airplane_360.gif",
 		},
 		Output: "webp",
 	}, "airplane__360_gif.webp"},
@@ -240,6 +253,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "foo",
 			Extension: "jpg",
+			Source:    "foo.jpg",
 		},
 		Output: "",
 	}, "foo"},
@@ -247,6 +261,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "foo_bah_h",
 			Extension: "jpg",
+			Source:    "foo_bah_h.jpg",
 		},
 		Crop: Crop{
 			X:      0,
@@ -260,6 +275,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "foo_bah_h",
 			Extension: "jpg",
+			Source:    "foo_bah_h.jpg",
 		},
 		Crop: Crop{
 			X:      300,
@@ -273,6 +289,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "foo",
 			Extension: "jpg",
+			Source:    "foo.jpg",
 		},
 		Width:  800,
 		Height: 600,
@@ -289,6 +306,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "adoption_shelters_in_nyc/pretty_dogs",
 			Extension: "jpg",
+			Source:    "adoption_shelters_in_nyc/pretty_dogs.jpg",
 		},
 		Width:  800,
 		Height: 600,
@@ -305,6 +323,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "adoption_shelters_in_nyc/pretty_dogs",
 			Extension: "jpg",
+			Source:    "adoption_shelters_in_nyc/pretty_dogs.jpg",
 		},
 		Crop: Crop{
 			X:      137,
@@ -319,6 +338,7 @@ var CompeteEncodingAndDecodingCases = []CompeteEncodingAndDecodingProvider{
 		Image: Image{
 			Id:        "la_office/newborn_bunnies",
 			Extension: "jpg",
+			Source:    "la_office/newborn_bunnies.jpg",
 		},
 		Raw:    true,
 		Output: "jpg",
@@ -331,6 +351,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 		Image: Image{
 			Id:        "la_office/newborn_bunnies",
 			Extension: "jpg",
+			Source:    "la_office/newborn_bunnies.jpg",
 		},
 		Raw:    false,
 		Output: "other",
@@ -340,6 +361,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 		Image: Image{
 			Id:        "la_office/newborn_bunnies",
 			Extension: "jpg",
+			Source:    "la_office/newborn_bunnies.jpg",
 		},
 		Raw:    false,
 		Output: "other",
@@ -349,6 +371,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 		Image: Image{
 			Id:        "la_office/newborn_bunnies",
 			Extension: "other",
+			Source:    "la_office/newborn_bunnies.other",
 		},
 		Raw:    false,
 		Output: "other",
@@ -358,6 +381,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 		Image: Image{
 			Id:        "la_office/newborn_bunnies",
 			Extension: "gif",
+			Source:    "la_office/newborn_bunnies.gif",
 		},
 		Raw:    false,
 		Output: "gif",
@@ -367,6 +391,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 		Image: Image{
 			Id:        "big_sur",
 			Extension: "jpg",
+			Source:    "big_sur.jpg",
 		},
 		Crop: Crop{
 			X:      0,

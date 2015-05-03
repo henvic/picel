@@ -5,6 +5,7 @@
         "image": {
             "id": "foo",
             "extension": "jpg"
+            "source": "foo.jpg"
         },
         "original": false,
         "width": 800,

@@ -26,6 +26,7 @@ var (
 type Image struct {
 	Id        string `json:"id"`
 	Extension string `json:"extension"`
+	Source    string `json:"source"`
 }
 
 type Crop struct {
@@ -89,6 +90,8 @@ func Decode(path string, defaultOutputFormat string) (transform Transform, errs 
 
 		t.Image.Extension = unescapeRawUrlParts(extension)
 		t.Output = getOutputFormat(unescapeRawUrlParts(output), defaultOutputFormat)
+		_, fullname := t.Image.Name()
+		t.Image.Source = fullname
 
 		return t, errs, err
 	}
@@ -98,6 +101,8 @@ func Decode(path string, defaultOutputFormat string) (transform Transform, errs 
 	t.Image.Id = unescapeRawUrlParts(imgId)
 	t.Output = getOutputFormat(unescapeRawUrlParts(output), defaultOutputFormat)
 	err, errs = extractParams(paramsString, unescapeRawUrlParts(output), &t)
+	_, fullname := t.Image.Name()
+	t.Image.Source = fullname
 
 	return t, errs, err
 }
