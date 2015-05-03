@@ -126,7 +126,7 @@ func TestBuildExplain(t *testing.T) {
 
 func TestJsonEncodeTransformation(t *testing.T) {
 	t.Parallel()
-	path := "https:example.net/foo_137x0:737x450_800x600_jpg.webp"
+	path := "s:example.net/foo_137x0:737x450_800x600_jpg.webp"
 	reference := "../explain_example.json"
 
 	content, err := ioutil.ReadFile(reference)
@@ -147,7 +147,7 @@ func TestJsonEncodeTransformation(t *testing.T) {
 
 func TestServerExplain(t *testing.T) {
 	t.Parallel()
-	url := "/https:example.net/foo_137x0:737x450_800x600_jpg.webp"
+	url := "/s:example.net/foo_137x0:737x450_800x600_jpg.webp"
 	reference := "../explain_example.json"
 
 	req, _ := http.NewRequest("GET", url+"?explain", nil)

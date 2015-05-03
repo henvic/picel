@@ -11,7 +11,7 @@ var HostCases = []HostProvider{
 		"http://google.com",
 	},
 	{
-		"https:google.com",
+		"s:google.com",
 		"https://google.com",
 	},
 }
@@ -42,7 +42,7 @@ var EncodingAndDecodingCases = []EncodingAndDecodingProvider{
 		},
 		Width:  800,
 		Output: "webp",
-	}, "https:localhost/help/staff_800x.webp"},
+	}, "s:localhost/help/staff_800x.webp"},
 }
 
 var EncodingAndDecodingForExplicitBackendCases = []EncodingAndDecodingForExplicitBackendProvider{
@@ -75,8 +75,8 @@ var EncodingAndDecodingForExplicitBackendCases = []EncodingAndDecodingForExplici
 		Width:  800,
 		Output: "webp",
 	},
-		"https:localhost/help/staff_800x.webp",
-		"https:localhost"},
+		"s:localhost/help/staff_800x.webp",
+		"s:localhost"},
 }
 
 var GoodRequestsCases = []GoodRequestProvider{

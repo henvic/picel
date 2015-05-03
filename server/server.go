@@ -16,7 +16,7 @@ const (
 	BAD_REQUEST_MESSAGE    = "Bad request."
 	HTTP_SCHEMA            = "http://"
 	HTTPS_SCHEMA           = "https://"
-	FLAG_HTTPS_SCHEMA      = "https:"
+	FLAG_HTTPS_SCHEMA      = "s:"
 )
 
 var (
