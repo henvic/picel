@@ -57,7 +57,7 @@ func TestBackendFailure(t *testing.T) {
 	size, err := Load(ts.URL, file.Name())
 
 	if err != ErrBackend {
-		t.Errorf("Load(%v, %v) == %v %v should fail", ts.URL, file.Name(), size, err, 0, ErrBackend)
+		t.Errorf("Load(%v, %v) == %v %v should fail", ts.URL, file.Name(), size, err)
 	}
 }
 
@@ -80,7 +80,7 @@ func TestNotFound(t *testing.T) {
 	size, err := Load(ts.URL, file.Name())
 
 	if err != http.ErrMissingFile {
-		t.Errorf("Load(%v, %v) == %v %v should fail", ts.URL, file.Name(), size, err, 0, http.ErrMissingFile)
+		t.Errorf("Load(%v, %v) == %v %v should fail", ts.URL, file.Name(), size, err)
 	}
 }
 
@@ -110,7 +110,7 @@ func TestLoad(t *testing.T) {
 		}
 
 		if err != nil || int(size) != len(c.word) || fileInfo.Size() != size {
-			t.Errorf("Load(%q, %q) == %q %q, want %q %q", ts.URL, file.Name(), size, err, len(c.word), nil)
+			t.Errorf("Load(%q, %q) == %q %q, want %q %v", ts.URL, file.Name(), size, err, len(c.word), nil)
 		}
 	}
 }

@@ -78,7 +78,7 @@ func main() {
 	logger.Stdout.Println(fmt.Sprintf("picel started listening on %v", addr))
 
 	if server.Backend != "" {
-		logger.Stdout.Println("Single backend mode: %v", server.Backend)
+		logger.Stdout.Println(fmt.Sprintf("Single backend mode: %v", server.Backend))
 	}
 
 	http.HandleFunc("/", server.Handler)
