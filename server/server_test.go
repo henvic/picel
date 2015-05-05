@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"os/exec"
 	"reflect"
 	"strings"
@@ -48,8 +49,13 @@ type EncodingAndDecodingForExplicitBackendProvider struct {
 
 func init() {
 	// binary test assets are stored in a helper branch for neatness
-	exec.Command("git", "checkout", "test_assets", "--", "../test_assets").Run()
-	exec.Command("git", "rm", "--cached", "-r", "../test_assets").Run()
+	checkout := exec.Command("git", "checkout", "test_assets", "--", "../test_assets")
+	checkout.Stderr = os.Stderr
+	checkout.Run()
+
+	gitRmCached := exec.Command("git", "rm", "--cached", "-r", "../test_assets")
+	gitRmCached.Stderr = os.Stderr
+	gitRmCached.Run()
 }
 
 func TestCompressAndExpandHost(t *testing.T) {
