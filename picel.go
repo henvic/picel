@@ -18,9 +18,9 @@ import (
 )
 
 const (
-	VERSION         = "0.0.1"
-	DEFAULT_ADDR    = ":8123"
-	DEFAULT_BACKEND = ""
+	Version        = "0.0.1"
+	defaultAddr    = ":8123"
+	defaultBackend = ""
 )
 
 var (
@@ -30,14 +30,14 @@ var (
 )
 
 func init() {
-	flag.StringVar(&addr, "addr", DEFAULT_ADDR, "Serving address")
-	flag.StringVar(&server.Backend, "backend", DEFAULT_BACKEND, "Image storage back-end server")
+	flag.StringVar(&addr, "addr", defaultAddr, "Serving address")
+	flag.StringVar(&server.Backend, "backend", defaultBackend, "Image storage back-end server")
 	flag.BoolVar(&verbose, "verbose", false, "Pipe image processing output to stderr/stdout")
 	flag.BoolVar(&flagVersion, "version", false, "Print version information and quit")
 }
 
 func showVersion() {
-	fmt.Println("picel version", VERSION)
+	fmt.Println("picel version", Version)
 }
 
 func existsDependency(cmd string) bool {
@@ -53,7 +53,7 @@ func checkMissingDependencies(arg ...string) {
 		if !existsDependency(arg[left-1]) {
 			missing = append(missing, arg[left-1])
 		}
-		left -= 1
+		left--
 	}
 
 	if missing != nil {

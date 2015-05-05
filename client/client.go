@@ -36,7 +36,7 @@ func Load(url string, filename string) (size int64, err error) {
 		return io.Copy(file, resp.Body)
 	case http.StatusNotFound:
 		return 0, http.ErrMissingFile
-	default:
-		return 0, ErrBackend
 	}
+
+	return 0, ErrBackend
 }
