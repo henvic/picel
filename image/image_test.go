@@ -136,10 +136,10 @@ func TestEncodeCrop(t *testing.T) {
 func TestEncodeDimension(t *testing.T) {
 	t.Parallel()
 	for _, c := range EncodeDimensionCases {
-		got := EncodeDimension(c.in)
+		got := encodeDimension(c.in)
 
 		if got != c.want {
-			t.Errorf("EncodeDimension(%v) == %v, want %v", c.in, got, c.want)
+			t.Errorf("encodeDimension(%v) == %v, want %v", c.in, got, c.want)
 		}
 	}
 }

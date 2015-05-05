@@ -125,7 +125,7 @@ func Encode(transform Transform) (url string) {
 
 	url += encodeParam(encodeCrop(transform.Crop))
 
-	url += encodeParam(EncodeDimension(transform))
+	url += encodeParam(encodeDimension(transform))
 
 	if transform.Output != inputExtension && (inputExtension != defaultInputExtension || transform.Output != "") {
 		url += encodeParam(escapeRawUrlParts(inputExtension))
@@ -154,7 +154,7 @@ func encodeCrop(c Crop) (crop string) {
 	return crop
 }
 
-func EncodeDimension(transform Transform) (dim string) {
+func encodeDimension(transform Transform) (dim string) {
 	if transform.Width == 0 && transform.Height == 0 {
 		return dim
 	}
