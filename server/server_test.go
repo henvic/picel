@@ -49,6 +49,10 @@ type EncodingAndDecodingForExplicitBackendProvider struct {
 
 func init() {
 	// binary test assets are stored in a helper branch for neatness
+	branch := exec.Command("git", "branch", "test_assets", "--track", "origin/test_assets", "-f")
+	branch.Stderr = os.Stderr
+	branch.Run()
+
 	checkout := exec.Command("git", "checkout", "test_assets", "--", "../test_assets")
 	checkout.Stderr = os.Stderr
 	checkout.Run()
