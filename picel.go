@@ -75,11 +75,12 @@ func main() {
 
 	checkMissingDependencies("convert", "cwebp", "gif2webp")
 
-	http.HandleFunc("/", server.Handler)
-	panic(http.ListenAndServe(addr, nil))
-	logger.Stdout.Println(fmt.Sprintf("picel started listening on %v"))
+	logger.Stdout.Println(fmt.Sprintf("picel started listening on %v", addr))
 
 	if server.Backend != "" {
-		logger.Stdout.Println("Single backend mode: %v", addr, server.Backend)
+		logger.Stdout.Println("Single backend mode: %v", server.Backend)
 	}
+
+	http.HandleFunc("/", server.Handler)
+	panic(http.ListenAndServe(addr, nil))
 }
