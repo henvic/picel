@@ -200,6 +200,16 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "help/foo_400x800"},
 	{Transform{
 		Image: Image{
+			Id:        "help/foo.my.dotted.file",
+			Extension: "jpg",
+			Source:    "help/foo.my.dotted.file.jpg",
+		},
+		Output: "",
+		Width:  400,
+		Height: 800,
+	}, "help/foo.my.dotted.file_400x800"},
+	{Transform{
+		Image: Image{
 			Id:        "help/foo",
 			Extension: "jpg",
 			Source:    "help/foo.jpg",
