@@ -1,1 +1,4 @@
 language: go
+before_install:
+  - sudo apt-get install webp
+  - git fetch origin test_assets:test_assets

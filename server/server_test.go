@@ -48,8 +48,8 @@ type EncodingAndDecodingForExplicitBackendProvider struct {
 
 func init() {
 	// binary test assets are stored in a helper branch for neatness
-	exec.Command("git", "checkout", "test_assets", "--", "test_assets").Run()
-	exec.Command("git", "rm", "--cached", "-r", "test_assets").Run()
+	exec.Command("git", "checkout", "test_assets", "--", "../test_assets").Run()
+	exec.Command("git", "rm", "--cached", "-r", "../test_assets").Run()
 }
 
 func TestCompressAndExpandHost(t *testing.T) {
