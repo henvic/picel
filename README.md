@@ -1,4 +1,4 @@
-# picel [![Build Status](http://img.shields.io/travis/henvic/picel/master.svg?style=flat)](https://travis-ci.org/henvic/picel)
+# picel [![Build Status](http://img.shields.io/travis/henvic/picel/master.svg?style=flat)](https://travis-ci.org/henvic/picel) [![GoDoc](https://godoc.org/github.com/henvic/picel?status.svg)](https://godoc.org/github.com/henvic/picel)
 
 picel is a light-weight, blazing fast REST-ful micro service for image processing with a lean API.
 

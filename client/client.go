@@ -1,3 +1,6 @@
+/*
+Package client is the HTTP(S) client for picel.
+*/
 package client
 
 import (

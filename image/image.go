@@ -1,3 +1,6 @@
+/*
+Package image provides encoding and processing for picel.
+*/
 package image
 
 import (

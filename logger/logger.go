@@ -1,3 +1,6 @@
+/*
+Package logger provides logging for picel.
+*/
 package logger
 
 import (

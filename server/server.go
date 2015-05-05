@@ -1,3 +1,6 @@
+/*
+Package server provides server encoding, decoding and request handler for picel.
+*/
 package server
 
 import (
