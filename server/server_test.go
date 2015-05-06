@@ -295,7 +295,7 @@ func verifyGoodRequest(compBackend string, c GoodRequestProvider, t *testing.T) 
 
 	for _, v := range c.meta {
 		if strings.LastIndex(info, v) == -1 {
-			t.Errorf("Error identifying image: want %v, but it was not found", v)
+			t.Errorf("Error identifying image: want %v, but it was not found for %+v", v, transform)
 		}
 	}
 }

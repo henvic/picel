@@ -135,7 +135,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"red: 1-bit",
 			"green: 1-bit",
 			"blue: 1-bit",
-			"Pixels: 400",
 			"Red:\n      min: 255 (1)\n      max: 255 (1)",
 			"Green:\n      min: 0 (0)\n      max: 0 (0)",
 			"Blue:\n      min: 0 (0)\n      max: 0 (0)",
@@ -150,7 +149,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"red: 1-bit",
 			"green: 1-bit",
 			"blue: 1-bit",
-			"Pixels: 400",
 			"Red:\n      min: 0 (0)\n      max: 0 (0)",
 			"Green:\n      min: 0 (0)\n      max: 0 (0)",
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
@@ -165,7 +163,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"red: 1-bit",
 			"green: 1-bit",
 			"blue: 1-bit",
-			"Pixels: 400",
 			"Red:\n      min: 0 (0)\n      max: 0 (0)",
 			"Green:\n      min: 255 (1)\n      max: 255 (1)",
 			"Blue:\n      min: 0 (0)\n      max: 0 (0)",
@@ -180,7 +177,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"red: 1-bit",
 			"green: 1-bit",
 			"blue: 1-bit",
-			"Pixels: 400",
 			"Red:\n      min: 0 (0)\n      max: 0 (0)",
 			"Green:\n      min: 255 (1)\n      max: 255 (1)",
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
@@ -195,7 +191,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"red: 1-bit",
 			"green: 1-bit",
 			"blue: 1-bit",
-			"Pixels: 400",
 			"Red:\n      min: 255 (1)\n      max: 255 (1)",
 			"Green:\n      min: 0 (0)\n      max: 0 (0)",
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
@@ -210,7 +205,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"red: 1-bit",
 			"green: 1-bit",
 			"blue: 1-bit",
-			"Pixels: 400",
 			"Red:\n      min: 255 (1)\n      max: 255 (1)",
 			"Green:\n      min: 255 (1)\n      max: 255 (1)",
 			"Blue:\n      min: 0 (0)\n      max: 0 (0)",
@@ -223,7 +217,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 		[]string{
 			"Geometry: 20x20+0+0",
 			"Colorspace: Gray",
-			"Pixels: 400",
 			"Gray:\n      min: 0 (0)\n      max: 0 (0)",
 			"Interlace: None",
 		},
@@ -233,7 +226,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 		"image/webp",
 		[]string{
 			"Geometry: 20x20+0+0",
-			"Pixels: 400",
 			"Red:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
 		},
@@ -243,7 +235,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 		"image/webp",
 		[]string{
 			"Geometry: 20x20+0+0",
-			"Pixels: 400",
 			"Red:\n      min: 0 (0)\n      max: 0 (0)",
 			"Green:\n      min: 0 (0)\n      max: 0 (0)",
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
@@ -255,7 +246,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 		"image/webp",
 		[]string{
 			"Geometry: 20x20+0+0",
-			"Pixels: 400",
 			"Red:\n      min: 0 (0)\n      max: 0 (0)",
 			"Green:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
@@ -266,7 +256,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 		"image/webp",
 		[]string{
 			"Geometry: 20x20+0+0",
-			"Pixels: 400",
 			"Green:\n      min: 255 (1)\n      max: 255 (1)",
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
@@ -277,7 +266,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 		"image/webp",
 		[]string{
 			"Geometry: 20x20+0+0",
-			"Pixels: 400",
 			"Red:\n      min: 255 (1)\n      max: 255 (1)",
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
@@ -288,7 +276,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 		"image/webp",
 		[]string{
 			"Geometry: 20x20+0+0",
-			"Pixels: 400",
 			"Red:\n      min: 255 (1)\n      max: 255 (1)",
 			"Green:\n      min: 255 (1)\n      max: 255 (1)",
 			"Blue:\n      min: 0 (0)\n      max: 0 (0)",
@@ -301,7 +288,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 		[]string{
 			"Geometry: 20x20+0+0",
 			"Colorspace: Gray",
-			"Pixels: 400",
 			"Gray:\n      min: 0 (0)\n      max: 0 (0)",
 			"Interlace: None",
 		},
