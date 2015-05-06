@@ -1,4 +1,5 @@
 language: go
+sudo: required
 before_install:
-  - sudo apt-get install webp
+  - bash .travis.install_deps.bash
   - git fetch origin test_assets:origin/test_assets
