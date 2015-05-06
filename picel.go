@@ -18,6 +18,7 @@ import (
 )
 
 const (
+	// Current picel version
 	Version        = "0.0.1"
 	defaultAddr    = ":8123"
 	defaultBackend = ""
