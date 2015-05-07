@@ -41,6 +41,7 @@ type Crop struct {
 
 type Transform struct {
 	Image  `json:"image"`
+	Path   string `json:"path"`
 	Raw    bool   `json:"original"`
 	Width  int    `json:"width"`
 	Height int    `json:"height"`
@@ -74,6 +75,8 @@ func getOutputFormat(output string, defaultOutputFormat string) string {
 
 func Decode(path string, defaultOutputFormat string) (transform Transform, errs []error, err error) {
 	t := Transform{}
+
+	t.Path = path
 
 	paramsSubstringStart := getParamsSubstringStart(path)
 

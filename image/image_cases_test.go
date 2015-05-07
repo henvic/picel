@@ -145,6 +145,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "help/staff.jpg",
 		},
+		Path:   "help/staff.jpg",
 		Output: "jpg",
 	}, "help/staff.jpg"},
 	{Transform{
@@ -153,6 +154,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "webp",
 			Source:    "help/staff.webp",
 		},
+		Path:   "help/staff.webp",
 		Output: "webp",
 	}, "help/staff.webp"},
 	{Transform{
@@ -161,6 +163,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "webp",
 			Source:    "help/staff.webp",
 		},
+		Path:   "help/staff_800x.webp",
 		Width:  800,
 		Output: "webp",
 	}, "help/staff_800x.webp"},
@@ -170,6 +173,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "help/staff.jpg",
 		},
+		Path:   "help/staff_jpg.webp",
 		Output: "webp",
 	}, "help/staff_jpg.webp"},
 	{Transform{
@@ -178,6 +182,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "airplane_flying_low.jpg",
 		},
+		Path:   "airplane__flying__low_jpg.webp",
 		Output: "webp",
 	}, "airplane__flying__low_jpg.webp"},
 	{Transform{
@@ -186,6 +191,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "dog.jpg",
 		},
+		Path:   "dog",
 		Output: "",
 	}, "dog"},
 	{Transform{
@@ -194,6 +200,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "help/foo.jpg",
 		},
+		Path:   "help/foo_400x800",
 		Output: "",
 		Width:  400,
 		Height: 800,
@@ -204,6 +211,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "help/foo.my.dotted.file.jpg",
 		},
+		Path:   "help/foo.my.dotted.file_400x800",
 		Output: "",
 		Width:  400,
 		Height: 800,
@@ -214,6 +222,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "help/foo.jpg",
 		},
+		Path:   "help/foo_400x",
 		Output: "",
 		Width:  400,
 	}, "help/foo_400x"},
@@ -223,6 +232,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "help/foo.jpg",
 		},
+		Path:   "help/foo_x800",
 		Output: "",
 		Height: 800,
 	}, "help/foo_x800"},
@@ -232,6 +242,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "adoption_shelters_in_nyc/pretty_dogs.jpg",
 		},
+		Path:   "adoption__shelters__in__nyc/pretty__dogs_400x800_jpg.webp",
 		Output: "webp",
 		Width:  400,
 		Height: 800,
@@ -242,6 +253,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "gif",
 			Source:    "airplane_360.gif",
 		},
+		Path:   "airplane__360.gif",
 		Output: "gif",
 	}, "airplane__360.gif"},
 	{Transform{
@@ -250,6 +262,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "gif",
 			Source:    "airplane_360.gif",
 		},
+		Path: "airplane__360_gif",
 	}, "airplane__360_gif"},
 	{Transform{
 		Image: Image{
@@ -257,6 +270,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "gif",
 			Source:    "airplane_360.gif",
 		},
+		Path:   "airplane__360_gif.webp",
 		Output: "webp",
 	}, "airplane__360_gif.webp"},
 	{Transform{
@@ -265,6 +279,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "foo.jpg",
 		},
+		Path:   "foo",
 		Output: "",
 	}, "foo"},
 	{Transform{
@@ -273,6 +288,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "foo_bah_h.jpg",
 		},
+		Path: "foo__bah__h_0x0:800x400.jpg",
 		Crop: Crop{
 			X:      0,
 			Y:      0,
@@ -287,6 +303,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "foo_bah_h.jpg",
 		},
+		Path: "foo__bah__h_300x300:800x400.jpg",
 		Crop: Crop{
 			X:      300,
 			Y:      300,
@@ -301,6 +318,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "foo.jpg",
 		},
+		Path:   "foo_137x0:737x450_800x600_jpg.webp",
 		Width:  800,
 		Height: 600,
 		Crop: Crop{
@@ -318,6 +336,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "adoption_shelters_in_nyc/pretty_dogs.jpg",
 		},
+		Path:   "adoption__shelters__in__nyc/pretty__dogs_137x1:737x451_800x600_jpg.webp",
 		Width:  800,
 		Height: 600,
 		Crop: Crop{
@@ -335,6 +354,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "adoption_shelters_in_nyc/pretty_dogs.jpg",
 		},
+		Path: "adoption__shelters__in__nyc/pretty__dogs_137x1:737x451_jpg.webp",
 		Crop: Crop{
 			X:      137,
 			Y:      1,
@@ -350,6 +370,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 			Extension: "jpg",
 			Source:    "la_office/newborn_bunnies.jpg",
 		},
+		Path:   "la__office/newborn__bunnies_raw.jpg",
 		Raw:    true,
 		Output: "jpg",
 	}, "la__office/newborn__bunnies_raw.jpg",
@@ -363,6 +384,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 			Extension: "jpg",
 			Source:    "la_office/newborn_bunnies.jpg",
 		},
+		Path:   "la__office/newborn__bunnies",
 		Raw:    false,
 		Output: "other",
 	}, "la__office/newborn__bunnies",
@@ -373,6 +395,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 			Extension: "jpg",
 			Source:    "la_office/newborn_bunnies.jpg",
 		},
+		Path:   "la__office/newborn__bunnies_jpg",
 		Raw:    false,
 		Output: "other",
 	}, "la__office/newborn__bunnies_jpg",
@@ -383,6 +406,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 			Extension: "other",
 			Source:    "la_office/newborn_bunnies.other",
 		},
+		Path:   "la__office/newborn__bunnies_other",
 		Raw:    false,
 		Output: "other",
 	}, "la__office/newborn__bunnies_other",
@@ -393,6 +417,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 			Extension: "gif",
 			Source:    "la_office/newborn_bunnies.gif",
 		},
+		Path:   "la__office/newborn__bunnies.gif",
 		Raw:    false,
 		Output: "gif",
 	}, "la__office/newborn__bunnies.gif",
@@ -403,6 +428,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 			Extension: "jpg",
 			Source:    "big_sur.jpg",
 		},
+		Path: "big__sur_0x0:600x600",
 		Crop: Crop{
 			X:      0,
 			Y:      0,
