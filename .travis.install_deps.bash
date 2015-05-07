@@ -9,13 +9,16 @@ fi
 if [ "$TRAVIS_OS_NAME" == "linux" ]; then
   IMAGEMAGICK_VERSION=6.9.1-1
 
+  sudo apt-get install libjpeg-dev libpng-dev libtiff-dev libgif-dev
   wget http://downloads.webmproject.org/releases/webp/libwebp-0.4.3.tar.gz
-  tar -xzf libwebp-0.4.3.tar.gz
+  tar xzf libwebp-0.4.3.tar.gz
+  rm libwebp-0.4.3.tar.gz
   cd libwebp-0.4.3
-  mkdir tmp
-  ./configure --disable-shared --prefix=tmp --bin-dir=tmp
-  make && make install
+  ./configure --enable-everything
+  make
+  sudo make install
   cd ..
+  rm -r libwebp-0.4.3
 
   dpkg --list imagemagick
   sudo apt-get remove imagemagick
