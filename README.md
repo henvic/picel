@@ -13,7 +13,7 @@ Also, you want your proxy layer to have protection against abuse ([enhance your 
 picel is designed to be safe so that you can try to process untrusted data with no security issues.
 
 ## tl;dr
-1. Download the picel binary for your platform.
+1. Download the latest picel binary release for your platform from the [releases page](https://github.com/henvic/picel/releases).
 2. Run it with no arguments or with something like `--Backend localhost:8080`
 3. Use [picel-js](https://github.com/henvic/picel-js) to encode your images.
 
