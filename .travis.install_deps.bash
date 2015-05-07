@@ -18,7 +18,7 @@ if [ "$TRAVIS_OS_NAME" == "linux" ]; then
   make
   sudo make install
   cd ..
-  rm -r libwebp-0.4.3
+  rm -rf libwebp-0.4.3
 
   dpkg --list imagemagick
   sudo apt-get remove imagemagick
