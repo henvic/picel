@@ -3,3 +3,10 @@ sudo: required
 before_install:
   - bash .travis.install_deps.bash
   - git fetch origin test_assets:origin/test_assets
+  - go get code.google.com/p/go.tools/cmd/cover
+  - go get github.com/mattn/goveralls
+after_script:
+  - if [ -z "$COVERALLS_TOKEN" ]; then
+    echo Running tests again with coverage on (and publishing on coveralls). \
+    go test -v ./... -covermode=count -coverprofile=coverage.out $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN;
+    fi
