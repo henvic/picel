@@ -90,6 +90,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 		"/rocks__waves__big__sur__2_raw.jpg",
 		"image/jpeg",
 		[]string{},
+		1600,
+		1067,
 		true},
 	{
 		"/rocks__waves__big__sur__2_500x.jpg",
@@ -99,6 +101,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Geometry: 500x333",
 			"Interlace: None",
 		},
+		500,
+		333,
 		true},
 	{
 		"/insects-2_500x.JPEG",
@@ -108,6 +112,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Geometry: 500x333",
 			"Interlace: None",
 		},
+		500,
+		333,
 		true},
 	{
 		"/rocks__waves__big__sur__1_0x0:600x300_112x56",
@@ -116,6 +122,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Geometry: 112x56+0+0",
 			"Interlace: None",
 		},
+		112,
+		56,
 		false},
 	{
 		"/big__sur_0x0:600x600_100x",
@@ -124,6 +132,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Geometry: 100x100+0+0",
 			"Interlace: None",
 		},
+		100,
+		100,
 		true},
 	{
 		"/big__sur_0x0:600x600_100x",
@@ -132,6 +142,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Geometry: 100x100+0+0",
 			"Interlace: None",
 		},
+		100,
+		100,
 		false},
 	{
 		"/additive-color_70x30:20x20.png",
@@ -146,6 +158,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Blue:\n      min: 0 (0)\n      max: 0 (0)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_130x150:20x20.png",
@@ -160,6 +174,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_50x150:20x20.png",
@@ -174,6 +190,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Blue:\n      min: 0 (0)\n      max: 0 (0)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_90x140:20x20.png",
@@ -188,6 +206,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_120x70:20x20.png",
@@ -202,6 +222,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_40x70:20x20.png",
@@ -216,6 +238,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Blue:\n      min: 0 (0)\n      max: 0 (0)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_0x0:20x20.png",
@@ -226,6 +250,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Gray:\n      min: 0 (0)\n      max: 0 (0)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_70x30:20x20_png.webp",
@@ -235,6 +261,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Red:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_130x150:20x20_png.webp",
@@ -246,6 +274,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_50x150:20x20_png.webp",
@@ -256,6 +286,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Green:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_90x140:20x20_png.webp",
@@ -266,6 +298,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_120x70:20x20_png.webp",
@@ -276,6 +310,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Blue:\n      min: 255 (1)\n      max: 255 (1)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_40x70:20x20_png.webp",
@@ -287,6 +323,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Blue:\n      min: 0 (0)\n      max: 0 (0)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/additive-color_0x0:20x20_png.webp",
@@ -297,6 +335,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Gray:\n      min: 0 (0)\n      max: 0 (0)",
 			"Interlace: None",
 		},
+		20,
+		20,
 		true},
 	{
 		"/barter.gif",
@@ -305,6 +345,8 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Format: GIF",
 			"Geometry: 400x300+0+0",
 		},
+		400,
+		300,
 		true},
 	{
 		"/barter_20x.gif",
@@ -313,16 +355,22 @@ var GoodRequestsCases = []GoodRequestProvider{
 			"Format: GIF",
 			"Geometry: 20x15+0+0",
 		},
+		20,
+		15,
 		true},
 	{
 		"/barter_gif",
 		"image/webp",
 		nil,
+		400,
+		300,
 		true},
 	{
 		"/barter_20x_gif",
 		"image/webp",
 		nil,
+		20,
+		15,
 		true},
 }
 

@@ -3,12 +3,14 @@ package server
 import (
 	"bytes"
 	"github.com/henvic/picel/image"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"os/exec"
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -22,6 +24,8 @@ type GoodRequestProvider struct {
 	url            string
 	outputFiletype string
 	meta           []string
+	width          int
+	height         int
 	acceptWebp     bool
 }
 
@@ -243,6 +247,59 @@ func TestServerNotFound(t *testing.T) {
 	}
 }
 
+func identifyImageDetails(filename string, meta []string, transform image.Transform, t *testing.T) {
+	// imagick doesn't support decoding some standards like .gif
+	if meta == nil {
+		return
+	}
+
+	identify := exec.Command("identify", "-verbose", filename)
+	out, identifyImageErr := identify.CombinedOutput()
+	info := string(out)
+
+	if identifyImageErr != nil {
+		t.Errorf("Error while identifying image: %v", identifyImageErr)
+	}
+
+	for _, v := range meta {
+		if strings.LastIndex(info, v) == -1 {
+			t.Errorf("Error identifying image: want %v, but it was not found for %+v", v, transform)
+		}
+	}
+}
+
+func compareImage(output string, transform image.Transform, width int, height int, t *testing.T) {
+	reference := "../test_assets/compare" + transform.Path
+
+	compare := exec.Command("compare", "-metric", "AE", "-fuzz", "15%", reference, output, "/dev/null")
+
+	// always ignore compare exit code
+	out, _ := compare.CombinedOutput()
+	content := string(out)
+
+	if strings.Index(content, "is not supported.") != -1 {
+		return
+	}
+
+	lastLine := strings.LastIndex(content, "\n")
+
+	if lastLine != -1 {
+		content = content[lastLine+1 : len(content)]
+	}
+
+	abs, err := strconv.Atoi(content)
+
+	if err != nil {
+		panic(err)
+	}
+
+	diff := float64(abs) / float64(width*height)
+
+	if diff > 0.15 {
+		t.Errorf("Image %+v is very different than expected", transform)
+	}
+}
+
 func verifyGoodRequest(compBackend string, c GoodRequestProvider, t *testing.T) {
 	url := "/" + compBackend + c.url
 	req, _ := http.NewRequest("GET", url, nil)
@@ -277,27 +334,23 @@ func verifyGoodRequest(compBackend string, c GoodRequestProvider, t *testing.T) 
 		if bytes.Compare(reference, w.Body.Bytes()) != 0 {
 			t.Errorf("Raw file for %v differ from what is expected", filename)
 		}
-	}
 
-	// identify doesn't support some standards like .gif
-	if c.meta == nil {
 		return
 	}
 
-	identify := exec.Command("identify", "-verbose", "-")
-	identify.Stdin = w.Body
-	out, identifyImageErr := identify.CombinedOutput()
-	info := string(out)
+	file, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
+	filename := file.Name()
+	defer os.Remove(filename)
+	defer file.Close()
 
-	if identifyImageErr != nil {
-		t.Errorf("Error while identifying image: %v", identifyImageErr)
+	if tmpFileErr != nil {
+		panic(tmpFileErr)
 	}
 
-	for _, v := range c.meta {
-		if strings.LastIndex(info, v) == -1 {
-			t.Errorf("Error identifying image: want %v, but it was not found for %+v", v, transform)
-		}
-	}
+	io.Copy(file, w.Body)
+
+	identifyImageDetails(filename, c.meta, transform, t)
+	compareImage(filename, transform, c.width, c.height, t)
 }
 
 func TestServerGoodRequests(t *testing.T) {
