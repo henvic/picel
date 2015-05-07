@@ -2,6 +2,7 @@ package server
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/henvic/picel/image"
 	"io"
 	"io/ioutil"
@@ -277,7 +278,8 @@ func compareImage(output string, transform image.Transform, width int, height in
 	out, _ := compare.CombinedOutput()
 	content := string(out)
 
-	if strings.Index(content, "is not supported.") != -1 {
+	if strings.Index(content, "is not supported.") != -1 || strings.Index(content, "no decode") != -1 {
+		fmt.Println(fmt.Sprintf("Jumping comparing for %v: no support / decoder for ImageMagick compare tool", reference))
 		return
 	}
 
