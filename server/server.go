@@ -146,7 +146,7 @@ func processingHandler(filename string, t image.Transform, w http.ResponseWriter
 	outputFilename := output.Name()
 	defer os.Remove(outputFilename)
 
-	err := image.Process(t, filename, output.Name())
+	err := image.Process(t, filename, outputFilename)
 
 	if err != nil {
 		http.Error(w, "Processing error.", http.StatusInternalServerError)
