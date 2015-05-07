@@ -289,6 +289,7 @@ func compareImage(output string, transform image.Transform, width int, height in
 	abs, err := strconv.Atoi(r.FindString(content))
 
 	if err != nil {
+		fmt.Println("compare content:", content)
 		panic(err)
 	}
 
