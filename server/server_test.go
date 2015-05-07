@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	"testing"
@@ -283,13 +284,9 @@ func compareImage(output string, transform image.Transform, width int, height in
 		return
 	}
 
-	lastLine := strings.LastIndex(content, "\n")
+	r, _ := regexp.Compile("(?m)^([0-9]+)$")
 
-	if lastLine != -1 {
-		content = content[lastLine+1 : len(content)]
-	}
-
-	abs, err := strconv.Atoi(content)
+	abs, err := strconv.Atoi(r.FindString(content))
 
 	if err != nil {
 		panic(err)
