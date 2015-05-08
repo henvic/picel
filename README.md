@@ -97,6 +97,12 @@ Currently you can encode urls using either the go package or using the auxiliary
 
 If you need to write URLs by hand take a look at the [examples for the JS encoder](https://github.com/henvic/picel-js#examples) and [its source code](https://github.com/henvic/picel-js/blob/master/picel.js).
 
+## Contributing
+In lieu of a formal style guide, take care to maintain the existing coding style.Add unit tests for any new or changed functionality. Check your code with go fmt, go vet, go test, go cover, and go lint.
+
+* [Binary builts by GoBuilder.me](https://gobuilder.me/github.com/henvic/picel)
+* [Lint for this repo](http://go-lint.appspot.com/github.com/henvic/picel)
+
 ## test_assets branch
 The test_assets branch exists to the sole purpose of serving as a branch for binary image files for the integration tests. It only contains binary files (and nothing else) and maybe rebased at any time since its history doesn't matter. It's used to checkout the `test_assets` directory whenever the tests are run.
 
