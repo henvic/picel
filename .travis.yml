@@ -6,4 +6,4 @@ before_install:
   - go get golang.org/x/tools/cmd/cover
   - go get github.com/mattn/goveralls
 after_script:
-  - script/coverage --coveralls
+  - sh `pwd`/scripts/coverage --coveralls
