@@ -4,11 +4,11 @@ picel is a light-weight, blazing fast REST-ful micro service for image processin
 
 It does one thing and does it well: process images like a UNIX [filter](https://en.wikipedia.org/wiki/Filter_\(software\)) (see [Basics of the UNIX Philosophy](http://www.catb.org/esr/writings/taoup/html/ch01s06.html)).
 
-You can use picel as a middleware between your backend (storage) and your caching layer. User requests can go trough the caching layer and, if the content is not found, it is proxied to the picel microservice, which will then process and try to retrieve the raw data from the backend server, before processing and returning the response. The response SHOULD be cached by the caching layer for further requests.
+You can use picel as a middleware between your backend (storage) and your caching layer. User requests can go trough the caching layer and, if the content is not found, it is proxied to the picel microservice, which will then try to decode the query, retrieve the raw data from the backend server, process and return the response. The response SHOULD be cached by the caching layer for further requests.
 
 This way you can simplify your operations environment by avoiding multiple caching layers. Just be aware that due to the very nature of images (large in size, seldom changing) it is wise to consider carefully appropriate caching rules to avoid premature removal.
 
-Also, you want your proxy layer to have protection against abuse ([enhance your calm](http://httpstatusdogs.com/420-enhance-your-calm) to avoid trying to process [too many suspicious requests](http://httpstatusdogs.com/429-too-many-requests)). Refer to [rfc6585#section-4](https://tools.ietf.org/html/rfc6585#section-4) to know more. Modern HTTP servers such as nginx already have options to deal with such attacks.
+Also, you want your proxy layer to have protection against abuse ([enhance your calm](http://httpstatusdogs.com/420-enhance-your-calm) to avoid trying to process [too many suspicious requests](http://httpstatusdogs.com/429-too-many-requests)). Refer to [rfc6585#section-4](https://tools.ietf.org/html/rfc6585#section-4) to know more. Modern HTTP servers such as [nginx](http://nginx.org/) or [HAProxy](http://www.haproxy.org/) already have options to deal with such attacks.
 
 picel is designed to be safe so that you can try to process untrusted data with no security issues.
 
