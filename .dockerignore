@@ -2,3 +2,6 @@
 test_assets
 *_test.go
 picel
+picel_*_386
+# picel_*_amd64 is needed
+picel_*_arm

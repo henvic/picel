@@ -1,5 +1,8 @@
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 picel
+picel_*_386
+picel_*_amd64
+picel_*_arm
 *.o
 *.a
 *.so
