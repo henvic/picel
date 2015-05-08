@@ -21,6 +21,16 @@ The default port is 8123. Change it with `--addr :8000` to listen on port 8000 (
 
 `picel --help` for more help.
 
+## tl;dr Docker
+There's a [docker](https://www.docker.com/) container you can get from the [docker HUB registry](https://registry.hub.docker.com/) as well.
+
+You can get the [henvic/picel](https://registry.hub.docker.com/u/henvic/picel/) container up and running quickly with
+
+```
+docker pull henvic/picel
+docker run -d -p 8123:8123 picel
+```
+
 ## Defaults, performance friendly, and more
 By default, picel will try to use webp if the user doesn't explicitly request another format and his client announces it accepts it (Chrome, for example).
 
