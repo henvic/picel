@@ -1,9 +1,6 @@
 language: go
 sudo: required
-before_install:
-  - bash .travis.install_deps.bash
-  - git fetch origin test_assets:origin/test_assets
-  - go get golang.org/x/tools/cmd/cover
-  - go get github.com/mattn/goveralls
+script:
+  - pwd
 after_script:
-  - script/coverage --coveralls
+  - ./script/coverage --coveralls
