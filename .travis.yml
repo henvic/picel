@@ -6,4 +6,5 @@ before_install:
   - go get golang.org/x/tools/cmd/cover
   - go get github.com/mattn/goveralls
 after_script:
+  - PATH="$HOME/gopath/bin:$PATH"
   - script/coverage --coveralls
