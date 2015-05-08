@@ -14,7 +14,7 @@ picel is designed to be safe so that you can try to process untrusted data with 
 
 ## tl;dr
 1. Download the latest picel binary release for your platform from the [releases page](https://github.com/henvic/picel/releases).
-2. Run it with no arguments or with something like `--Backend localhost:8080`
+2. Run it with no arguments or with something like `--backend localhost:8080`
 3. Use [picel-js](https://github.com/henvic/picel-js) to encode your images.
 
 The default port is 8123. Change it with `--addr :8000` to listen on port 8000 (for example).
@@ -49,7 +49,7 @@ picel uses [webp](https://developers.google.com/speed/webp/) and [ImageMagick](h
 
 The id and output MUST be escaped by **_** (underscore).
 
-backend is the server backend, to be used if picel was not started with the `--Backend` flag. It should be a host without a leading `http://` or, in case of `https://`, with a `s:` prepended.
+backend is the server backend, to be used if picel was not started with the `--backend` flag. It should be a host without a leading `http://` or, in case of `https://`, with a `s:` prepended.
 
 Available params are:
 
