@@ -6,12 +6,13 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/henvic/picel/client"
-	"github.com/henvic/picel/image"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/henvic/picel/client"
+	"github.com/henvic/picel/image"
 )
 
 const (

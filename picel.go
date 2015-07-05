@@ -9,12 +9,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/henvic/picel/image"
-	"github.com/henvic/picel/logger"
-	"github.com/henvic/picel/server"
 	"net/http"
 	"os/exec"
 	"strings"
+
+	"github.com/henvic/picel/image"
+	"github.com/henvic/picel/logger"
+	"github.com/henvic/picel/server"
 )
 
 const (
