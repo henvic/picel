@@ -2,6 +2,7 @@ package server
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -24,6 +25,7 @@ type HostProvider struct {
 }
 
 type GoodRequestProvider struct {
+	requestBody    string
 	url            string
 	outputFiletype string
 	meta           []string
@@ -32,7 +34,12 @@ type GoodRequestProvider struct {
 	acceptWebp     bool
 }
 
+type BadRequestProvider struct {
+	request string
+}
+
 type BuildExplainProvider struct {
+	path      string
 	transform image.Transform
 	err       error
 	errs      []error
@@ -54,6 +61,23 @@ type EncodingAndDecodingForExplicitBackendProvider struct {
 	backend string
 }
 
+type EncodeCropProvider struct {
+	in   crop
+	want string
+}
+
+type EncodeDimensionProvider struct {
+	in   publicImage
+	want string
+}
+
+type CreateRequestPathProvider struct {
+	doc  string
+	path string
+}
+
+var ts *httptest.Server
+
 func init() {
 	// binary test assets are stored in a helper branch for neatness
 	branch := exec.Command("git", "branch", "test_assets", "--track", "origin/test_assets", "-f")
@@ -67,6 +91,13 @@ func init() {
 	gitRmCached := exec.Command("git", "rm", "--cached", "-r", "../test_assets")
 	gitRmCached.Stderr = os.Stderr
 	gitRmCached.Run()
+
+	fsHandler := func(w http.ResponseWriter, r *http.Request) {
+		path := strings.Replace(r.URL.Path, "../", "", -1)
+		http.ServeFile(w, r, "../test_assets/"+path[1:])
+	}
+
+	ts = httptest.NewServer(http.HandlerFunc(fsHandler))
 }
 
 func TestCompressAndExpandHost(t *testing.T) {
@@ -87,10 +118,10 @@ func TestCompressAndExpandHost(t *testing.T) {
 func TestCompleteEncodingAndDecoding(t *testing.T) {
 	t.Parallel()
 	for _, c := range EncodingAndDecodingCases {
-		gotUrl := Encode(c.object)
+		gotURL := Encode(c.object)
 
-		if gotUrl != c.url {
-			t.Errorf("Encode(%+v) == %v, want %v", c.object, gotUrl, c.url)
+		if gotURL != c.url {
+			t.Errorf("Encode(%+v) == %v, want %v", c.object, gotURL, c.url)
 		}
 
 		gotObject, _, err := Decode(c.url, "")
@@ -110,10 +141,10 @@ func TestEncodingForExplicitBackend(t *testing.T) {
 
 	for _, c := range EncodingAndDecodingForExplicitBackendCases {
 		Backend = c.backend
-		gotUrl := Encode(c.object)
+		gotURL := Encode(c.object)
 
-		if gotUrl != c.url {
-			t.Errorf("Encode(%+v) == %v, want %v", c.object, gotUrl, c.url)
+		if gotURL != c.url {
+			t.Errorf("Encode(%+v) == %v, want %v", c.object, gotURL, c.url)
 		}
 
 		gotObject, _, err := Decode(c.url, "")
@@ -133,15 +164,15 @@ func TestEncodingForExplicitBackend(t *testing.T) {
 func TestBuildExplain(t *testing.T) {
 	t.Parallel()
 	for _, c := range BuildExplainCases {
-		got := buildExplain(c.transform, c.err, c.errs)
+		got := buildExplain(c.path, c.transform, c.err, c.errs)
 
 		if reflect.DeepEqual(got, c.explain) != true {
-			t.Errorf("buildExplain(%v, %v, %v) == %+v, want %+v", c.transform, c.err, c.errs, got, c.explain)
+			t.Errorf("buildExplain(%v, %v, %v, %v) == %+v, want %+v", c.path, c.transform, c.err, c.errs, got, c.explain)
 		}
 	}
 }
 
-func TestJsonEncodeTransformation(t *testing.T) {
+func TestJSONEncodeTransformation(t *testing.T) {
 	t.Parallel()
 	path := "s:example.net/foo_137x0:737x450_800x600_jpg.webp"
 	reference := "../explain_example.json"
@@ -154,8 +185,9 @@ func TestJsonEncodeTransformation(t *testing.T) {
 
 	want := string(content)
 
-	actual := jsonEncodeTransformation(Decode(path, "foo"))
-	jsonEncodeTransformation(image.Transform{}, nil, nil)
+	transform, errs, err := Decode(path, "foo")
+
+	actual := jsonEncodeTransformation("/"+path, transform, errs, err)
 
 	if actual != want {
 		t.Errorf("Expected JSON for %v doesn't match with the result saved as %v", path, reference)
@@ -188,10 +220,67 @@ func TestServerExplain(t *testing.T) {
 	}
 }
 
+func TestServerRequestBodyPathExplain(t *testing.T) {
+	t.Parallel()
+
+	for _, c := range CreateRequestPathCases {
+		req, _ := http.NewRequest("GET", "/?explain", bytes.NewBufferString(c.doc))
+		w := httptest.NewRecorder()
+		http.HandlerFunc(Handler).ServeHTTP(w, req)
+
+		var pi publicImage
+
+		err := json.Unmarshal(w.Body.Bytes(), &pi)
+
+		if pi.Path != c.path || err != nil {
+			t.Errorf("Expected path returned by ?explain are invalid or error happened, got %v, want %v (%v)", "blob", pi.Path, c.path, err)
+		}
+	}
+}
+
+func TestServerRequestBodyExplain(t *testing.T) {
+	t.Parallel()
+	url := "/"
+	reference := "../explain_example.json"
+	body := `{
+		"backend": "https://example.net",
+		"path": "foo.jpg",
+		"crop": {
+			"x": 137,
+			"y": 0,
+			"width": 737,
+			"height": 450
+		},
+		"width": 800,
+		"height": 600,
+		"output": "webp"
+	}`
+
+	req, _ := http.NewRequest("GET", url+"?explain", bytes.NewBufferString(body))
+	w := httptest.NewRecorder()
+	http.HandlerFunc(Handler).ServeHTTP(w, req)
+
+	content, err := ioutil.ReadFile(reference)
+
+	if err != nil {
+		panic(err)
+	}
+
+	want := string(content)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Home page didn't return %v", http.StatusOK)
+	}
+
+	if w.Body.String() != want {
+		t.Errorf("Expected JSON for %v doesn't match with the result saved as %v", url, reference)
+	}
+}
+
 func TestServerSingleBackendExplain(t *testing.T) {
 	// don't run in parallel due to mocking Backend
 	url := "/foo_137x0:737x450_800x600_jpg.webp"
-	reference := "../explain_example.json"
+	reference := "../explain_example_single_be.json"
 
 	defaultBackend := Backend
 	Backend = "https://example.net"
@@ -219,22 +308,47 @@ func TestServerSingleBackendExplain(t *testing.T) {
 
 func TestServerBadRequest(t *testing.T) {
 	// don't run in parallel due to mocking Backend
-	url := "/_"
-
 	defaultBackend := Backend
 	Backend = "https://localhost/"
-	req, _ := http.NewRequest("GET", url, nil)
-	w := httptest.NewRecorder()
-	http.HandlerFunc(Handler).ServeHTTP(w, req)
+
+	for _, c := range BadRequestsURLCases {
+		req, _ := http.NewRequest("GET", c.request, nil)
+
+		w := httptest.NewRecorder()
+		http.HandlerFunc(Handler).ServeHTTP(w, req)
+
+		if w.Code != http.StatusBadRequest {
+			t.Errorf("Request status code response is %v, want %v", w.Code, http.StatusBadRequest)
+		}
+
+		if w.Body.String() != BadRequestMessage+"\n" {
+			t.Errorf("Bad request body message response is %v, want %v", w.Body.String(), BadRequestMessage)
+		}
+	}
+
 	Backend = defaultBackend
+}
 
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("Request status code response is %v, want %v", w.Code, http.StatusBadRequest)
+func TestServerBadBodyRequest(t *testing.T) {
+	// don't run in parallel due to mocking Backend
+	defaultBackend := Backend
+	Backend = "https://localhost/"
+
+	for _, c := range BadRequestsURLCases {
+		req, _ := http.NewRequest("GET", "/", bytes.NewBufferString(c.request))
+		w := httptest.NewRecorder()
+		http.HandlerFunc(Handler).ServeHTTP(w, req)
+
+		if w.Code != http.StatusBadRequest {
+			t.Errorf("Request status code response is %v, want %v", w.Code, http.StatusBadRequest)
+		}
+
+		if w.Body.String() != BadRequestMessage+"\n" {
+			t.Errorf("Bad request body message response is %v, want %v", w.Body.String(), BadRequestMessage)
+		}
 	}
 
-	if w.Body.String() != BAD_REQUEST_MESSAGE+"\n" {
-		t.Errorf("Bad request body message response is %v, want %v", w.Body.String(), BAD_REQUEST_MESSAGE)
-	}
+	Backend = defaultBackend
 }
 
 func TestServerNotFound(t *testing.T) {
@@ -301,19 +415,8 @@ func compareImage(output string, transform image.Transform, width int, height in
 	}
 }
 
-func verifyGoodRequest(compBackend string, c GoodRequestProvider, t *testing.T) {
-	url := "/" + compBackend + c.url
-	req, _ := http.NewRequest("GET", url, nil)
-	w := httptest.NewRecorder()
-	defaultOutput := "jpg"
-
-	if c.acceptWebp {
-		req.Header.Set("Accept", "image/webp,*/*;q=0.8")
-		defaultOutput = "webp"
-	}
-
-	http.HandlerFunc(Handler).ServeHTTP(w, req)
-
+func validateGoodRequest(compBackend string, c GoodRequestProvider,
+	t *testing.T, w *httptest.ResponseRecorder, defaultOutput string) {
 	if w.Code != http.StatusOK {
 		t.Errorf("Request status code response is %v, want %v", w.Code, http.StatusOK)
 	}
@@ -354,15 +457,45 @@ func verifyGoodRequest(compBackend string, c GoodRequestProvider, t *testing.T) 
 	compareImage(filename, transform, c.width, c.height, t)
 }
 
-func TestServerGoodRequests(t *testing.T) {
-	t.Parallel()
-	fsHandler := func(w http.ResponseWriter, r *http.Request) {
-		path := strings.Replace(r.URL.Path, "../", "", -1)
-		http.ServeFile(w, r, "../test_assets/"+path[1:])
+func verifyGoodRequestByPath(compBackend string, c GoodRequestProvider, t *testing.T) {
+	url := "/" + compBackend + c.url
+	req, _ := http.NewRequest("GET", url, nil)
+	w := httptest.NewRecorder()
+
+	defaultOutput := "jpg"
+
+	if c.acceptWebp {
+		req.Header.Set("Accept", "image/webp,*/*;q=0.8")
+		defaultOutput = "webp"
 	}
 
-	ts := httptest.NewServer(http.HandlerFunc(fsHandler))
-	defer ts.Close()
+	http.HandlerFunc(Handler).ServeHTTP(w, req)
+	validateGoodRequest(compBackend, c, t, w, defaultOutput)
+}
+
+func verifyGoodRequestByRequestBody(compBackend string, c GoodRequestProvider, t *testing.T) {
+	body := strings.Replace(c.requestBody, "REPLACE_ON_TEST", compBackend, -1)
+	req, _ := http.NewRequest("GET", "/", bytes.NewBufferString(body))
+	w := httptest.NewRecorder()
+
+	defaultOutput := "jpg"
+
+	if c.acceptWebp {
+		req.Header.Set("Accept", "image/webp,*/*;q=0.8")
+		defaultOutput = "webp"
+	}
+
+	http.HandlerFunc(Handler).ServeHTTP(w, req)
+	validateGoodRequest(compBackend, c, t, w, defaultOutput)
+}
+
+func verifyGoodRequest(compBackend string, c GoodRequestProvider, t *testing.T) {
+	verifyGoodRequestByPath(compBackend, c, t)
+	verifyGoodRequestByRequestBody(compBackend, c, t)
+}
+
+func TestServerGoodRequests(t *testing.T) {
+	t.Parallel()
 
 	compBackend := compressHost(ts.URL)
 
@@ -373,13 +506,6 @@ func TestServerGoodRequests(t *testing.T) {
 
 func TestServerProcessingFailure(t *testing.T) {
 	t.Parallel()
-	fsHandler := func(w http.ResponseWriter, r *http.Request) {
-		path := strings.Replace(r.URL.Path, "../", "", -1)
-		http.ServeFile(w, r, "../test_assets/"+path[1:])
-	}
-
-	ts := httptest.NewServer(http.HandlerFunc(fsHandler))
-	defer ts.Close()
 
 	Backend = ts.URL + "/"
 
@@ -393,4 +519,74 @@ func TestServerProcessingFailure(t *testing.T) {
 			t.Errorf("Request status code response is %v, want %v", w.Code, http.StatusInternalServerError)
 		}
 	}
+}
+
+func TestEncodeCrop(t *testing.T) {
+	t.Parallel()
+	for _, c := range EncodeCropCases {
+		got := encodeCrop(c.in)
+
+		if got != c.want {
+			t.Errorf("encodeCrop(%q) == %q, want %q", c.in, got, c.want)
+		}
+	}
+}
+
+func TestEncodeDimension(t *testing.T) {
+	t.Parallel()
+	for _, c := range EncodeDimensionCases {
+		in := c.in
+		got := encodeDimension(string(in.Width), string(in.Height))
+
+		if got != c.want {
+			t.Errorf("EncodeDimension(%v, %v) == %v, want %v", in.Width, in.Height, got, c.want)
+		}
+	}
+}
+
+func TestCreateRequestPath(t *testing.T) {
+	t.Parallel()
+	for _, c := range CreateRequestPathCases {
+		path, err := createRequestPath(bytes.NewBufferString(c.doc))
+
+		if path != c.path || err != nil {
+			t.Errorf("createRequestPath(%v) == %v, %v want %v %v", "blob", path, err, c.path, nil)
+		}
+	}
+}
+
+func benchmarkGoodRequest(compBackend string, c GoodRequestProvider, t *testing.B) {
+	url := "/" + compBackend + c.url
+
+	req, _ := http.NewRequest("GET", url, nil)
+	w := httptest.NewRecorder()
+
+	if c.acceptWebp {
+		req.Header.Set("Accept", "image/webp,*/*;q=0.8")
+	}
+
+	http.HandlerFunc(Handler).ServeHTTP(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Request status code response is %v, want %v", w.Code, http.StatusOK)
+	}
+
+	actualContentType := w.Header().Get("Content-Type")
+
+	if actualContentType != c.outputFiletype {
+		t.Errorf("Content-Type is %v, want %v", actualContentType, c.outputFiletype)
+	}
+}
+
+func BenchmarkServerGoodRequestsPerformance(t *testing.B) {
+	compBackend := compressHost(ts.URL)
+
+	defaultBackend := Backend
+	Backend = ""
+
+	for _, c := range GoodRequestsCases {
+		benchmarkGoodRequest(compBackend, c, t)
+	}
+
+	Backend = defaultBackend
 }

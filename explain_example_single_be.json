@@ -1,6 +1,6 @@
 {
     "message": "Success. Image path parsed and decoded correctly",
-    "path": "/s:example.net/foo_137x0:737x450_800x600_jpg.webp",
+    "path": "/foo_137x0:737x450_800x600_jpg.webp",
     "transform": {
         "image": {
             "id": "foo",

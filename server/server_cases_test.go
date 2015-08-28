@@ -88,6 +88,13 @@ var EncodingAndDecodingForExplicitBackendCases = []EncodingAndDecodingForExplici
 
 var GoodRequestsCases = []GoodRequestProvider{
 	{
+		`{
+			"backend":
+			"REPLACE_ON_TEST",
+			"path": "rocks_waves_big_sur_2.jpg",
+			"output": "jpg",
+			"raw": true
+		}`,
 		"/rocks__waves__big__sur__2_raw.jpg",
 		"image/jpeg",
 		[]string{},
@@ -95,6 +102,12 @@ var GoodRequestsCases = []GoodRequestProvider{
 		1067,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "rocks_waves_big_sur_2.jpg",
+			"output": "jpg",
+			"width": 500
+		}`,
 		"/rocks__waves__big__sur__2_500x.jpg",
 		"image/jpeg",
 		[]string{
@@ -106,6 +119,12 @@ var GoodRequestsCases = []GoodRequestProvider{
 		333,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "insects-2.JPEG",
+			"output": "JPEG",
+			"width": "500"
+		}`,
 		"/insects-2_500x.JPEG",
 		"image/jpeg",
 		[]string{
@@ -117,6 +136,18 @@ var GoodRequestsCases = []GoodRequestProvider{
 		333,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "rocks_waves_big_sur_1.jpg",
+			"width": "112",
+			"height": 56,
+			"crop": {
+				"x": 0,
+				"y": "0",
+				"width": 600,
+				"height": 300
+			}
+		}`,
 		"/rocks__waves__big__sur__1_0x0:600x300_112x56",
 		"image/jpeg",
 		[]string{
@@ -127,6 +158,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		56,
 		false},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "big_sur.jpg",
+			"width": 100,
+			"crop": {
+				"x": "0",
+				"y": 0,
+				"width": "600",
+				"height": "600"
+			}
+		}`,
 		"/big__sur_0x0:600x600_100x",
 		"image/webp",
 		[]string{
@@ -137,6 +179,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		100,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "big_sur.jpg",
+			"width": 100,
+			"crop": {
+				"x": "0",
+				"y": 0,
+				"width": "600",
+				"height": "600"
+			}
+		}`,
 		"/big__sur_0x0:600x600_100x",
 		"image/jpeg",
 		[]string{
@@ -147,6 +200,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		100,
 		false},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "/additive-color.png",
+			"crop": {
+				"x": "70",
+				"y": "30",
+				"width": "20",
+				"height": "20"
+			},
+			"output": "png"
+		}`,
 		"/additive-color_70x30:20x20.png",
 		"image/png",
 		[]string{
@@ -163,6 +227,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": "130",
+				"y": "150",
+				"width": "20",
+				"height": "20"
+			},
+			"output": "png"
+		}`,
 		"/additive-color_130x150:20x20.png",
 		"image/png",
 		[]string{
@@ -179,6 +254,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": "50",
+				"y": "150",
+				"width": "20",
+				"height": "20"
+			},
+			"output": "png"
+		}`,
 		"/additive-color_50x150:20x20.png",
 		"image/png",
 		[]string{
@@ -195,6 +281,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "/additive-color.png",
+			"crop": {
+				"x": "90",
+				"y": "140",
+				"width": "20",
+				"height": "20"
+			},
+			"output": "png"
+		}`,
 		"/additive-color_90x140:20x20.png",
 		"image/png",
 		[]string{
@@ -211,6 +308,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": "120",
+				"y": "70",
+				"width": "20",
+				"height": "20"
+			},
+			"output": "png"
+		}`,
 		"/additive-color_120x70:20x20.png",
 		"image/png",
 		[]string{
@@ -227,6 +335,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": 40,
+				"y": 70,
+				"width": 20,
+				"height": 20
+			},
+			"output": "png"
+		}`,
 		"/additive-color_40x70:20x20.png",
 		"image/png",
 		[]string{
@@ -243,6 +362,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": "0",
+				"y": "0",
+				"width": "20",
+				"height": "20"
+			},
+			"output": "png"
+		}`,
 		"/additive-color_0x0:20x20.png",
 		"image/png",
 		[]string{
@@ -255,6 +385,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": "70",
+				"y": "30",
+				"width": "20",
+				"height": "20"
+			},
+			"output": "webp"
+		}`,
 		"/additive-color_70x30:20x20_png.webp",
 		"image/webp",
 		[]string{
@@ -266,6 +407,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": "130",
+				"y": "150",
+				"width": "20",
+				"height": "20"
+			},
+			"output": "webp"
+		}`,
 		"/additive-color_130x150:20x20_png.webp",
 		"image/webp",
 		[]string{
@@ -279,6 +431,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": "50",
+				"y": "150",
+				"width": "20",
+				"height": "20"
+			},
+			"output": "webp"
+		}`,
 		"/additive-color_50x150:20x20_png.webp",
 		"image/webp",
 		[]string{
@@ -291,6 +454,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": 90,
+				"y": 140,
+				"width": 20,
+				"height": 20
+			},
+			"output": "webp"
+		}`,
 		"/additive-color_90x140:20x20_png.webp",
 		"image/webp",
 		[]string{
@@ -303,6 +477,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": "120",
+				"y": "70",
+				"width": "20",
+				"height": "20"
+			},
+			"output": "webp"
+		}`,
 		"/additive-color_120x70:20x20_png.webp",
 		"image/webp",
 		[]string{
@@ -315,6 +500,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": 40,
+				"y": 70,
+				"width": 20,
+				"height" : 20
+			},
+			"output": "webp"
+		}`,
 		"/additive-color_40x70:20x20_png.webp",
 		"image/webp",
 		[]string{
@@ -328,6 +524,17 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "additive-color.png",
+			"crop": {
+				"x": 0,
+				"y": 0,
+				"width": 20,
+				"height" : 20
+			},
+			"output": "webp"
+		}`,
 		"/additive-color_0x0:20x20_png.webp",
 		"image/webp",
 		[]string{
@@ -340,6 +547,11 @@ var GoodRequestsCases = []GoodRequestProvider{
 		20,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "barter.gif",
+			"output": "gif"
+		}`,
 		"/barter.gif",
 		"image/gif",
 		[]string{
@@ -350,6 +562,12 @@ var GoodRequestsCases = []GoodRequestProvider{
 		300,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "barter.gif",
+			"width": "20",
+			"output": "gif"
+		}`,
 		"/barter_20x.gif",
 		"image/gif",
 		[]string{
@@ -360,6 +578,10 @@ var GoodRequestsCases = []GoodRequestProvider{
 		15,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "barter.gif"
+		}`,
 		"/barter_gif",
 		"image/webp",
 		nil,
@@ -367,6 +589,11 @@ var GoodRequestsCases = []GoodRequestProvider{
 		300,
 		true},
 	{
+		`{
+			"backend": "REPLACE_ON_TEST",
+			"path": "barter.gif",
+			"width": "20"
+		}`,
 		"/barter_20x_gif",
 		"image/webp",
 		nil,
@@ -375,22 +602,36 @@ var GoodRequestsCases = []GoodRequestProvider{
 		true},
 }
 
+var BadRequestsURLCases = []BadRequestProvider{
+	{
+		"/_",
+	},
+}
+
+var BadRequestsJSONCases = []BadRequestProvider{
+	{`{`}, {`{}`}, {`{"width": "200"}`},
+}
+
 var BuildExplainCases = []BuildExplainProvider{
 	{
+		"/xyz",
 		image.Transform{},
 		nil,
 		nil,
 		Explain{
-			Message:    SUCCESS_DECODE_MESSAGE,
+			Message:    SuccessDecodeMessage,
+			Path:       "/xyz",
 			Transform:  image.Transform{},
 			ErrorStack: nil},
 	},
 	{
+		"/",
 		image.Transform{},
 		errors.New("xyz"),
 		[]error{errors.New("foo"), errors.New("testing")},
 		Explain{
 			Message:    "xyz",
+			Path:       "/",
 			Transform:  image.Transform{},
 			ErrorStack: []string{"foo", "testing"},
 		}},
@@ -399,4 +640,77 @@ var BuildExplainCases = []BuildExplainProvider{
 var ServerProcessingFailureCases = []ServerProcessingFailureProvider{
 	{"/empty__file.jpg"},
 	{"/insects_jpg.xoo"},
+}
+
+var EncodeCropCases = []EncodeCropProvider{
+	{crop{
+		X:      "1",
+		Y:      "2",
+		Width:  "3",
+		Height: "4",
+	}, "1x2:3x4"},
+	{crop{}, ""},
+}
+
+var EncodeDimensionCases = []EncodeDimensionProvider{
+	{publicImage{
+		Width:  "",
+		Height: "",
+	}, ""},
+	{publicImage{
+		Width: "10",
+	}, "10x"},
+	{publicImage{
+		Height: "10",
+	}, "x10"},
+	{publicImage{
+		Width:  "10",
+		Height: "10",
+	}, "10x10"},
+}
+
+var CreateRequestPathCases = []CreateRequestPathProvider{
+	{
+		doc:  `{"path": "foo.jpg"}`,
+		path: "/foo",
+	}, {
+		doc:  `{"path": "foo.jpg", "backend": "https://localhost/"}`,
+		path: "/s:localhost/foo",
+	}, {
+		doc:  `{"path": "foo.gif", "raw": true}`,
+		path: "/foo_raw.gif",
+	}, {
+		doc:  `{"path": "bah.jpg", "raw": true}`,
+		path: "/bah_raw.jpg",
+	}, {
+		doc:  `{"path": "bah.jpg", "crop": {"x": 0, "y": 0, "width": 100, "height": 200}}`,
+		path: "/bah_0x0:100x200",
+	}, {
+		doc:  `{"path": "bah.jpg", "crop": {"x": "0", "y": "0", "width": "100", "height": "200"}}`,
+		path: "/bah_0x0:100x200",
+	}, {
+		doc:  `{"path": "bah.jpg", "width": 100}`,
+		path: "/bah_100x",
+	}, {
+		doc:  `{"path": "bah.jpg", "width": "100"}`,
+		path: "/bah_100x",
+	}, {
+		doc:  `{"path": "bah.jpg", "height": 100}`,
+		path: "/bah_x100",
+	}, {
+		doc:  `{"path": "bah.jpg", "height": "100"}`,
+		path: "/bah_x100",
+	}, {
+		doc:  `{"path": "bah.jpg", "width": 40, "height": "100"}`,
+		path: "/bah_40x100",
+	}, {
+		doc:  `{"path": "bah.jpg", "width": "40", "height": 100}`,
+		path: "/bah_40x100",
+	}, {
+		doc:  `{"path": "bah.gif", "width": "40", "output": "webp"}`,
+		path: "/bah_40x_gif.webp",
+	}, {
+		doc:  `{"path": "foo_bah.jpg", "width": "40", "output": "jpg"}`,
+		path: "/foo__bah_40x.jpg",
+	},
 }

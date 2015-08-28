@@ -1,0 +1,13 @@
+{
+	"backend": "https://example.net/",
+	"path": "foo.jpg",
+	"crop": {
+		"x": 137,
+		"y": 0,
+		"width": 737,
+		"height": 450
+	},
+	"width": 800,
+	"height": 600,
+	"output": "webp"
+}

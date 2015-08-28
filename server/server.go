@@ -5,7 +5,9 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -16,46 +18,65 @@ import (
 )
 
 const (
-	SUCCESS_DECODE_MESSAGE = "Success. Image path parsed and decoded correctly"
-	BAD_REQUEST_MESSAGE    = "Bad request."
-	HTTP_SCHEMA            = "http://"
-	HTTPS_SCHEMA           = "https://"
-	FLAG_HTTPS_SCHEMA      = "s:"
+	SuccessDecodeMessage = "Success. Image path parsed and decoded correctly"
+	BadRequestMessage    = "Bad request."
+	HTTPSchema           = "http://"
+	HTTPSSchema          = "https://"
+	FlagHTTPSSchema      = "s:"
 )
 
 var (
-	Backend string
-	Verbose bool
+	Backend        string
+	Verbose        bool
+	ErrMissingPath = "Missing path"
 )
 
 type Explain struct {
 	Message    string          `json:"message"`
+	Path       string          `json:"path"`
 	Transform  image.Transform `json:"transform"`
 	ErrorStack []string        `json:"errors"`
 }
 
+type crop struct {
+	X      json.Number `json:"x"`
+	Y      json.Number `json:"y"`
+	Width  json.Number `json:"width"`
+	Height json.Number `json:"height"`
+}
+
+type publicImage struct {
+	Backend string      `json:"backend"`
+	Path    string      `json:"path"`
+	Raw     bool        `json:"raw"`
+	Crop    crop        `json:"crop"`
+	Width   json.Number `json:"width"`
+	Height  json.Number `json:"height"`
+	Output  string      `json:"output"`
+}
+
 func compressHost(raw string) string {
-	if strings.Index(raw, HTTPS_SCHEMA) == 0 {
-		return strings.Replace(raw, HTTPS_SCHEMA, FLAG_HTTPS_SCHEMA, 1)
+	if strings.Index(raw, HTTPSSchema) == 0 {
+		return strings.Replace(raw, HTTPSSchema, FlagHTTPSSchema, 1)
 	}
 
-	return strings.Replace(raw, HTTP_SCHEMA, "", 1)
+	return strings.Replace(raw, HTTPSchema, "", 1)
 }
 
 func expandHost(raw string) (source string) {
 	https := false
 	source = raw
 
-	if strings.Index(source, FLAG_HTTPS_SCHEMA) == 0 {
+	if strings.Index(source, FlagHTTPSSchema) == 0 {
 		https = true
-		source = strings.TrimPrefix(source, FLAG_HTTPS_SCHEMA)
+		source = strings.TrimPrefix(source, FlagHTTPSSchema)
 	}
 
 	switch https {
 	case true:
-		source = HTTPS_SCHEMA + source
+		source = HTTPSSchema + source
 	default:
-		source = HTTP_SCHEMA + source
+		source = HTTPSchema + source
 	}
 
 	return source
@@ -95,7 +116,7 @@ func Encode(transform image.Transform) (url string) {
 	return compressHost(source[0:len(source)-len(fullname)]) + url
 }
 
-func buildExplain(transform image.Transform, err error, errs []error) Explain {
+func buildExplain(path string, transform image.Transform, err error, errs []error) Explain {
 	var errorsMessages []string
 	var message string
 
@@ -108,18 +129,19 @@ func buildExplain(transform image.Transform, err error, errs []error) Explain {
 	}
 
 	if message == "" {
-		message = SUCCESS_DECODE_MESSAGE
+		message = SuccessDecodeMessage
 	}
 
 	return Explain{
 		Message:    message,
+		Path:       path,
 		Transform:  transform,
 		ErrorStack: errorsMessages,
 	}
 }
 
-func jsonEncodeTransformation(t image.Transform, errs []error, err error) string {
-	res, _ := json.MarshalIndent(buildExplain(t, err, errs), "", "    ")
+func jsonEncodeTransformation(path string, t image.Transform, errs []error, err error) string {
+	res, _ := json.MarshalIndent(buildExplain(path, t, err, errs), "", "    ")
 
 	return string(res)
 }
@@ -172,23 +194,121 @@ func loadingHandler(t image.Transform, w http.ResponseWriter, r *http.Request) {
 	processingHandler(filename, t, w, r)
 }
 
-func Handler(w http.ResponseWriter, r *http.Request) {
+func encodeCrop(c crop) (param string) {
+	if len(c.Width) != 0 && len(c.Height) != 0 {
+		param = fmt.Sprintf("%sx%s:%sx%s", c.X, c.Y, c.Width, c.Height)
+	}
+
+	return param
+}
+
+func encodeDimension(width string, height string) (dim string) {
+	if len(width) == 0 && len(height) == 0 {
+		return dim
+	}
+
+	if len(width) != 0 {
+		dim += fmt.Sprintf("%s", width)
+	}
+
+	dim += "x"
+
+	if len(height) != 0 {
+		dim += fmt.Sprintf("%s", height)
+	}
+
+	return dim
+}
+
+func createRequestPath(body io.Reader) (path string, err error) {
+	decoder := json.NewDecoder(body)
+
+	var pi publicImage
+	var params []string
+
+	err = decoder.Decode(&pi)
+
+	if len(pi.Backend) != 0 {
+		path = "/" + strings.TrimSuffix(compressHost(pi.Backend), "/")
+	}
+
+	id, extension := image.GetFilePathParts(pi.Path)
+
+	id = strings.TrimPrefix(image.EscapePath(id), "/")
+
+	if len(id) != 0 {
+		path += "/" + id
+	}
+
+	if pi.Raw {
+		path += "_" + image.RAW + "." + extension
+		return path, err
+	}
+
+	params = append(params, encodeCrop(pi.Crop))
+	params = append(params, encodeDimension(string(pi.Width), string(pi.Height)))
+
+	if pi.Output != extension && (extension != image.DefaultInputExtension || len(pi.Output) != 0) {
+		params = append(params, image.EscapePath(extension))
+	}
+
+	for _, param := range params {
+		path += image.EncodeParam(param)
+	}
+
+	if len(pi.Output) != 0 {
+		path += "." + image.EscapePath(pi.Output)
+	}
+
+	if pi.Path == "" {
+		err = errors.New(ErrMissingPath)
+	}
+
+	return path, err
+}
+
+func prepare(r *http.Request) (transform image.Transform, reqPath string, errs []error, err error) {
 	path := r.URL.Path[1:]
+	reqPath = path
+	var errRequestPath error
+
+	if len(path) == 0 {
+		var p string
+		p, errRequestPath = createRequestPath(r.Body)
+
+		if errRequestPath == nil && len(p) != 0 {
+			path = p[1:]
+			reqPath = path
+		}
+	}
 
 	if Backend != "" {
 		path = compressHost(Backend) + "/" + path
 	}
 
-	transform, errs, err := Decode(path, getDefaultRequestOutputFormat(r))
+	transform, errsDecode, err := Decode(path, getDefaultRequestOutputFormat(r))
+
+	if errRequestPath != nil {
+		errs = append(errs, errRequestPath)
+		err = errRequestPath
+	}
+
+	errs = append(errs, errsDecode...)
+
+	return transform, reqPath, errs, err
+}
+
+func Handler(w http.ResponseWriter, r *http.Request) {
+	transform, path, errs, err := prepare(r)
 
 	if r.URL.Query()["explain"] != nil {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, jsonEncodeTransformation(transform, errs, err))
+		fmt.Fprint(w, jsonEncodeTransformation("/"+path, transform, errs, err))
 		return
 	}
 
 	if err != nil {
-		http.Error(w, BAD_REQUEST_MESSAGE, http.StatusBadRequest)
+		http.Error(w, BadRequestMessage, http.StatusBadRequest)
 		return
 	}
 

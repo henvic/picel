@@ -19,7 +19,7 @@ var NameCases = []NameProvider{
 	}, "dog", "dog"},
 }
 
-var EscapeRawUrlPartsCases = []EscapeRawUrlPartsProvider{
+var EscapePathCases = []EscapePathProvider{
 	{"", ""},
 	{"_", "__"},
 	{"__", "____"},

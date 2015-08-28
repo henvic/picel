@@ -11,7 +11,7 @@ type NameProvider struct {
 	fullname string
 }
 
-type EscapeRawUrlPartsProvider struct {
+type EscapePathProvider struct {
 	unescaped string
 	escaped   string
 }
@@ -106,18 +106,18 @@ func TestName(t *testing.T) {
 	}
 }
 
-func TestEscapeRawUrlParts(t *testing.T) {
+func TestEscapePath(t *testing.T) {
 	t.Parallel()
-	for _, c := range EscapeRawUrlPartsCases {
-		esc := escapeRawUrlParts(c.unescaped)
-		unesc := unescapeRawUrlParts(c.escaped)
+	for _, c := range EscapePathCases {
+		esc := EscapePath(c.unescaped)
+		unesc := UnescapePath(c.escaped)
 
 		if esc != c.escaped {
-			t.Errorf("escapeRawUrlParts(%q) == %q, want %q", c.unescaped, esc, c.escaped)
+			t.Errorf("EscapePath(%q) == %q, want %q", c.unescaped, esc, c.escaped)
 		}
 
 		if unesc != c.unescaped {
-			t.Errorf("escapeRawUrlParts(%q) == %q, want %q", c.escaped, unesc, c.unescaped)
+			t.Errorf("EscapePath(%q) == %q, want %q", c.escaped, unesc, c.unescaped)
 		}
 	}
 }
@@ -136,10 +136,11 @@ func TestEncodeCrop(t *testing.T) {
 func TestEncodeDimension(t *testing.T) {
 	t.Parallel()
 	for _, c := range EncodeDimensionCases {
-		got := encodeDimension(c.in)
+		in := c.in
+		got := encodeDimension(in.Width, in.Height)
 
 		if got != c.want {
-			t.Errorf("encodeDimension(%v) == %v, want %v", c.in, got, c.want)
+			t.Errorf("encodeDimension(%v, %v) == %v, want %v", in.Width, in.Height, got, c.want)
 		}
 	}
 }
@@ -147,10 +148,10 @@ func TestEncodeDimension(t *testing.T) {
 func TestEncodeParam(t *testing.T) {
 	t.Parallel()
 	for _, c := range EncodeParamCases {
-		got := encodeParam(c.in)
+		got := EncodeParam(c.in)
 
 		if got != c.want {
-			t.Errorf("encodeParam(%v) == %v, want %v", c.in, got, c.want)
+			t.Errorf("EncodeParam(%v) == %v, want %v", c.in, got, c.want)
 		}
 	}
 }
@@ -235,10 +236,10 @@ func TestGetDimensionsFailure(t *testing.T) {
 func TestGetOutput(t *testing.T) {
 	t.Parallel()
 	for _, c := range GetOutputCases {
-		prefix, suffix := getFilePathParts(c.in)
+		prefix, suffix := GetFilePathParts(c.in)
 
 		if prefix != c.prefix || suffix != c.suffix {
-			t.Errorf("getFilePathParts(%q) == %q %q, want %q %q", c.in, prefix, suffix, c.prefix, c.suffix)
+			t.Errorf("GetFilePathParts(%q) == %q %q, want %q %q", c.in, prefix, suffix, c.prefix, c.suffix)
 		}
 	}
 }

@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	defaultInputExtension = "jpg"
+	DefaultInputExtension = "jpg"
 	RAW                   = "raw"
 )
 
@@ -85,17 +85,17 @@ func Decode(path string, defaultOutputFormat string) (transform Transform, errs 
 	output := ""
 
 	if paramsSubstringStart == -1 {
-		imgId, output = getFilePathParts(path)
-		t.Image.Id = unescapeRawUrlParts(imgId)
+		imgId, output = GetFilePathParts(path)
+		t.Image.Id = UnescapePath(imgId)
 
 		extension := output
 
 		if extension == "" {
-			extension = defaultInputExtension
+			extension = DefaultInputExtension
 		}
 
-		t.Image.Extension = unescapeRawUrlParts(extension)
-		t.Output = getOutputFormat(unescapeRawUrlParts(output), defaultOutputFormat)
+		t.Image.Extension = UnescapePath(extension)
+		t.Output = getOutputFormat(UnescapePath(output), defaultOutputFormat)
 		_, fullname := t.Image.Name()
 		t.Image.Source = fullname
 
@@ -103,10 +103,10 @@ func Decode(path string, defaultOutputFormat string) (transform Transform, errs 
 	}
 
 	imgId = path[0 : paramsSubstringStart-1]
-	paramsString, output = getFilePathParts(path[paramsSubstringStart-1 : len(path)])
-	t.Image.Id = unescapeRawUrlParts(imgId)
-	t.Output = getOutputFormat(unescapeRawUrlParts(output), defaultOutputFormat)
-	err, errs = extractParams(paramsString, unescapeRawUrlParts(output), &t)
+	paramsString, output = GetFilePathParts(path[paramsSubstringStart-1 : len(path)])
+	t.Image.Id = UnescapePath(imgId)
+	t.Output = getOutputFormat(UnescapePath(output), defaultOutputFormat)
+	err, errs = extractParams(paramsString, UnescapePath(output), &t)
 	_, fullname := t.Image.Name()
 	t.Image.Source = fullname
 
@@ -115,12 +115,12 @@ func Decode(path string, defaultOutputFormat string) (transform Transform, errs 
 
 func Encode(transform Transform) (url string) {
 	image := transform.Image
-	url = escapeRawUrlParts(image.Id)
+	url = EscapePath(image.Id)
 
 	inputExtension := image.Extension
 
 	if inputExtension == "" {
-		inputExtension = defaultInputExtension
+		inputExtension = DefaultInputExtension
 	}
 
 	if transform.Raw {
@@ -129,26 +129,26 @@ func Encode(transform Transform) (url string) {
 		return url
 	}
 
-	url += encodeParam(encodeCrop(transform.Crop))
+	url += EncodeParam(encodeCrop(transform.Crop))
 
-	url += encodeParam(encodeDimension(transform))
+	url += EncodeParam(encodeDimension(transform.Width, transform.Height))
 
-	if transform.Output != inputExtension && (inputExtension != defaultInputExtension || transform.Output != "") {
-		url += encodeParam(escapeRawUrlParts(inputExtension))
+	if transform.Output != inputExtension && (inputExtension != DefaultInputExtension || transform.Output != "") {
+		url += EncodeParam(EscapePath(inputExtension))
 	}
 
 	if transform.Output != "" {
-		url += "." + escapeRawUrlParts(transform.Output)
+		url += "." + EscapePath(transform.Output)
 	}
 
 	return url
 }
 
-func escapeRawUrlParts(raw string) string {
+func EscapePath(raw string) string {
 	return strings.Replace(raw, "_", "__", -1)
 }
 
-func unescapeRawUrlParts(raw string) string {
+func UnescapePath(raw string) string {
 	return strings.Replace(raw, "__", "_", -1)
 }
 
@@ -160,25 +160,25 @@ func encodeCrop(c Crop) (crop string) {
 	return crop
 }
 
-func encodeDimension(transform Transform) (dim string) {
-	if transform.Width == 0 && transform.Height == 0 {
+func encodeDimension(width int, height int) (dim string) {
+	if width == 0 && height == 0 {
 		return dim
 	}
 
-	if transform.Width > 0 {
-		dim += fmt.Sprintf("%d", transform.Width)
+	if width > 0 {
+		dim += fmt.Sprintf("%d", width)
 	}
 
 	dim += "x"
 
-	if transform.Height > 0 {
-		dim += fmt.Sprintf("%d", transform.Height)
+	if height > 0 {
+		dim += fmt.Sprintf("%d", height)
 	}
 
 	return dim
 }
 
-func encodeParam(param string) string {
+func EncodeParam(param string) string {
 	if param != "" {
 		param = "_" + param
 	}
@@ -303,7 +303,7 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 	params := strings.Split(part, "_")
 
 	for i := range params {
-		params[i] = unescapeRawUrlParts(params[i])
+		params[i] = UnescapePath(params[i])
 	}
 
 	pos := 1
@@ -342,10 +342,10 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 	}
 
 	if extension == "" {
-		extension = defaultInputExtension
+		extension = DefaultInputExtension
 	}
 
-	t.Image.Extension = unescapeRawUrlParts(extension)
+	t.Image.Extension = UnescapePath(extension)
 
 	if pos != len(params) {
 		err = ErrNonEmptyParameterQueue
@@ -355,7 +355,7 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 	return err, errs
 }
 
-func getFilePathParts(part string) (string, string) {
+func GetFilePathParts(part string) (string, string) {
 	last := strings.LastIndex(part, ".")
 
 	if last == -1 {
