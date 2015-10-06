@@ -101,7 +101,6 @@ func init() {
 }
 
 func TestCompressAndExpandHost(t *testing.T) {
-	t.Parallel()
 	for _, c := range HostCases {
 		compressed := compressHost(c.expanded)
 		if compressed != c.compressed {
@@ -116,7 +115,6 @@ func TestCompressAndExpandHost(t *testing.T) {
 }
 
 func TestCompleteEncodingAndDecoding(t *testing.T) {
-	t.Parallel()
 	for _, c := range EncodingAndDecodingCases {
 		gotURL := Encode(c.object)
 
@@ -162,7 +160,6 @@ func TestEncodingForExplicitBackend(t *testing.T) {
 }
 
 func TestBuildExplain(t *testing.T) {
-	t.Parallel()
 	for _, c := range BuildExplainCases {
 		got := buildExplain(c.path, c.transform, c.err, c.errs)
 
@@ -173,7 +170,6 @@ func TestBuildExplain(t *testing.T) {
 }
 
 func TestJSONEncodeTransformation(t *testing.T) {
-	t.Parallel()
 	path := "s:example.net/foo_137x0:737x450_800x600_jpg.webp"
 	reference := "../explain_example.json"
 
@@ -195,7 +191,6 @@ func TestJSONEncodeTransformation(t *testing.T) {
 }
 
 func TestServerExplain(t *testing.T) {
-	t.Parallel()
 	url := "/s:example.net/foo_137x0:737x450_800x600_jpg.webp"
 	reference := "../explain_example.json"
 
@@ -221,8 +216,6 @@ func TestServerExplain(t *testing.T) {
 }
 
 func TestServerRequestBodyPathExplain(t *testing.T) {
-	t.Parallel()
-
 	for _, c := range CreateRequestPathCases {
 		req, _ := http.NewRequest("GET", "/?explain", bytes.NewBufferString(c.doc))
 		w := httptest.NewRecorder()
@@ -239,7 +232,6 @@ func TestServerRequestBodyPathExplain(t *testing.T) {
 }
 
 func TestServerRequestBodyExplain(t *testing.T) {
-	t.Parallel()
 	url := "/"
 	reference := "../explain_example.json"
 	body := `{
@@ -352,7 +344,6 @@ func TestServerBadBodyRequest(t *testing.T) {
 }
 
 func TestServerNotFound(t *testing.T) {
-	t.Parallel()
 	url := "/not-found_640x"
 
 	req, _ := http.NewRequest("GET", url, nil)
@@ -495,8 +486,6 @@ func verifyGoodRequest(compBackend string, c GoodRequestProvider, t *testing.T) 
 }
 
 func TestServerGoodRequests(t *testing.T) {
-	t.Parallel()
-
 	compBackend := compressHost(ts.URL)
 
 	for _, c := range GoodRequestsCases {
@@ -505,8 +494,6 @@ func TestServerGoodRequests(t *testing.T) {
 }
 
 func TestServerProcessingFailure(t *testing.T) {
-	t.Parallel()
-
 	Backend = ts.URL + "/"
 
 	for _, c := range ServerProcessingFailureCases {
@@ -522,7 +509,6 @@ func TestServerProcessingFailure(t *testing.T) {
 }
 
 func TestEncodeCrop(t *testing.T) {
-	t.Parallel()
 	for _, c := range EncodeCropCases {
 		got := encodeCrop(c.in)
 
@@ -533,7 +519,6 @@ func TestEncodeCrop(t *testing.T) {
 }
 
 func TestEncodeDimension(t *testing.T) {
-	t.Parallel()
 	for _, c := range EncodeDimensionCases {
 		in := c.in
 		got := encodeDimension(string(in.Width), string(in.Height))
@@ -545,7 +530,6 @@ func TestEncodeDimension(t *testing.T) {
 }
 
 func TestCreateRequestPath(t *testing.T) {
-	t.Parallel()
 	for _, c := range CreateRequestPathCases {
 		path, err := createRequestPath(bytes.NewBufferString(c.doc))
 

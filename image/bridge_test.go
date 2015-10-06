@@ -2,12 +2,13 @@ package image
 
 import (
 	"bytes"
-	"github.com/henvic/picel/logger"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"testing"
+
+	"github.com/henvic/picel/logger"
 )
 
 type ProcessProvider struct {
@@ -37,7 +38,6 @@ func init() {
 }
 
 func TestProcessInputFileNotFound(t *testing.T) {
-	t.Parallel()
 	output, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
 
 	if tmpFileErr != nil {
@@ -64,7 +64,6 @@ func TestProcessInputFileNotFound(t *testing.T) {
 }
 
 func TestInvalidProcess(t *testing.T) {
-	t.Parallel()
 	for _, c := range InvalidProcessCases {
 		err := Process(c.t, c.input, c.output)
 
@@ -75,7 +74,6 @@ func TestInvalidProcess(t *testing.T) {
 }
 
 func TestProcess(t *testing.T) {
-	t.Parallel()
 	for _, c := range ProcessCases {
 		output, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
 		defer os.Remove(output.Name())
