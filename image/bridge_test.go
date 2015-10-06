@@ -12,14 +12,15 @@ import (
 )
 
 type ProcessProvider struct {
-	filename string
-	t        Transform
+	input string
+	t     Transform
 }
 
 type InvalidProcessProvider struct {
 	t      Transform
 	input  string
 	output string
+	err    error
 }
 
 func init() {
@@ -65,10 +66,10 @@ func TestProcessInputFileNotFound(t *testing.T) {
 
 func TestInvalidProcess(t *testing.T) {
 	for _, c := range InvalidProcessCases {
-		err := Process(c.t, c.input, c.output)
+		err := Process(c.t, "../"+c.input, c.output)
 
-		if err != ErrOutputFormatNotSupported {
-			t.Errorf("Process(%v, %q, %q) unknown output format should make it fail", c.t, c.input, c.output)
+		if err != c.err {
+			t.Errorf("Process(%v, %q, %q) should fail with %q, not %q", c.t, c.input, c.output, c.err, err)
 		}
 	}
 }
@@ -82,10 +83,10 @@ func TestProcess(t *testing.T) {
 			panic(tmpFileErr)
 		}
 
-		err := Process(c.t, "../"+c.filename, output.Name())
+		err := Process(c.t, "../"+c.input, output.Name())
 
 		if err != nil {
-			t.Errorf("Process(%q, %v, %q) should not fail", "../"+c.filename, c.t, output.Name())
+			t.Errorf("Process(%q, %v, %q) should not fail", "../"+c.input, c.t, output.Name())
 		}
 
 		fileInfo, fileInfoErr := os.Stat(output.Name())
@@ -118,13 +119,13 @@ func TestProcessWithVerboseOn(t *testing.T) {
 		logger.Stdout = log.New(&StdoutMock, "", -1)
 		logger.Stderr = log.New(&StderrMock, "", -1)
 		Verbose = true
-		err := Process(c.t, "../"+c.filename, output.Name())
+		err := Process(c.t, "../"+c.input, output.Name())
 		Verbose = false
 		logger.Stdout = defaultStdout
 		logger.Stderr = defaultStderr
 
 		if err != nil {
-			t.Errorf("Process(%q, %v, %q) should not fail", "../"+c.filename, c.t, output.Name())
+			t.Errorf("Process(%q, %v, %q) should not fail", "../"+c.input, c.t, output.Name())
 		}
 
 		fileInfo, fileInfoErr := os.Stat(output.Name())
@@ -166,13 +167,13 @@ func TestProcessFailureForEmptyFileWithVerboseOn(t *testing.T) {
 		logger.Stdout = log.New(&StdoutMock, "", -1)
 		logger.Stderr = log.New(&StderrMock, "", -1)
 		Verbose = true
-		err := Process(c.t, "../"+c.filename, output.Name())
+		err := Process(c.t, "../"+c.input, output.Name())
 		Verbose = false
 		logger.Stdout = defaultStdout
 		logger.Stderr = defaultStderr
 
 		if err == nil {
-			t.Errorf("Process(%q, %v, %q) should fail", "../"+c.filename, c.t, output.Name())
+			t.Errorf("Process(%q, %v, %q) should fail", "../"+c.input, c.t, output.Name())
 		}
 
 		outMessages := StdoutMock.String()

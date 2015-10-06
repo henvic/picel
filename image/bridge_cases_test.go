@@ -207,11 +207,32 @@ var ProcessFailureForEmptyFileWithVerboseOnCases = []ProcessProvider{
 var InvalidProcessCases = []InvalidProcessProvider{
 	{Transform{
 		Image: Image{
-			Id:        "20120528-IMG_5236",
+			Id:        "test_assets/golden-gate-bridge.jpg",
 			Extension: "jpg",
 		},
 		Output: "unknown",
 	},
 		"foo.png",
-		"foo.unknown"},
+		"foo.unknown",
+		ErrOutputFormatNotSupported},
+	{Transform{
+		Image: Image{
+			Id:        "not-found",
+			Extension: "jpg",
+		},
+		Output: "jpg",
+	},
+		"foo.png",
+		"foo.unknown",
+		ErrMimeTypeExtension},
+	{Transform{
+		Image: Image{
+			Id:        "invalid",
+			Extension: "gif",
+		},
+		Output: "gif",
+	},
+		"test_assets/invalid.gif",
+		"invalid.gif",
+		ErrMimeTypeNotSupported},
 }
