@@ -4,9 +4,12 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/henvic/picel/logger"
+	"log"
 	"os/exec"
 	"strings"
+
+	"github.com/henvic/picel/logger"
+	"github.com/rakyll/magicmime"
 )
 
 const (
@@ -16,6 +19,8 @@ const (
 
 var (
 	ErrOutputFormatNotSupported = errors.New("The requested output format is not supported")
+	ErrMimeTypeExtension        = errors.New("Internal mime type extension error")
+	ErrMimeTypeNotSupported     = errors.New("The loaded file mime type is not supported")
 	Verbose                     = false
 )
 
@@ -28,11 +33,37 @@ var OutputFormats = map[string]string{
 	"webp": "Webp",
 }
 
+var ValidInputMimeTypes = map[string]bool{
+	"image/jpeg": true,
+	"image/png":  true,
+	"image/webp": true,
+	"image/gif":  true,
+}
+
+func init() {
+	if err := magicmime.Open(
+		magicmime.MAGIC_MIME_TYPE |
+			magicmime.MAGIC_SYMLINK |
+			magicmime.MAGIC_ERROR); err != nil {
+		log.Fatal(err)
+	}
+}
+
 func Process(t Transform, input string, output string) (err error) {
 	tool, valid := OutputFormats[strings.ToLower(t.Output)]
 
 	if !valid {
 		return ErrOutputFormatNotSupported
+	}
+
+	mimeType, mimeErr := magicmime.TypeByFile(input)
+
+	if mimeErr != nil {
+		return ErrMimeTypeExtension
+	}
+
+	if !ValidInputMimeTypes[mimeType] {
+		return ErrMimeTypeNotSupported
 	}
 
 	if tool == "Imagick" {
