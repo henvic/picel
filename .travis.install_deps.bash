@@ -24,6 +24,7 @@ if [ "$TRAVIS_OS_NAME" == "linux" ]; then
   sudo apt-get remove imagemagick
   sudo apt-get install build-essential libx11-dev libxext-dev zlib1g-dev libpng12-dev libjpeg-dev libfreetype6-dev libxml2-dev
   sudo apt-get build-dep imagemagick
+  sudo apt-get install libmagic-dev
 
   wget http://www.imagemagick.org/download/releases/ImageMagick-${IMAGEMAGICK_VERSION}.tar.gz
   tar -xzf ImageMagick-${IMAGEMAGICK_VERSION}.tar.gz
