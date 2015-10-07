@@ -16,11 +16,10 @@ import (
 	"github.com/henvic/picel/image"
 	"github.com/henvic/picel/logger"
 	"github.com/henvic/picel/server"
+	"github.com/henvic/picel/version"
 )
 
 const (
-	// Version of latest picel release
-	Version        = "0.0.1"
 	defaultAddr    = ":8123"
 	defaultBackend = ""
 )
@@ -39,7 +38,7 @@ func init() {
 }
 
 func showVersion() {
-	fmt.Println("picel version", Version)
+	fmt.Println("picel version", version.Version)
 }
 
 func existsDependency(cmd string) bool {
