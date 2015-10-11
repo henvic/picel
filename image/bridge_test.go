@@ -86,7 +86,7 @@ func TestProcess(t *testing.T) {
 		err := Process(c.t, "../"+c.input, output.Name())
 
 		if err != nil {
-			t.Errorf("Process(%q, %v, %q) should not fail", "../"+c.input, c.t, output.Name())
+			t.Errorf("Process(%q, %v, %q) failed with %q", "../"+c.input, c.t, output.Name(), err)
 		}
 
 		fileInfo, fileInfoErr := os.Stat(output.Name())
@@ -125,7 +125,7 @@ func TestProcessWithVerboseOn(t *testing.T) {
 		logger.Stderr = defaultStderr
 
 		if err != nil {
-			t.Errorf("Process(%q, %v, %q) should not fail", "../"+c.input, c.t, output.Name())
+			t.Errorf("Process(%q, %v, %q) failed with %q", "../"+c.input, c.t, output.Name(), err)
 		}
 
 		fileInfo, fileInfoErr := os.Stat(output.Name())
@@ -172,7 +172,7 @@ func TestProcessFailureForEmptyFileWithVerboseOn(t *testing.T) {
 		logger.Stdout = defaultStdout
 		logger.Stderr = defaultStderr
 
-		if err == nil {
+		if err != ErrMimeTypeNotSupported {
 			t.Errorf("Process(%q, %v, %q) should fail", "../"+c.input, c.t, output.Name())
 		}
 
