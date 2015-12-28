@@ -38,6 +38,8 @@ Also, JPEG is the default image format for input.
 ## Dependencies
 picel uses [webp](https://developers.google.com/speed/webp/) and [ImageMagick](http://www.imagemagick.org/). At startup it will warn if it doesn't find the binaries for these processes. If you don't have it (or are running old versions) use your operating system package manager system to install the newest versions.
 
+[libmagic](http://linux.die.net/man/3/libmagic) is also used for discovering the mime type of the source files.
+
 ## Protocol
 `GET /<backend>/<id><params>.<output>`
 
@@ -133,7 +135,7 @@ In lieu of a formal style guide, take care to maintain the existing coding style
 ## test_assets branch
 The test_assets branch exists to the sole purpose of serving as a branch for binary image files for the integration tests. It only contains binary files (and nothing else) and maybe rebased at any time since its history doesn't matter. It's used to checkout the `test_assets` directory whenever the tests are run.
 
-Currently the images on the test_assets branch, despite [AdditiveColor](https://commons.wikimedia.org/wiki/File:AdditiveColor.svg), are thw following photos I've taken and published on [my Flickr account](https://www.flickr.com/photos/henriquev):
+Currently the images on the test_assets branch, besides [AdditiveColor](https://commons.wikimedia.org/wiki/File:AdditiveColor.svg), are the following photos I've taken and published on [my Flickr account](https://www.flickr.com/photos/henriquev):
 
 * [Golden Gate Bridge after the sunset](https://www.flickr.com/photos/henriquev/8872926264)
 * [Rocks & waves @ Big Sur #1](https://www.flickr.com/photos/henriquev/11274440243)
