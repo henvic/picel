@@ -30,3 +30,5 @@ _testmain.go
 
 coverage.html
 coverage.out
+
+*.coverprofile

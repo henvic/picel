@@ -8,9 +8,13 @@ import (
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/henvic/picel/version"
 )
 
 var (
+	client     = &http.Client{}
+	UserAgent  = "picel/" + version.Version + " (+https://github.com/henvic/picel)"
 	ErrBackend = errors.New("Backend server failed to fulfill the request")
 )
 
@@ -23,7 +27,15 @@ func Load(url string, filename string) (size int64, err error) {
 
 	defer file.Close()
 
-	resp, err := http.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
+
+	if err != nil {
+		return 0, err
+	}
+
+	req.Header.Set("User-Agent", UserAgent)
+
+	resp, err := client.Do(req)
 
 	if err != nil {
 		return 0, err

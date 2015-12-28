@@ -95,7 +95,6 @@ type IncompleteEncodingProvider struct {
 }
 
 func TestName(t *testing.T) {
-	t.Parallel()
 	for _, c := range NameCases {
 		image := c.i
 		name, fullname := image.Name()
@@ -107,7 +106,6 @@ func TestName(t *testing.T) {
 }
 
 func TestEscapePath(t *testing.T) {
-	t.Parallel()
 	for _, c := range EscapePathCases {
 		esc := EscapePath(c.unescaped)
 		unesc := UnescapePath(c.escaped)
@@ -123,7 +121,6 @@ func TestEscapePath(t *testing.T) {
 }
 
 func TestEncodeCrop(t *testing.T) {
-	t.Parallel()
 	for _, c := range EncodeCropCases {
 		got := encodeCrop(c.in)
 
@@ -134,7 +131,6 @@ func TestEncodeCrop(t *testing.T) {
 }
 
 func TestEncodeDimension(t *testing.T) {
-	t.Parallel()
 	for _, c := range EncodeDimensionCases {
 		in := c.in
 		got := encodeDimension(in.Width, in.Height)
@@ -146,7 +142,6 @@ func TestEncodeDimension(t *testing.T) {
 }
 
 func TestEncodeParam(t *testing.T) {
-	t.Parallel()
 	for _, c := range EncodeParamCases {
 		got := EncodeParam(c.in)
 
@@ -157,7 +152,6 @@ func TestEncodeParam(t *testing.T) {
 }
 
 func TestExtractCrop(t *testing.T) {
-	t.Parallel()
 	for _, c := range ExtractCropCases {
 		crop, _ := extractCrop(c.in)
 
@@ -168,7 +162,6 @@ func TestExtractCrop(t *testing.T) {
 }
 
 func TestExtractCropFailure(t *testing.T) {
-	t.Parallel()
 	for _, c := range ExtractCropFailureCases {
 		_, err := extractCrop(c.in)
 
@@ -179,7 +172,6 @@ func TestExtractCropFailure(t *testing.T) {
 }
 
 func TestGetParamsSubstringStart(t *testing.T) {
-	t.Parallel()
 	for _, c := range GetParamsSubstringStartCases {
 		got := getParamsSubstringStart(c.in)
 
@@ -190,7 +182,6 @@ func TestGetParamsSubstringStart(t *testing.T) {
 }
 
 func TestGetOffsets(t *testing.T) {
-	t.Parallel()
 	for _, c := range GetOffsetsCases {
 		x, y, err := getOffsets(c.in)
 
@@ -201,7 +192,6 @@ func TestGetOffsets(t *testing.T) {
 }
 
 func TestGetOffsetsFailure(t *testing.T) {
-	t.Parallel()
 	for _, c := range GetOffsetsFailureCases {
 		_, _, err := getOffsets(c.in)
 
@@ -212,7 +202,6 @@ func TestGetOffsetsFailure(t *testing.T) {
 }
 
 func TestGetDimensions(t *testing.T) {
-	t.Parallel()
 	for _, c := range GetDimensionsCases {
 		x, y, err := getDimensions(c.in)
 
@@ -223,7 +212,6 @@ func TestGetDimensions(t *testing.T) {
 }
 
 func TestGetDimensionsFailure(t *testing.T) {
-	t.Parallel()
 	for _, c := range GetDimensionsFailureCases {
 		_, _, err := getDimensions(c.in)
 
@@ -234,7 +222,6 @@ func TestGetDimensionsFailure(t *testing.T) {
 }
 
 func TestGetOutput(t *testing.T) {
-	t.Parallel()
 	for _, c := range GetOutputCases {
 		prefix, suffix := GetFilePathParts(c.in)
 
@@ -245,7 +232,6 @@ func TestGetOutput(t *testing.T) {
 }
 
 func TestDecodingFailureUnknownParameter(t *testing.T) {
-	t.Parallel()
 	for _, c := range DecodingFailureUnknownParameterCases {
 		_, _, err := Decode(c.in, "webp")
 
@@ -256,7 +242,6 @@ func TestDecodingFailureUnknownParameter(t *testing.T) {
 }
 
 func TestDecodingFailure(t *testing.T) {
-	t.Parallel()
 	for _, c := range DecodingFailureCases {
 		_, _, err := Decode(c.in, "jpg")
 
@@ -267,7 +252,6 @@ func TestDecodingFailure(t *testing.T) {
 }
 
 func TestCompleteEncodingAndDecoding(t *testing.T) {
-	t.Parallel()
 	for _, c := range CompleteEncodingAndDecodingCases {
 		gotUrl := Encode(c.object)
 
@@ -288,7 +272,6 @@ func TestCompleteEncodingAndDecoding(t *testing.T) {
 }
 
 func TestDecodingToDefaultOutputFormat(t *testing.T) {
-	t.Parallel()
 	for _, c := range DecodingToDefaultOutputFormatCases {
 		gotObject, _, err := Decode(c.url, "other")
 
@@ -304,7 +287,6 @@ func TestDecodingToDefaultOutputFormat(t *testing.T) {
 }
 
 func TestIncompleteEncoding(t *testing.T) {
-	t.Parallel()
 	for _, c := range IncompleteEncodingCases {
 		gotUrl := Encode(c.object)
 

@@ -14,7 +14,6 @@ type LoadProvider struct {
 }
 
 func TestLoadWithInvalidFilename(t *testing.T) {
-	t.Parallel()
 	_, err := Load("0/foo.png", "")
 
 	if err == nil {
@@ -23,7 +22,6 @@ func TestLoadWithInvalidFilename(t *testing.T) {
 }
 
 func TestLoadFromInvalidSchema(t *testing.T) {
-	t.Parallel()
 	file, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
 	defer os.Remove(file.Name())
 
@@ -39,7 +37,6 @@ func TestLoadFromInvalidSchema(t *testing.T) {
 }
 
 func TestBackendFailure(t *testing.T) {
-	t.Parallel()
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	}
@@ -62,7 +59,6 @@ func TestBackendFailure(t *testing.T) {
 }
 
 func TestNotFound(t *testing.T) {
-	t.Parallel()
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 	}
@@ -85,7 +81,6 @@ func TestNotFound(t *testing.T) {
 }
 
 func TestLoad(t *testing.T) {
-	t.Parallel()
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, r.URL.Path)
 	}

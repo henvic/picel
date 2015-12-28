@@ -4,14 +4,6 @@ picel is a light-weight, blazing fast REST-ful micro service for image processin
 
 It does one thing and does it well: process images like a UNIX [filter](https://en.wikipedia.org/wiki/Filter_\(software\)) (see [Basics of the UNIX Philosophy](http://www.catb.org/esr/writings/taoup/html/ch01s06.html)).
 
-You can use picel as a middleware between your backend (storage) and your caching layer. User requests can go trough the caching layer and, if the content is not found, it is proxied to the picel microservice, which will then try to decode the query, retrieve the raw data from the backend server, process and return the response. The response SHOULD be cached by the caching layer for further requests.
-
-This way you can simplify your operations environment by avoiding multiple caching layers. Just be aware that due to the very nature of images (large in size, seldom changing) it is wise to consider carefully appropriate caching rules to avoid premature removal.
-
-Also, you want your proxy layer to have protection against abuse ([enhance your calm](http://httpstatusdogs.com/420-enhance-your-calm) to avoid trying to process [too many suspicious requests](http://httpstatusdogs.com/429-too-many-requests)). Refer to [rfc6585#section-4](https://tools.ietf.org/html/rfc6585#section-4) to know more. Modern HTTP servers such as [nginx](http://nginx.org/) or [HAProxy](http://www.haproxy.org/) already have options to deal with such attacks.
-
-picel is designed to be safe so that you can try to process untrusted data with no security issues.
-
 ## tl;dr
 1. Download the latest picel binary release for your platform from the [releases page](https://github.com/henvic/picel/releases).
 2. Run it with no arguments or with something like `--backend localhost:8080`
@@ -31,6 +23,13 @@ docker pull henvic/picel
 docker run -d -p 8123:8123 picel
 ```
 
+## picel middleware between caching and storage
+Use sane defaults to make your caching rules. Consider that images are large binary blobs that seldom change, are large in size, and hard to process. It is wise to consider carefully appropriate caching rules to avoid premature removal. See [Real Time Resizing of Flickr Images](http://code.flickr.net/2015/06/25/real-time-resizing-of-flickr-images-using-gpus/) though to see their new approach replacing ImageMagick with a (not open sourced so far) GPU library of their own.
+
+Also, you want your proxy layer to have protection against abuse ([enhance your calm](http://httpstatusdogs.com/420-enhance-your-calm) to avoid trying to process [too many suspicious requests](http://httpstatusdogs.com/429-too-many-requests)). Refer to [rfc6585#section-4](https://tools.ietf.org/html/rfc6585#section-4) to know more. Modern HTTP servers such as [nginx](http://nginx.org/) or [HAProxy](http://www.haproxy.org/) already have options to deal with such attacks.
+
+picel is designed to be used in the wild, processing untrusted, user uploaded data (but it's not been used in production so far and its performance - despite the light-weight on the very first sentence of this README - is not even being measured with metrics now).
+
 ## Defaults, performance friendly, and more
 By default, picel will try to use webp if the user doesn't explicitly request another format and his client announces it accepts it (Chrome, for example).
 
@@ -38,6 +37,8 @@ Also, JPEG is the default image format for input.
 
 ## Dependencies
 picel uses [webp](https://developers.google.com/speed/webp/) and [ImageMagick](http://www.imagemagick.org/). At startup it will warn if it doesn't find the binaries for these processes. If you don't have it (or are running old versions) use your operating system package manager system to install the newest versions.
+
+[libmagic](http://linux.die.net/man/3/libmagic) is also used for discovering the mime type of the source files.
 
 ## Protocol
 `GET /<backend>/<id><params>.<output>`
@@ -67,6 +68,19 @@ Parameters MUST be given in this order or, otherwise, picel will not recognize t
 
 All parameters are prefixed by a **_** (underscore).
 
+### GET with request body
+You can also make requests to the "/" end-point with a JSON-based request body with the following parameters:
+
+* backend (url string)
+* path (string)
+* raw (boolean)
+* crop (object wit x, y, width, height)
+* width (number)
+* height (number)
+* output (number)
+
+The path parameter is required.
+
 ### ?explain
 To help debugging you can use append the ?explain to a URL in order to get a JSON response that will tell you how a image was transformed (or failed to be).
 
@@ -78,6 +92,7 @@ Example:
 ```
 {
     "message": "Success. Image path parsed and decoded correctly",
+    "path": "/s:example.net/foo_137x0:737x450_800x600_jpg.webp",
     "transform": {
         "image": {
             "id": "foo",
@@ -100,7 +115,11 @@ Example:
 }
 ```
 
-Please note that ?explain only tell if a request is **not bad** and does **NOT** verify if processing works or even if an image exists on the backend server. If you just need to verify it process correctly you can judge by getting the Content-Length from a 200 OK'ed HEAD request.
+Please notice that ?explain can only tell if a request is **not bad** and does **NOT** verify if processing works or even if an image exists on the backend server. If you just need to verify it process correctly you can judge by getting the Content-Length from a 200 OK'ed HEAD request.
+
+Also notice that the file is not loaded to execute the explain so its mimetype is not returned.
+
+For GET requests with body the path value will be calculated and given on the path key.
 
 ## Encoding libraries
 Currently you can encode urls using either the go package or using the auxiliary [JavaScript encoding library](https://github.com/henvic/picel-js) that can be conveniently installed with npm or bower (package name is picel). If you need the encoder library available for another language let me know.
@@ -110,13 +129,13 @@ If you need to write URLs by hand take a look at the [examples for the JS encode
 ## Contributing
 In lieu of a formal style guide, take care to maintain the existing coding style.Add unit tests for any new or changed functionality. Check your code with go fmt, go vet, go test, go cover, and go lint.
 
-* [Binary builts by GoBuilder.me](https://gobuilder.me/github.com/henvic/picel)
+* [Binary built by GoBuilder.me](https://gobuilder.me/github.com/henvic/picel)
 * [Lint for this repo](http://go-lint.appspot.com/github.com/henvic/picel)
 
 ## test_assets branch
 The test_assets branch exists to the sole purpose of serving as a branch for binary image files for the integration tests. It only contains binary files (and nothing else) and maybe rebased at any time since its history doesn't matter. It's used to checkout the `test_assets` directory whenever the tests are run.
 
-Currently the images on the test_assets branch, despite [AdditiveColor](https://commons.wikimedia.org/wiki/File:AdditiveColor.svg), are thw following photos I've taken and published on [my Flickr account](https://www.flickr.com/photos/henriquev):
+Currently the images on the test_assets branch, besides [AdditiveColor](https://commons.wikimedia.org/wiki/File:AdditiveColor.svg), are the following photos I've taken and published on [my Flickr account](https://www.flickr.com/photos/henriquev):
 
 * [Golden Gate Bridge after the sunset](https://www.flickr.com/photos/henriquev/8872926264)
 * [Rocks & waves @ Big Sur #1](https://www.flickr.com/photos/henriquev/11274440243)

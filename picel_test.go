@@ -2,9 +2,10 @@ package main
 
 import (
 	"bytes"
-	"github.com/henvic/picel/logger"
 	"log"
 	"testing"
+
+	"github.com/henvic/picel/logger"
 )
 
 type ExistsDependencyProvider struct {
@@ -18,7 +19,6 @@ func TestVersion(t *testing.T) {
 }
 
 func TestExistsDependency(t *testing.T) {
-	t.Parallel()
 	for _, c := range existsDependencyCases {
 		exists := existsDependency(c.cmd)
 
@@ -34,7 +34,6 @@ type CheckMissingDependenciesProvider struct {
 }
 
 func TestCheckMissingDependencies(t *testing.T) {
-	t.Parallel()
 	for _, c := range CheckMissingDependencies {
 		var StdoutMock bytes.Buffer
 		var StderrMock bytes.Buffer
