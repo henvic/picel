@@ -1,3 +1,6 @@
 artifacts:
   - LICENSE
 version_file: VERSION
+general:
+  ldflags:
+    - "-X version.Version 0.0.2"
