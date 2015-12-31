@@ -371,7 +371,7 @@ func identifyImageDetails(filename string, meta []string, transform image.Transf
 
 	for _, v := range meta {
 		if strings.LastIndex(info, v) == -1 {
-			t.Errorf("Error identifying image: want %v, but it was not found for %+v, found instead %+v", v, transform, meta)
+			t.Errorf("Error identifying image: want %v, but it was not found for %+v, found instead %+v", v, transform, info)
 		}
 	}
 }
