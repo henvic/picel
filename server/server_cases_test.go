@@ -539,7 +539,6 @@ var GoodRequestsCases = []GoodRequestProvider{
 		"image/webp",
 		[]string{
 			"Geometry: 20x20+0+0",
-			"Colorspace: Gray",
 			"Gray:\n      min: 0 (0)\n      max: 0 (0)",
 			"Interlace: None",
 		},
