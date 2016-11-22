@@ -117,6 +117,36 @@ func TestLoad(t *testing.T) {
 	}
 }
 
+func TestLoadWrongURL(t *testing.T) {
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		time.Sleep(400 * time.Millisecond)
+		fmt.Fprintf(w, r.URL.Path)
+	}
+
+	ts := httptest.NewServer(http.HandlerFunc(handler))
+	defer ts.Close()
+
+	file, tmpFileErr := ioutil.TempFile(os.TempDir(), "picel")
+	defer os.Remove(file.Name())
+
+	if tmpFileErr != nil {
+		panic(tmpFileErr)
+	}
+
+	var download = &Download{
+		URL:      "://example.com/foo/bah",
+		Filename: file.Name(),
+	}
+
+	download.Timeout(160 * time.Millisecond)
+
+	var wantErr = "parse ://example.com/foo/bah: missing protocol scheme"
+
+	if err := download.Load(); err == nil || err.Error() != wantErr {
+		t.Errorf("Wanted error to be %v, got %v instead", wantErr, err)
+	}
+}
+
 func TestLoadNotTimeout(t *testing.T) {
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(40 * time.Millisecond)

@@ -56,7 +56,7 @@ func (d *Download) Load() (err error) {
 
 	defer d.file.Close()
 
-	if d.setupRequest(); err != nil {
+	if err = d.setupRequest(); err != nil {
 		return err
 	}
 
