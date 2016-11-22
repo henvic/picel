@@ -1,0 +1,3 @@
+package: github.com/henvic/picel
+import:
+- package: github.com/rakyll/magicmime

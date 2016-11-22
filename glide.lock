@@ -1,0 +1,6 @@
+hash: 52a4e4e2f8d07b5657f97e1f78922531bbe67a91bd8b65b3d0bbe5fd644d7735
+updated: 2016-11-22T04:27:45.111438537-03:00
+imports:
+- name: github.com/rakyll/magicmime
+  version: 2b8b8f91948c4307f40a8f86ac6f3b26e27b7389
+testImports: []
