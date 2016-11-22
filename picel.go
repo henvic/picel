@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/henvic/picel/image"
 	"github.com/henvic/picel/logger"
@@ -33,6 +34,7 @@ var (
 func init() {
 	flag.StringVar(&addr, "addr", defaultAddr, "Serving address")
 	flag.StringVar(&server.Backend, "backend", defaultBackend, "Image storage back-end server")
+	flag.DurationVar(&server.DownloadTimeout, "downloadTimeout", 5*time.Second, "Timeout for downloading an image from the origin server")
 	flag.BoolVar(&verbose, "verbose", false, "Pipe image processing output to stderr/stdout")
 	flag.BoolVar(&flagVersion, "version", false, "Print version information and quit")
 }

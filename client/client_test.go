@@ -14,9 +14,10 @@ type LoadProvider struct {
 }
 
 func TestLoadWithInvalidFilename(t *testing.T) {
-	_, err := Load("0/foo.png", "")
-
-	if err == nil {
+	var download = &Download{
+		URL: "0/foo.png",
+	}
+	if err := download.Load(); err == nil {
 		t.Errorf("Load(0/foo.png, ) should fail")
 	}
 }
@@ -29,9 +30,11 @@ func TestLoadFromInvalidSchema(t *testing.T) {
 		panic(tmpFileErr)
 	}
 
-	_, err := Load("0/foo.png", file.Name())
-
-	if err == nil {
+	var download = &Download{
+		URL:      "0/foo.png",
+		Filename: file.Name(),
+	}
+	if err := download.Load(); err == nil {
 		t.Errorf("Load(0/foo.png, %v) should fail", file.Name())
 	}
 }
@@ -51,10 +54,13 @@ func TestBackendFailure(t *testing.T) {
 		panic(tmpFileErr)
 	}
 
-	size, err := Load(ts.URL, file.Name())
+	var download = &Download{
+		URL:      ts.URL,
+		Filename: file.Name(),
+	}
 
-	if err != ErrBackend {
-		t.Errorf("Load(%v, %v) == %v %v should fail", ts.URL, file.Name(), size, err)
+	if err := download.Load(); err != ErrBackend {
+		t.Errorf("Load() should fail with %v, got %v instead", ErrBackend, err)
 	}
 }
 
@@ -73,10 +79,13 @@ func TestNotFound(t *testing.T) {
 		panic(tmpFileErr)
 	}
 
-	size, err := Load(ts.URL, file.Name())
+	var download = &Download{
+		URL:      ts.URL,
+		Filename: file.Name(),
+	}
 
-	if err != http.ErrMissingFile {
-		t.Errorf("Load(%v, %v) == %v %v should fail", ts.URL, file.Name(), size, err)
+	if err := download.Load(); err != http.ErrMissingFile {
+		t.Errorf("Load() should fail with %v, got %v instead", http.ErrMissingFile, err)
 	}
 }
 
@@ -96,16 +105,13 @@ func TestLoad(t *testing.T) {
 			panic(tmpFileErr)
 		}
 
-		size, err := Load(ts.URL+c.word, file.Name())
-
-		fileInfo, fileInfoErr := os.Stat(file.Name())
-
-		if fileInfoErr != nil {
-			panic(fileInfoErr)
+		var download = &Download{
+			URL:      ts.URL + c.word,
+			Filename: file.Name(),
 		}
 
-		if err != nil || int(size) != len(c.word) || fileInfo.Size() != size {
-			t.Errorf("Load(%q, %q) == %q %q, want %q %v", ts.URL, file.Name(), size, err, len(c.word), nil)
+		if err := download.Load(); err != nil {
+			t.Errorf("Load() should not fail, got %v instead", err)
 		}
 	}
 }

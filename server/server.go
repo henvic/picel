@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/henvic/picel/client"
 	"github.com/henvic/picel/image"
@@ -26,9 +27,10 @@ const (
 )
 
 var (
-	Backend        string
-	Verbose        bool
-	ErrMissingPath = "Missing path"
+	Backend         string
+	Verbose         bool
+	ErrMissingPath  = "Missing path"
+	DownloadTimeout time.Duration
 )
 
 type Explain struct {
@@ -184,7 +186,16 @@ func loadingHandler(t image.Transform, w http.ResponseWriter, r *http.Request) {
 	defer os.Remove(file.Name())
 	filename := file.Name()
 
-	_, err := client.Load(t.Image.Source, file.Name())
+	download := &client.Download{
+		URL:      t.Image.Source,
+		Filename: file.Name(),
+	}
+
+	if DownloadTimeout > 0*time.Second {
+		download.Timeout(DownloadTimeout)
+	}
+
+	err := download.Load()
 
 	if err != nil {
 		http.NotFound(w, r)

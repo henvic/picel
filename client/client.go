@@ -4,10 +4,13 @@ Package client is the HTTP(S) client for picel.
 package client
 
 import (
+	"context"
 	"errors"
 	"io"
 	"net/http"
 	"os"
+
+	"time"
 
 	"github.com/henvic/picel/version"
 )
@@ -18,37 +21,89 @@ var (
 	ErrBackend = errors.New("Backend server failed to fulfill the request")
 )
 
-func Load(url string, filename string) (size int64, err error) {
-	file, err := os.Create(filename)
+// Download a given URL
+type Download struct {
+	URL           string
+	Filename      string
+	file          *os.File
+	request       *http.Request
+	timeout       *time.Duration
+	cancelTimeout *context.CancelFunc
+	context       context.Context
+}
 
-	if err != nil {
-		return 0, err
+// Timeout for the request
+func (d *Download) Timeout(timeout time.Duration) {
+	d.timeout = &timeout
+}
+
+// Cancel the download
+func (d *Download) Cancel() {
+	if d.cancelTimeout != nil {
+		(*d.cancelTimeout)()
+	}
+}
+
+// Load the download
+func (d *Download) Load() (err error) {
+	if err = d.createFile(); err != nil {
+		return err
 	}
 
-	defer file.Close()
+	defer d.file.Close()
 
-	req, err := http.NewRequest("GET", url, nil)
-
-	if err != nil {
-		return 0, err
+	if d.setupRequest(); err != nil {
+		return err
 	}
 
-	req.Header.Set("User-Agent", UserAgent)
+	d.request.Header.Set("User-Agent", UserAgent)
+	return d.do()
+}
 
-	resp, err := client.Do(req)
+func (d *Download) createFile() (err error) {
+	d.file, err = os.Create(d.Filename)
+	return err
+}
+
+func (d *Download) setupRequestTimeout() {
+	if d.timeout != nil && *d.timeout != 0*time.Second {
+		var c context.CancelFunc
+		d.context, c = context.WithTimeout(d.context, *d.timeout)
+		d.cancelTimeout = &c
+		d.request = d.request.WithContext(d.context)
+	}
+}
+
+func (d *Download) setupRequest() (err error) {
+	d.request, err = http.NewRequest("GET", d.URL, nil)
 
 	if err != nil {
-		return 0, err
+		return err
+	}
+
+	d.context = context.Background()
+	d.setupRequestTimeout()
+	d.request = d.request.WithContext(d.context)
+	return nil
+}
+
+func (d *Download) do() (err error) {
+	var resp *http.Response
+	resp, err = client.Do(d.request)
+
+	if err != nil {
+		return err
 	}
 
 	defer resp.Body.Close()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		return io.Copy(file, resp.Body)
+		_, err = io.Copy(d.file, resp.Body)
+		return err
 	case http.StatusNotFound:
-		return 0, http.ErrMissingFile
+		return http.ErrMissingFile
 	}
 
-	return 0, ErrBackend
+	return ErrBackend
 }
