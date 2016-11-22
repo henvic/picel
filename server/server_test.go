@@ -313,8 +313,8 @@ func TestServerBadRequest(t *testing.T) {
 			t.Errorf("Request status code response is %v, want %v", w.Code, http.StatusBadRequest)
 		}
 
-		if w.Body.String() != BadRequestMessage+"\n" {
-			t.Errorf("Bad request body message response is %v, want %v", w.Body.String(), BadRequestMessage)
+		if w.Body.String() != "Bad request.\n" {
+			t.Errorf("Bad request body message response not expected, got: %v", w.Body.String())
 		}
 	}
 
@@ -335,8 +335,8 @@ func TestServerBadBodyRequest(t *testing.T) {
 			t.Errorf("Request status code response is %v, want %v", w.Code, http.StatusBadRequest)
 		}
 
-		if w.Body.String() != BadRequestMessage+"\n" {
-			t.Errorf("Bad request body message response is %v, want %v", w.Body.String(), BadRequestMessage)
+		if w.Body.String() != "Bad request.\n" {
+			t.Errorf("Bad request body message response not expected, got: %v", w.Body.String())
 		}
 	}
 

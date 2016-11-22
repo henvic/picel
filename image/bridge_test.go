@@ -51,7 +51,7 @@ func TestProcessInputFileNotFound(t *testing.T) {
 
 	transform := Transform{
 		Image: Image{
-			Id:        "20120528-IMG_5236",
+			ID:        "20120528-IMG_5236",
 			Extension: "jpg",
 		},
 		Output: "jpg",

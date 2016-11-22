@@ -4,7 +4,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/golden-gate-bridge.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/golden-gate-bridge",
+				ID:        "test_assets/golden-gate-bridge",
 				Extension: "jpg",
 			},
 			Output: "jpg",
@@ -12,7 +12,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/insects-2.JPEG",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/insects",
+				ID:        "test_assets/insects",
 				Extension: "JPEG",
 			},
 			Output: "JPEG",
@@ -20,7 +20,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/raccoons.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/raccoons",
+				ID:        "test_assets/raccoons",
 				Extension: "jpg",
 			},
 			Width:  100,
@@ -29,7 +29,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/golden-gate-bridge.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/golden-gate-bridge",
+				ID:        "test_assets/golden-gate-bridge",
 				Extension: "jpg",
 			},
 			Height: 100,
@@ -38,7 +38,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/golden-gate-bridge.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/golden-gate-bridge",
+				ID:        "test_assets/golden-gate-bridge",
 				Extension: "jpg",
 			},
 			Width:  100,
@@ -48,7 +48,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/golden-gate-bridge.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/golden-gate-bridge",
+				ID:        "test_assets/golden-gate-bridge",
 				Extension: "jpg",
 			},
 			Crop: Crop{
@@ -62,7 +62,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/rocks_waves_big_sur_2.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/rocks_waves_big_sur_2",
+				ID:        "test_assets/rocks_waves_big_sur_2",
 				Extension: "jpg",
 			},
 			Output: "webp",
@@ -70,7 +70,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/rocks_waves_big_sur_1.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/rocks_waves_big_sur_1",
+				ID:        "test_assets/rocks_waves_big_sur_1",
 				Extension: "jpg",
 			},
 			Width:  100,
@@ -79,7 +79,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/rocks_waves_big_sur_1.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/rocks_waves_big_sur_1",
+				ID:        "test_assets/rocks_waves_big_sur_1",
 				Extension: "jpg",
 			},
 			Height: 100,
@@ -88,7 +88,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/rocks_waves_big_sur_1.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/rocks_waves_big_sur_1",
+				ID:        "test_assets/rocks_waves_big_sur_1",
 				Extension: "jpg",
 			},
 			Width:  100,
@@ -98,7 +98,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/raccoons.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/raccoons",
+				ID:        "test_assets/raccoons",
 				Extension: "jpg",
 			},
 			Crop: Crop{
@@ -112,7 +112,7 @@ var ProcessCases = []ProcessProvider{
 	{"test_assets/barter.gif",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/barter",
+				ID:        "test_assets/barter",
 				Extension: "gif",
 			},
 			Crop: Crop{
@@ -129,7 +129,7 @@ var ProcessCasesForVerboseOn = []ProcessProvider{
 	{"test_assets/insects.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/insects",
+				ID:        "test_assets/insects",
 				Extension: "jpg",
 			},
 			Output: "jpg",
@@ -137,7 +137,7 @@ var ProcessCasesForVerboseOn = []ProcessProvider{
 	{"test_assets/insects.jpg",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/insects",
+				ID:        "test_assets/insects",
 				Extension: "jpg",
 			},
 			Output: "webp",
@@ -145,7 +145,7 @@ var ProcessCasesForVerboseOn = []ProcessProvider{
 	{"test_assets/barter.gif",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/barter",
+				ID:        "test_assets/barter",
 				Extension: "gif",
 			},
 			Output: "webp",
@@ -153,7 +153,7 @@ var ProcessCasesForVerboseOn = []ProcessProvider{
 	{"test_assets/barter.gif",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/barter",
+				ID:        "test_assets/barter",
 				Extension: "gif",
 			},
 			Width:  100,
@@ -162,7 +162,7 @@ var ProcessCasesForVerboseOn = []ProcessProvider{
 	{"test_assets/barter.gif",
 		Transform{
 			Image: Image{
-				Id:        "test_assets/barter",
+				ID:        "test_assets/barter",
 				Extension: "gif",
 			},
 			Width: 100,
@@ -180,7 +180,7 @@ var ProcessFailureForEmptyFileWithVerboseOnCases = []ProcessProvider{
 	{"test_assets/empty_file.jpg",
 		Transform{
 			Image: Image{
-				Id:        "empty_file",
+				ID:        "empty_file",
 				Extension: "jpg",
 			},
 			Output: "jpg",
@@ -188,7 +188,7 @@ var ProcessFailureForEmptyFileWithVerboseOnCases = []ProcessProvider{
 	{"test_assets/empty_file.gif",
 		Transform{
 			Image: Image{
-				Id:        "empty_file",
+				ID:        "empty_file",
 				Extension: "gif",
 			},
 			Height: 100,
@@ -197,7 +197,7 @@ var ProcessFailureForEmptyFileWithVerboseOnCases = []ProcessProvider{
 	{"test_assets/empty_file.jpg",
 		Transform{
 			Image: Image{
-				Id:        "empty_file",
+				ID:        "empty_file",
 				Extension: "jpg",
 			},
 			Output: "webp",
@@ -207,7 +207,7 @@ var ProcessFailureForEmptyFileWithVerboseOnCases = []ProcessProvider{
 var InvalidProcessCases = []InvalidProcessProvider{
 	{Transform{
 		Image: Image{
-			Id:        "test_assets/golden-gate-bridge.jpg",
+			ID:        "test_assets/golden-gate-bridge.jpg",
 			Extension: "jpg",
 		},
 		Output: "unknown",
@@ -217,7 +217,7 @@ var InvalidProcessCases = []InvalidProcessProvider{
 		ErrOutputFormatNotSupported},
 	{Transform{
 		Image: Image{
-			Id:        "not-found",
+			ID:        "not-found",
 			Extension: "jpg",
 		},
 		Output: "jpg",
@@ -227,7 +227,7 @@ var InvalidProcessCases = []InvalidProcessProvider{
 		ErrMimeTypeExtension},
 	{Transform{
 		Image: Image{
-			Id:        "invalid",
+			ID:        "invalid",
 			Extension: "gif",
 		},
 		Output: "gif",

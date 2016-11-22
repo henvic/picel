@@ -20,7 +20,7 @@ var HostCases = []HostProvider{
 var EncodingAndDecodingCases = []EncodingAndDecodingProvider{
 	{image.Transform{
 		Image: image.Image{
-			Id:        "help/staff",
+			ID:        "help/staff",
 			Extension: "jpg",
 			Source:    "http://127.0.0.1/help/staff.jpg",
 		},
@@ -30,7 +30,7 @@ var EncodingAndDecodingCases = []EncodingAndDecodingProvider{
 		"127.0.0.1/help/staff.jpg"},
 	{image.Transform{
 		Image: image.Image{
-			Id:        "help/staff",
+			ID:        "help/staff",
 			Extension: "webp",
 			Source:    "http://remote.local/help/staff.webp",
 		},
@@ -39,7 +39,7 @@ var EncodingAndDecodingCases = []EncodingAndDecodingProvider{
 	}, "remote.local/help/staff.webp"},
 	{image.Transform{
 		Image: image.Image{
-			Id:        "help/staff",
+			ID:        "help/staff",
 			Extension: "webp",
 			Source:    "https://localhost/help/staff.webp",
 		},
@@ -52,7 +52,7 @@ var EncodingAndDecodingCases = []EncodingAndDecodingProvider{
 var EncodingAndDecodingForExplicitBackendCases = []EncodingAndDecodingForExplicitBackendProvider{
 	{image.Transform{
 		Image: image.Image{
-			Id:        "help/staff",
+			ID:        "help/staff",
 			Extension: "jpg",
 			Source:    "http://127.0.0.1/help/staff.jpg",
 		},
@@ -63,7 +63,7 @@ var EncodingAndDecodingForExplicitBackendCases = []EncodingAndDecodingForExplici
 		"127.0.0.1"},
 	{image.Transform{
 		Image: image.Image{
-			Id:        "help/staff",
+			ID:        "help/staff",
 			Extension: "webp",
 			Source:    "http://remote.local/help/staff.webp",
 		},
@@ -74,7 +74,7 @@ var EncodingAndDecodingForExplicitBackendCases = []EncodingAndDecodingForExplici
 		"remote.local"},
 	{image.Transform{
 		Image: image.Image{
-			Id:        "help/staff",
+			ID:        "help/staff",
 			Extension: "webp",
 			Source:    "https://localhost/help/staff.webp",
 		},
@@ -618,7 +618,7 @@ var BuildExplainCases = []BuildExplainProvider{
 		nil,
 		nil,
 		Explain{
-			Message:    SuccessDecodeMessage,
+			Message:    "Success. Image path parsed and decoded correctly",
 			Path:       "/xyz",
 			Transform:  image.Transform{},
 			ErrorStack: nil},

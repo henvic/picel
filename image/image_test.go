@@ -253,10 +253,10 @@ func TestDecodingFailure(t *testing.T) {
 
 func TestCompleteEncodingAndDecoding(t *testing.T) {
 	for _, c := range CompleteEncodingAndDecodingCases {
-		gotUrl := Encode(c.object)
+		gotURL := Encode(c.object)
 
-		if gotUrl != c.url {
-			t.Errorf("Encode(%+v) == %v, want %v", c.object, gotUrl, c.url)
+		if gotURL != c.url {
+			t.Errorf("Encode(%+v) == %v, want %v", c.object, gotURL, c.url)
 		}
 
 		gotObject, _, err := Decode(c.url, "")
@@ -288,10 +288,10 @@ func TestDecodingToDefaultOutputFormat(t *testing.T) {
 
 func TestIncompleteEncoding(t *testing.T) {
 	for _, c := range IncompleteEncodingCases {
-		gotUrl := Encode(c.object)
+		gotURL := Encode(c.object)
 
-		if gotUrl != c.url {
-			t.Errorf("Encode(%+v) == %v, want %v", c.object, gotUrl, c.url)
+		if gotURL != c.url {
+			t.Errorf("Encode(%+v) == %v, want %v", c.object, gotURL, c.url)
 		}
 	}
 }

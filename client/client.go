@@ -16,8 +16,12 @@ import (
 )
 
 var (
-	client     = &http.Client{}
-	UserAgent  = "picel/" + version.Version + " (+https://github.com/henvic/picel)"
+	client = &http.Client{}
+
+	// UserAgent for the picel middleware
+	UserAgent = "picel/" + version.Version + " (+https://github.com/henvic/picel)"
+
+	// ErrBackend is a generic error returned when the server fails to fulfill the request
 	ErrBackend = errors.New("Backend server failed to fulfill the request")
 )
 

@@ -19,20 +19,28 @@ import (
 )
 
 const (
-	SuccessDecodeMessage = "Success. Image path parsed and decoded correctly"
-	BadRequestMessage    = "Bad request."
-	HTTPSchema           = "http://"
-	HTTPSSchema          = "https://"
-	FlagHTTPSSchema      = "s:"
+	// HTTPSchema is a constant for the HTTP schema
+	HTTPSchema = "http://"
+
+	// HTTPSSchema is a constant for the HTTPS schema
+	HTTPSSchema = "https://"
+
+	// FlagHTTPSSchema is a short flag for the HTTPS schema
+	FlagHTTPSSchema = "s:"
 )
 
 var (
-	Backend         string
-	Verbose         bool
-	ErrMissingPath  = "Missing path"
+	// Backend for when a single backend is set
+	Backend string
+
+	// Verbose for the server module
+	Verbose bool
+
+	// DownloadTimeout is the timeout for the download of a image from the backend
 	DownloadTimeout time.Duration
 )
 
+// Explain returns a structure telling how a given request was interpreted
 type Explain struct {
 	Message    string          `json:"message"`
 	Path       string          `json:"path"`
@@ -84,6 +92,7 @@ func expandHost(raw string) (source string) {
 	return source
 }
 
+// Decode a given image URL
 func Decode(rawurl string, defaultOutputFormat string) (transform image.Transform, errs []error, err error) {
 	rawurlIndex := strings.Index(rawurl, "/")
 
@@ -105,6 +114,7 @@ func Decode(rawurl string, defaultOutputFormat string) (transform image.Transfor
 	return transform, errs, err
 }
 
+// Encode a given image as a URL
 func Encode(transform image.Transform) (url string) {
 	url = image.Encode(transform)
 
@@ -131,7 +141,7 @@ func buildExplain(path string, transform image.Transform, err error, errs []erro
 	}
 
 	if message == "" {
-		message = SuccessDecodeMessage
+		message = "Success. Image path parsed and decoded correctly"
 	}
 
 	return Explain{
@@ -252,7 +262,7 @@ func createRequestPath(body io.Reader) (path string, err error) {
 	}
 
 	if pi.Raw {
-		path += "_" + image.RAW + "." + extension
+		path += "_" + image.Raw + "." + extension
 		return path, err
 	}
 
@@ -272,7 +282,7 @@ func createRequestPath(body io.Reader) (path string, err error) {
 	}
 
 	if pi.Path == "" {
-		err = errors.New(ErrMissingPath)
+		err = errors.New("Missing path")
 	}
 
 	return path, err
@@ -309,7 +319,11 @@ func prepare(r *http.Request) (transform image.Transform, reqPath string, errs [
 	return transform, reqPath, errs, err
 }
 
+// Handler for the image frontend
 func Handler(w http.ResponseWriter, r *http.Request) {
+	// fmt.Println(r.URL.Path)
+	// os.Exit(34)
+	// requests to / with no body should fail with more information
 	transform, path, errs, err := prepare(r)
 
 	if r.URL.Query()["explain"] != nil {
@@ -319,7 +333,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		http.Error(w, BadRequestMessage, http.StatusBadRequest)
+		http.Error(w, "Bad request.", http.StatusBadRequest)
 		return
 	}
 

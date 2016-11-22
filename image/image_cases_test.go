@@ -2,19 +2,19 @@ package image
 
 var NameCases = []NameProvider{
 	{Image{
-		Id:        "help/staff",
+		ID:        "help/staff",
 		Extension: "jpg",
 	}, "staff.jpg", "help/staff.jpg"},
 	{Image{
-		Id:        "section/help/staff",
+		ID:        "section/help/staff",
 		Extension: "jpg",
 	}, "staff.jpg", "section/help/staff.jpg"},
 	{Image{
-		Id:        "dog",
+		ID:        "dog",
 		Extension: "png",
 	}, "dog.png", "dog.png"},
 	{Image{
-		Id:        "dog",
+		ID:        "dog",
 		Extension: "",
 	}, "dog", "dog"},
 }
@@ -141,7 +141,7 @@ var DecodingFailureCases = []DecodingFailureProvider{
 var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	{Transform{
 		Image: Image{
-			Id:        "help/staff",
+			ID:        "help/staff",
 			Extension: "jpg",
 			Source:    "help/staff.jpg",
 		},
@@ -150,7 +150,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "help/staff.jpg"},
 	{Transform{
 		Image: Image{
-			Id:        "help/staff",
+			ID:        "help/staff",
 			Extension: "webp",
 			Source:    "help/staff.webp",
 		},
@@ -159,7 +159,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "help/staff.webp"},
 	{Transform{
 		Image: Image{
-			Id:        "help/staff",
+			ID:        "help/staff",
 			Extension: "webp",
 			Source:    "help/staff.webp",
 		},
@@ -169,7 +169,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "help/staff_800x.webp"},
 	{Transform{
 		Image: Image{
-			Id:        "help/staff",
+			ID:        "help/staff",
 			Extension: "jpg",
 			Source:    "help/staff.jpg",
 		},
@@ -178,7 +178,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "help/staff_jpg.webp"},
 	{Transform{
 		Image: Image{
-			Id:        "airplane_flying_low",
+			ID:        "airplane_flying_low",
 			Extension: "jpg",
 			Source:    "airplane_flying_low.jpg",
 		},
@@ -187,7 +187,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "airplane__flying__low_jpg.webp"},
 	{Transform{
 		Image: Image{
-			Id:        "dog",
+			ID:        "dog",
 			Extension: "jpg",
 			Source:    "dog.jpg",
 		},
@@ -196,7 +196,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "dog"},
 	{Transform{
 		Image: Image{
-			Id:        "help/foo",
+			ID:        "help/foo",
 			Extension: "jpg",
 			Source:    "help/foo.jpg",
 		},
@@ -207,7 +207,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "help/foo_400x800"},
 	{Transform{
 		Image: Image{
-			Id:        "help/foo.my.dotted.file",
+			ID:        "help/foo.my.dotted.file",
 			Extension: "jpg",
 			Source:    "help/foo.my.dotted.file.jpg",
 		},
@@ -218,7 +218,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "help/foo.my.dotted.file_400x800"},
 	{Transform{
 		Image: Image{
-			Id:        "help/foo",
+			ID:        "help/foo",
 			Extension: "jpg",
 			Source:    "help/foo.jpg",
 		},
@@ -228,7 +228,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "help/foo_400x"},
 	{Transform{
 		Image: Image{
-			Id:        "help/foo",
+			ID:        "help/foo",
 			Extension: "jpg",
 			Source:    "help/foo.jpg",
 		},
@@ -238,7 +238,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "help/foo_x800"},
 	{Transform{
 		Image: Image{
-			Id:        "adoption_shelters_in_nyc/pretty_dogs",
+			ID:        "adoption_shelters_in_nyc/pretty_dogs",
 			Extension: "jpg",
 			Source:    "adoption_shelters_in_nyc/pretty_dogs.jpg",
 		},
@@ -249,7 +249,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "adoption__shelters__in__nyc/pretty__dogs_400x800_jpg.webp"},
 	{Transform{
 		Image: Image{
-			Id:        "airplane_360",
+			ID:        "airplane_360",
 			Extension: "gif",
 			Source:    "airplane_360.gif",
 		},
@@ -258,7 +258,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "airplane__360.gif"},
 	{Transform{
 		Image: Image{
-			Id:        "airplane_360",
+			ID:        "airplane_360",
 			Extension: "gif",
 			Source:    "airplane_360.gif",
 		},
@@ -266,7 +266,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "airplane__360_gif"},
 	{Transform{
 		Image: Image{
-			Id:        "airplane_360",
+			ID:        "airplane_360",
 			Extension: "gif",
 			Source:    "airplane_360.gif",
 		},
@@ -275,7 +275,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "airplane__360_gif.webp"},
 	{Transform{
 		Image: Image{
-			Id:        "foo",
+			ID:        "foo",
 			Extension: "jpg",
 			Source:    "foo.jpg",
 		},
@@ -284,7 +284,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "foo"},
 	{Transform{
 		Image: Image{
-			Id:        "foo_bah_h",
+			ID:        "foo_bah_h",
 			Extension: "jpg",
 			Source:    "foo_bah_h.jpg",
 		},
@@ -299,7 +299,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "foo__bah__h_0x0:800x400.jpg"},
 	{Transform{
 		Image: Image{
-			Id:        "foo_bah_h",
+			ID:        "foo_bah_h",
 			Extension: "jpg",
 			Source:    "foo_bah_h.jpg",
 		},
@@ -314,7 +314,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	}, "foo__bah__h_300x300:800x400.jpg"},
 	{Transform{
 		Image: Image{
-			Id:        "foo",
+			ID:        "foo",
 			Extension: "jpg",
 			Source:    "foo.jpg",
 		},
@@ -332,7 +332,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	},
 	{Transform{
 		Image: Image{
-			Id:        "adoption_shelters_in_nyc/pretty_dogs",
+			ID:        "adoption_shelters_in_nyc/pretty_dogs",
 			Extension: "jpg",
 			Source:    "adoption_shelters_in_nyc/pretty_dogs.jpg",
 		},
@@ -350,7 +350,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	},
 	{Transform{
 		Image: Image{
-			Id:        "adoption_shelters_in_nyc/pretty_dogs",
+			ID:        "adoption_shelters_in_nyc/pretty_dogs",
 			Extension: "jpg",
 			Source:    "adoption_shelters_in_nyc/pretty_dogs.jpg",
 		},
@@ -366,7 +366,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 	},
 	{Transform{
 		Image: Image{
-			Id:        "la_office/newborn_bunnies",
+			ID:        "la_office/newborn_bunnies",
 			Extension: "jpg",
 			Source:    "la_office/newborn_bunnies.jpg",
 		},
@@ -380,7 +380,7 @@ var CompleteEncodingAndDecodingCases = []CompleteEncodingAndDecodingProvider{
 var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider{
 	{Transform{
 		Image: Image{
-			Id:        "la_office/newborn_bunnies",
+			ID:        "la_office/newborn_bunnies",
 			Extension: "jpg",
 			Source:    "la_office/newborn_bunnies.jpg",
 		},
@@ -391,7 +391,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 	},
 	{Transform{
 		Image: Image{
-			Id:        "la_office/newborn_bunnies",
+			ID:        "la_office/newborn_bunnies",
 			Extension: "jpg",
 			Source:    "la_office/newborn_bunnies.jpg",
 		},
@@ -402,7 +402,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 	},
 	{Transform{
 		Image: Image{
-			Id:        "la_office/newborn_bunnies",
+			ID:        "la_office/newborn_bunnies",
 			Extension: "other",
 			Source:    "la_office/newborn_bunnies.other",
 		},
@@ -413,7 +413,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 	},
 	{Transform{
 		Image: Image{
-			Id:        "la_office/newborn_bunnies",
+			ID:        "la_office/newborn_bunnies",
 			Extension: "gif",
 			Source:    "la_office/newborn_bunnies.gif",
 		},
@@ -424,7 +424,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 	},
 	{Transform{
 		Image: Image{
-			Id:        "big_sur",
+			ID:        "big_sur",
 			Extension: "jpg",
 			Source:    "big_sur.jpg",
 		},
@@ -443,7 +443,7 @@ var DecodingToDefaultOutputFormatCases = []DecodingToDefaultOutputFormatProvider
 var IncompleteEncodingCases = []IncompleteEncodingProvider{
 	{Transform{
 		Image: Image{
-			Id:        "la_office/newborn_bunnies",
+			ID:        "la_office/newborn_bunnies",
 			Extension: "jpg",
 		},
 		Raw: true,
@@ -451,13 +451,13 @@ var IncompleteEncodingCases = []IncompleteEncodingProvider{
 	},
 	{Transform{
 		Image: Image{
-			Id: "foo",
+			ID: "foo",
 		},
 		Output: "",
 	}, "foo"},
 	{Transform{
 		Image: Image{
-			Id: "help/staff",
+			ID: "help/staff",
 		},
 		Output: "webp",
 	}, "help/staff_jpg.webp"},

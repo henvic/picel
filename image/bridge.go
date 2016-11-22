@@ -13,17 +13,28 @@ import (
 )
 
 const (
-	WEBP_QUALITY    = "92"
-	IMAGICK_QUALITY = "92"
+	// WebpQuality is the quality parameter to use when using cwebp
+	WebpQuality = "92"
+
+	// ImagickQuality is the quality parameter to use when using Imagick
+	ImagickQuality = "92"
 )
 
 var (
+	// ErrOutputFormatNotSupported is returned when the request output format is not supported
 	ErrOutputFormatNotSupported = errors.New("The requested output format is not supported")
-	ErrMimeTypeExtension        = errors.New("Internal mime type extension error")
-	ErrMimeTypeNotSupported     = errors.New("The loaded file mime type is not supported")
-	Verbose                     = false
+
+	// ErrMimeTypeExtension is returned when ther eis an error processing the image mime type
+	ErrMimeTypeExtension = errors.New("Internal mime type extension error")
+
+	// ErrMimeTypeNotSupported is returned when the loaded file mime type is not supported
+	ErrMimeTypeNotSupported = errors.New("The loaded file mime type is not supported")
+
+	// Verbose mode for the bridge module
+	Verbose = false
 )
 
+// OutputFormats is a list of supported output formats and the engines that should process it
 var OutputFormats = map[string]string{
 	"jpg":  "Imagick",
 	"jpeg": "Imagick",
@@ -33,6 +44,7 @@ var OutputFormats = map[string]string{
 	"webp": "Webp",
 }
 
+// ValidInputMimeTypes is a list of supported input formats
 var ValidInputMimeTypes = map[string]bool{
 	"image/jpeg": true,
 	"image/png":  true,
@@ -49,6 +61,7 @@ func init() {
 	}
 }
 
+// Process an image using a transformation to output a file
 func Process(t Transform, input string, output string) (err error) {
 	tool, valid := OutputFormats[strings.ToLower(t.Output)]
 
@@ -117,7 +130,7 @@ func processGif2Webp(input string, output string) (err error) {
 	var params []string
 
 	params = append(params, "-q")
-	params = append(params, WEBP_QUALITY)
+	params = append(params, WebpQuality)
 
 	if Verbose {
 		params = append(params, "-v")
@@ -134,7 +147,7 @@ func processCwebp(t Transform, input string, output string) (err error) {
 	var params []string
 
 	params = append(params, "-q")
-	params = append(params, WEBP_QUALITY)
+	params = append(params, WebpQuality)
 
 	if t.Crop.Width != 0 && t.Crop.Height != 0 {
 		params = append(params, "-crop")
@@ -170,7 +183,7 @@ func processImagick(t Transform, input string, output string) (err error) {
 
 	params = append(params, "-quality")
 
-	params = append(params, IMAGICK_QUALITY)
+	params = append(params, ImagickQuality)
 
 	params = append(params, input)
 

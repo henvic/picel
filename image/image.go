@@ -11,27 +11,47 @@ import (
 )
 
 const (
+	// DefaultInputExtension is the default input format for images
 	DefaultInputExtension = "jpg"
-	RAW                   = "raw"
+
+	// Raw is a special parameter to output a given image "as is" (acting like a proxy)
+	Raw = "raw"
 )
 
 var (
-	ErrOffsetInvalid            = errors.New("Offset is invalid")
-	ErrOffsetSeparator          = errors.New("Offset separator not found")
-	ErrOffsetNonNegative        = errors.New("x and y must be non-negative")
+	// ErrOffsetInvalid is returned when an offset is invalid
+	ErrOffsetInvalid = errors.New("Offset is invalid")
+
+	// ErrOffsetSeparator is returned when an off separator is not found
+	ErrOffsetSeparator = errors.New("Offset separator not found")
+
+	// ErrOffsetNonNegative is returned when an offset separator was given as a negative value
+	ErrOffsetNonNegative = errors.New("x and y must be non-negative")
+
+	// ErrBothDimensionEqualToZero is returned when the image size would be zero
 	ErrBothDimensionEqualToZero = errors.New("At least x and y must be greater than zero")
+
+	// ErrCropDimensionEqualToZero is returned when the image size would be zero after cropping
 	ErrCropDimensionEqualToZero = errors.New("Both x and y must be greater than zero")
-	ErrNotCropFormat            = errors.New("Not in crop format")
-	ErrInvalidCropDimensions    = errors.New("Invalid crop format dimensions")
-	ErrNonEmptyParameterQueue   = errors.New("Can't process all parameters")
+
+	// ErrNotCropFormat is returned when the crop format is invalid
+	ErrNotCropFormat = errors.New("Not in crop format")
+
+	// ErrInvalidCropDimensions is returned when the crop format dimensions is invalid
+	ErrInvalidCropDimensions = errors.New("Invalid crop format dimensions")
+
+	// ErrNonEmptyParameterQueue is returned when there are parameters left after processing a transformation
+	ErrNonEmptyParameterQueue = errors.New("Can't process all parameters")
 )
 
+// Image structure
 type Image struct {
-	Id        string `json:"id"`
+	ID        string `json:"id"`
 	Extension string `json:"extension"`
 	Source    string `json:"source"`
 }
 
+// Crop parameters
 type Crop struct {
 	X      int `json:"x"`
 	Y      int `json:"y"`
@@ -39,6 +59,7 @@ type Crop struct {
 	Height int `json:"height"`
 }
 
+// Transform structure
 type Transform struct {
 	Image  `json:"image"`
 	Path   string `json:"path"`
@@ -49,8 +70,9 @@ type Transform struct {
 	Output string `json:"output"`
 }
 
+// Name of the image
 func (i *Image) Name() (name string, fullname string) {
-	fullname = i.Id
+	fullname = i.ID
 
 	if i.Extension != "" {
 		fullname += "." + i.Extension
@@ -73,6 +95,7 @@ func getOutputFormat(output string, defaultOutputFormat string) string {
 	return output
 }
 
+// Decode an image
 func Decode(path string, defaultOutputFormat string) (transform Transform, errs []error, err error) {
 	t := Transform{}
 
@@ -80,13 +103,13 @@ func Decode(path string, defaultOutputFormat string) (transform Transform, errs 
 
 	paramsSubstringStart := getParamsSubstringStart(path)
 
-	imgId := ""
+	imgID := ""
 	paramsString := ""
 	output := ""
 
 	if paramsSubstringStart == -1 {
-		imgId, output = GetFilePathParts(path)
-		t.Image.Id = UnescapePath(imgId)
+		imgID, output = GetFilePathParts(path)
+		t.Image.ID = UnescapePath(imgID)
 
 		extension := output
 
@@ -102,20 +125,21 @@ func Decode(path string, defaultOutputFormat string) (transform Transform, errs 
 		return t, errs, err
 	}
 
-	imgId = path[0 : paramsSubstringStart-1]
+	imgID = path[0 : paramsSubstringStart-1]
 	paramsString, output = GetFilePathParts(path[paramsSubstringStart-1 : len(path)])
-	t.Image.Id = UnescapePath(imgId)
+	t.Image.ID = UnescapePath(imgID)
 	t.Output = getOutputFormat(UnescapePath(output), defaultOutputFormat)
-	err, errs = extractParams(paramsString, UnescapePath(output), &t)
+	errs, err = extractParams(paramsString, UnescapePath(output), &t)
 	_, fullname := t.Image.Name()
 	t.Image.Source = fullname
 
 	return t, errs, err
 }
 
+// Encode an image with a transformation
 func Encode(transform Transform) (url string) {
 	image := transform.Image
-	url = EscapePath(image.Id)
+	url = EscapePath(image.ID)
 
 	inputExtension := image.Extension
 
@@ -124,7 +148,7 @@ func Encode(transform Transform) (url string) {
 	}
 
 	if transform.Raw {
-		url += "_" + RAW + "." + inputExtension
+		url += "_" + Raw + "." + inputExtension
 
 		return url
 	}
@@ -144,10 +168,12 @@ func Encode(transform Transform) (url string) {
 	return url
 }
 
+// EscapePath of an image
 func EscapePath(raw string) string {
 	return strings.Replace(raw, "_", "__", -1)
 }
 
+// UnescapePath of an image
 func UnescapePath(raw string) string {
 	return strings.Replace(raw, "__", "_", -1)
 }
@@ -178,6 +204,7 @@ func encodeDimension(width int, height int) (dim string) {
 	return dim
 }
 
+// EncodeParam of an image
 func EncodeParam(param string) string {
 	if param != "" {
 		param = "_" + param
@@ -187,17 +214,17 @@ func EncodeParam(param string) string {
 }
 
 func getParamsSubstringStart(sp string) int {
-	next_ := -1
+	nextP := -1
 	pivot := 0
 
 	for {
-		next_ = strings.Index(sp[pivot:], "_")
+		nextP = strings.Index(sp[pivot:], "_")
 
-		if next_ == -1 {
+		if nextP == -1 {
 			break
 		}
 
-		pivot += next_ + 1
+		pivot += nextP + 1
 
 		if len(sp[pivot:]) == 0 || (sp[pivot:][:1] != "_" && (pivot < 2 || sp[pivot-2:][:1] != "_")) {
 			return pivot
@@ -299,7 +326,7 @@ func extractCrop(c string) (crop Crop, errs []error) {
 	return crop, errs
 }
 
-func extractParams(part string, output string, t *Transform) (err error, errs []error) {
+func extractParams(part string, output string, t *Transform) (errs []error, err error) {
 	params := strings.Split(part, "_")
 
 	for i := range params {
@@ -308,17 +335,17 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 
 	pos := 1
 
-	if len(params) == 2 && params[pos] == RAW {
+	if len(params) == 2 && params[pos] == Raw {
 		t.Raw = true
 		t.Image.Extension = output
-		return err, errs
+		return errs, err
 	}
 
 	crop, errsCrop := extractCrop(params[pos])
 
 	if len(errsCrop) == 0 {
 		t.Crop = crop
-		pos += 1
+		pos++
 	}
 
 	errs = append(errs, errsCrop...)
@@ -328,7 +355,7 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 
 		if len(errsResize) == 0 {
 			t.Width, t.Height = width, height
-			pos += 1
+			pos++
 		}
 
 		errs = append(errs, errsResize...)
@@ -338,7 +365,7 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 
 	if pos != len(params) && params[pos] != "" {
 		extension = params[pos]
-		pos += 1
+		pos++
 	}
 
 	if extension == "" {
@@ -352,9 +379,10 @@ func extractParams(part string, output string, t *Transform) (err error, errs []
 		errs = append(errs, err)
 	}
 
-	return err, errs
+	return errs, err
 }
 
+// GetFilePathParts separates extension from a given path
 func GetFilePathParts(part string) (string, string) {
 	last := strings.LastIndex(part, ".")
 
