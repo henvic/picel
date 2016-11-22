@@ -386,7 +386,7 @@ func compareImage(output string, transform image.Transform, width int, height in
 	content := string(out)
 
 	if strings.Index(content, "not supported") != -1 || strings.Index(content, "no decode") != -1 {
-		fmt.Println(fmt.Sprintf("Jumping comparing for %v: no support / decoder for ImageMagick compare tool", reference))
+		fmt.Println(fmt.Sprintf("Skipping comparing for %v: no support / decoder for ImageMagick compare tool", reference))
 		return
 	}
 
