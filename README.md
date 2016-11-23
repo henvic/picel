@@ -35,6 +35,12 @@ By default, picel will try to use webp if the user doesn't explicitly request an
 
 Also, JPEG is the default image format for input.
 
+The provided binaries are built without pprof support. You can compile yourself if you want it. The docker image provided has pprof support out of the box, but with a firewall rule to filter calls to it.
+
+You can run picel (or any Go server for that matter) with pprof support enabled by default with no issues or performance penalties as long as you filter untrusted requests to `/debug` paths.
+
+To build with pprof support use `make build-with-pprof`.
+
 ## Dependencies
 picel uses [webp](https://developers.google.com/speed/webp/) and [ImageMagick](http://www.imagemagick.org/). At startup it will warn if it doesn't find the binaries for these processes. If you don't have it (or are running old versions) use your operating system package manager system to install the newest versions.
 
