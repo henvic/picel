@@ -7,6 +7,7 @@ before_install:
   - git fetch origin test_assets:origin/test_assets
   - go get golang.org/x/tools/cmd/cover
   - go get github.com/mattn/goveralls
+  - go get -u github.com/kisielk/errcheck
 install:
   - go get github.com/Masterminds/glide
   - cd $GOPATH/src/github.com/Masterminds/glide && git checkout v0.12.2 && go install && cd -
