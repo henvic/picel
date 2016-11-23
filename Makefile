@@ -13,6 +13,13 @@ get-dependencies: check-go
 list-packages:
 	go list ./... | grep -v /vendor/
 test:
+	echo "Checking for unchecked errors."
+	errcheck $(go list ./... | grep -v /vendor/)
+	echo "Linting code."
+	test -z "$(golint ./... | grep -v "^vendor" | tee /dev/stderr)"
+	echo "Examining source code against code defect."
+	go vet $(go list ./... | grep -v /vendor/)
+	echo "Running tests (may take a while)."
 	go test `go list ./... | grep -v /vendor/`
 check-go:
 	if ! which go &> /dev/null; \
