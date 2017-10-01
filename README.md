@@ -1,4 +1,5 @@
 # picel [![Build Status](http://img.shields.io/travis/henvic/picel/master.svg?style=flat)](https://travis-ci.org/henvic/picel) [![Coverage Status](https://coveralls.io/repos/henvic/picel/badge.svg)](https://coveralls.io/r/henvic/picel) [![GoDoc](https://godoc.org/github.com/henvic/picel?status.svg)](https://godoc.org/github.com/henvic/picel)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhenvic%2Fpicel.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhenvic%2Fpicel?ref=badge_shield)
 
 picel is a light-weight, blazing fast REST-ful micro service for image processing with a lean API.
 
@@ -150,3 +151,7 @@ Currently the images on the test_assets branch, besides [AdditiveColor](https://
 * [Insects](https://www.flickr.com/photos/henriquev/8544618839)
 * [Raccoons](https://www.flickr.com/photos/henriquev/16100340385)
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhenvic%2Fpicel.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhenvic%2Fpicel?ref=badge_large)
